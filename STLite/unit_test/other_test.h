@@ -11,16 +11,16 @@
 #include <iostream>
 
 using namespace STLite;
-using namespace std;
+
 
 //  采用命名空间原因是可以在不同的测试文件中拥有相同的函数名，如test，如果调用该文件中的test，
 //  则采用other_test::test()
-namespace other_test
+namespace other_unit
 {
 
 void test()
 {
-    std::cout << "other test" << endl;
+    std::cout << "other test" << std::endl;
 }
 
 }

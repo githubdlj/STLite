@@ -5,27 +5,27 @@
 	
 	Purpose:  ≤‚ ‘type_traits
 *********************************************************************/
-#ifndef _TYPE_TRAITS_TEST_H_
-#define _TYPE_TRAITS_TEST_H_
+#ifndef _STLITE_TYPE_TRAITS_TEST_H_
+#define _STLITE_TYPE_TRAITS_TEST_H_
 
 #include <iostream>
-#include "../type_traits.h"
+#include "../stlite_type_traits.h"
 
-using namespace std;
+
 using namespace STLite;
 
-namespace type_traites_test
+namespace type_traites_unit
 {
 
 //  ÷ÿ‘ÿ∫Ø ˝
 void print_aux(__true_type)
 {
-    std::cout << "true" << endl;
+    std::cout << "true" << std::endl;
 }
 
 void print_aux(__false_type)
 {
-    std::cout << "false" << endl;
+    std::cout << "false" << std::endl;
 }
 
 template<class T>
