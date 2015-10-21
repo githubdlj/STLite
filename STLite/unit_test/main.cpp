@@ -7,21 +7,22 @@
 *********************************************************************/
 
 #include "type_traits_test.h"
+#include "iterator_test.h"
 #include "other_test.h"
 
 #include <iostream>
 
 using namespace STLite;
-using namespace std;
 
 int main()
 {
-    std::cout << "Hello STLite" << endl;
+    std::cout << "Hello STLite" << std::endl;
     
     //  分别调用不同文件的test()
-    type_traites_test::test();  
-    other_test::test();
-
+   //  type_traites_unit::test();  
+    iterator_unit::test();
+    other_unit::test();
+ 
     system("pause");
     return true;
 }
