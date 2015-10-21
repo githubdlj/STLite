@@ -21,8 +21,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="detail_test\main.cpp">
+    <ClCompile Include="unit_test\main.cpp">
       <Filter>源文件\unit_test</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="type_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\type_traits_test.h">
+      <Filter>源文件\unit_test</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\other_test.h">
+      <Filter>源文件\unit_test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

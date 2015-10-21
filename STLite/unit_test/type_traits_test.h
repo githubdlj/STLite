@@ -14,8 +14,6 @@
 using namespace std;
 using namespace STLite;
 
-//  采用命名空间原因是可以在不同的测试文件中拥有相同的函数名，如test，如果调用该文件中的test，
-//  则采用type_traits_test::test()
 namespace type_traites_test
 {
 
@@ -34,6 +32,8 @@ template<class T>
 void print(T)
 {
     typedef typename __type_traits<T>::is_POD_type is_POD_type;
+
+    std::cout << typeid(T).name() << ": ";
     print_aux(is_POD_type());
 }
 
@@ -52,6 +52,19 @@ void test()
     class B{};
     B d;
     print(d);
+
+    int *pi = NULL;
+    print(pi);
+
+    char *pc1 = NULL;
+    print(pc1);
+
+    unsigned char *pc2 = NULL;
+    print(pc2);
+
+    const char *pc3 = NULL;
+    print(pc3);
+   
 }
 
 }

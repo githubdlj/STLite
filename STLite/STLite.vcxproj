@@ -60,7 +60,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="detail_test\main.cpp" />
+    <ClCompile Include="unit_test\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="type_traits.h" />
+    <ClInclude Include="unit_test\other_test.h" />
+    <ClInclude Include="unit_test\type_traits_test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
