@@ -17,7 +17,7 @@ namespace STLite
     struct bidirectional_iterator_tag : public forward_iterator_tag{};
     struct random_access_iterator_tag : public bidirectional_iterator_tag{};
 
-    //  迭代器基类，若自定义迭代器，可以继承它
+    //  迭代器基类，若自定义迭代器，可以继承它,参见unit_test/iterator_traits_test.h
     template<class Category, class T, class Pointer = T*, class Reference = T&, class Distance = ptrdiff_t>
     struct iterator
     {
@@ -30,6 +30,8 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  五种迭代器定义
+    //  五种类型的迭代器仅仅是一个空壳，有什么具体作用？如果自定义迭代器，可以继承iterator；
+    //  如果涉及容器迭代器，则需要完全设计，也没有利用到这五种迭代器呀？
     template<class T, class Distance>
     struct input_iterator
     {
@@ -134,6 +136,12 @@ namespace STLite
     {
         return static_cast<typename iterator_traits<Iterator>::diffrence_type *>(0);
     }
-
+    
+    /*
+        上述的定义位于SGI STL中iterator_base.h文件中，此外iterator_base中还包含函数distance(Iterator first, Iterator last),
+        advance(Iterator iter, Distancen n)。
+        
+        在iterator.h中，还定义了reverse_itertor，istream_iterator, ostream_iterator等各类迭代器。
+    */
 }
 #endif
