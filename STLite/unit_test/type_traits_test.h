@@ -11,6 +11,9 @@
 #include <iostream>
 #include "../stlite_type_traits.h"
 
+using std::cout;
+using std::cin;
+using std::endl;
 
 using namespace STLite;
 
@@ -20,12 +23,12 @@ namespace type_traites_unit
 //  ÖØÔØº¯Êı
 void print_aux(__true_type)
 {
-    std::cout << "true" << std::endl;
+    cout << "true" << endl;
 }
 
 void print_aux(__false_type)
 {
-    std::cout << "false" << std::endl;
+    cout << "false" << endl;
 }
 
 template<class T>
@@ -33,7 +36,7 @@ void print(T)
 {
     typedef typename __type_traits<T>::is_POD_type is_POD_type;
 
-    std::cout << typeid(T).name() << ": ";
+    cout << typeid(T).name() << ": ";
     print_aux(is_POD_type());
 }
 

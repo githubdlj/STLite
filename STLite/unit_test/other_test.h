@@ -10,6 +10,10 @@
 
 #include <iostream>
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 using namespace STLite;
 
 
@@ -20,7 +24,7 @@ namespace other_unit
 
 void test()
 {
-    std::cout << "other test" << std::endl;
+    cout << "other test" << endl;
 }
 
 }

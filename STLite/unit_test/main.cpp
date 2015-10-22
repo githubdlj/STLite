@@ -12,11 +12,15 @@
 
 #include <iostream>
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 using namespace STLite;
 
 int main()
 {
-    std::cout << "Hello STLite" << std::endl;
+    cout << "Hello STLite" << endl;
     
     //  分别调用不同文件的test()
    //  type_traites_unit::test();  

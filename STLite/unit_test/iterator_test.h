@@ -12,6 +12,10 @@
 #include <iostream>
 #include "../stlite_iterator.h"
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 using namespace STLite;
 
 namespace iterator_unit
@@ -41,19 +45,19 @@ func(Iterator iter)
 
 void test()
 {
-    std::cout << "iterator_test" << std::endl;
+    cout << "iterator_test" << endl;
 
     //  普通指针
     int *p = new int(20);   
-    std::cout << func(p) << std::endl;      //  20
+    cout << func(p) << endl;      //  20
 
     //  自定义迭代器
     MyIterator<int> iter(new int(30));      //  30
-    std::cout << func(iter) << std::endl;
+    cout << func(iter) << endl;
    
-    std::cout << typeid(iter).name() << std::endl;  //  class iterator_unit::MyIterator<int>
-    std::cout << typeid(iterator_category(iter)).name() << std::endl;   //  struct STLite::random_access_iterator_tag
-    std::cout << typeid(value_type(iter)).name() << std::endl;  //  int
+    cout << typeid(iter).name() << endl;  //  class iterator_unit::MyIterator<int>
+    cout << typeid(iterator_category(iter)).name() << endl;   //  struct STLite::random_access_iterator_tag
+    cout << typeid(value_type(iter)).name() << endl;  //  int
 }
 }
 #endif
