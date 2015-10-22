@@ -63,8 +63,10 @@
     <ClCompile Include="unit_test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="stlite_construct.h" />
     <ClInclude Include="stlite_iterator.h" />
     <ClInclude Include="stlite_type_traits.h" />
+    <ClInclude Include="unit_test\construct_test.h" />
     <ClInclude Include="unit_test\iterator_test.h" />
     <ClInclude Include="unit_test\other_test.h" />
     <ClInclude Include="unit_test\type_traits_test.h" />
