@@ -16,10 +16,6 @@
 
 #include <new.h>    //  placement new, set_new_handler
 
-using std::cout;
-using std::cin;
-using std::endl;
-
 namespace STLite
 {
     //  allocate，deallocate
@@ -85,12 +81,19 @@ namespace STLite
         //  但是，vc下的STL版本为了配合容器必须提供以下接口。
         void construct(pointer p, const_reference value)
         {
-            ::construct(p, value);  //  调用全局的构造函数，位于stlite_construct.h
+            STLite::construct(p, value);  //  调用全局的构造函数，位于stlite_construct.h
+                  
         }
 
         void destroy(pointer p)
         {
-            ::destroy(p);   //  调用全局的析构函数，位于stlite.construct.h
+            STLite::destroy(p);   //  调用全局的析构函数，位于stlite.construct.h
+        }
+        
+        //  效率更高的destroy函数
+        void destroy(pointer first, pointer last)
+        {
+            STLite::destroy(first, last);
         }
         //////////////////////////////////////////////////////////////////////
         size_type max_size()const
