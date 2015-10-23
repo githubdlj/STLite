@@ -8,40 +8,23 @@
 
 #include "../stlite_alloc.h"
 #include <vector>
-
+#include <iostream>
 using std::cout;
 using std::cin;
 using std::endl;
+
 using namespace STLite;
 
 namespace alloc_unit
 {
 const int OBJECT_NUM = 10;
 
-void test_alloc_on_container()
+void testCase1()
 {
-    int arr[OBJECT_NUM];
-    for (int i = 0; i < OBJECT_NUM; i++)
-    {
-        arr[i] = i;
-    }
-    NULL
-    //  调用了两次内存分配construct函数
-    //  第一次分配8Byte，第二次分配sizeof(int) * OBJECT_NUM byte
-    //  通过调试，发现第一次分配的8byte内存返回类型为std::_Container_proxy *
-    std::vector< int, STLite::allocator<int> > v(arr, arr + OBJECT_NUM);
+    cout << "testCase1" << endl;
 
-    for (int i = 0; i < OBJECT_NUM; i++)
-    {
-        cout << v[i];
-    }
-    cout << endl;
-}
+    allocator<int> alloc;
 
-void test_alloc_on_basedata()
-{
-    STLite::allocator<int> alloc;
-    
     //  alloc memory
     int *ptr = alloc.allocate(OBJECT_NUM);
 
@@ -57,19 +40,44 @@ void test_alloc_on_basedata()
         cout << ptr[i];
     }
 
-    //  destroy
-    alloc.destroy(ptr);
-
+    //  destroy, 两个版本，版本一效率高
+    alloc.destroy(ptr, ptr + OBJECT_NUM); 
+//     for (int i = 0; i < OBJECT_NUM; i++)
+//     {
+//         alloc.destroy(ptr + i);     
+//                                    
+//     }
     //  deallocate
     alloc.deallocate(ptr, OBJECT_NUM);
 
-
+    cout << endl;
 }
+
+void testCase2()
+{
+    cout << "testCase2" << endl;
+
+    int arr[OBJECT_NUM];
+    for (int i = 0; i < OBJECT_NUM; i++)
+    {
+        arr[i] = i;
+    }
+   
+    //  调用了两次内存分配construct函数
+    //  第一次分配8Byte，第二次分配sizeof(int) * OBJECT_NUM byte
+    //  通过调试，发现第一次分配的8byte内存返回类型为std::_Container_proxy *
+    std::vector< int, STLite::allocator<int> > v(arr, arr + OBJECT_NUM);
+
+    for (int i = 0; i < OBJECT_NUM; i++)
+    {
+        cout << v[i];
+    }
+    cout << endl;
+}
+
 void test()
 {
-       cout << "alloc test" << endl;
-       //   test_alloc_on_basedata();
-       cout << endl;
-       test_alloc_on_container();
+     testCase1();
+     testCase2();
 }
 }

@@ -8,9 +8,10 @@
 #ifndef _STLITE_TYPE_TRAITS_TEST_H_
 #define _STLITE_TYPE_TRAITS_TEST_H_
 
-#include <iostream>
+
 #include "../stlite_type_traits.h"
 
+#include <iostream>
 using std::cout;
 using std::cin;
 using std::endl;
@@ -19,8 +20,8 @@ using namespace STLite;
 
 namespace type_traites_unit
 {
-
-//  重载函数
+  
+// 重载函数
 void print_aux(__true_type)
 {
     cout << "true" << endl;
@@ -40,21 +41,22 @@ void print(T)
     print_aux(is_POD_type());
 }
 
-void test()
+void testCase1()
 {
+    cout << "testCase1()" << endl;
+
     int a = 0;
     print(a);
 
     bool b = true;
     print(b);
 
-    class A{};
-    A c;
-    print(c);
+    cout << endl;
+}
 
-    class B{};
-    B d;
-    print(d);
+void testCase2()
+{
+    cout << "testCase2()" << endl;
 
     int *pi = NULL;
     print(pi);
@@ -67,7 +69,25 @@ void test()
 
     const char *pc3 = NULL;
     print(pc3);
-   
+
+    cout << endl;
+}
+
+void testCase3()
+{
+    cout << "testCase3()" << endl;
+
+    class A{};
+    A a;
+    print(a);
+
+    cout << endl;
+}
+void test()
+{
+    testCase1();
+    testCase2();
+    testCase3();
 }
 
 }

@@ -9,6 +9,11 @@
 #define _CONSTRUCT_TEST_H_
 
 #include "../stlite_construct.h"
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::endl;
+
 using namespace STLite;
 
 namespace construct_unit

@@ -10,6 +10,7 @@
 #include "iterator_test.h"
 #include "construct_test.h"
 #include "alloc_test.h"
+#include "uninitialized_test.h"
 #include "other_test.h"
 
 #include <iostream>
@@ -27,8 +28,9 @@ int main()
     //  分别调用不同文件的test()
     //  type_traites_unit::test();  
     //  iterator_unit::test();
-    //  construct_unit::test();
-        alloc_unit::test();
+      construct_unit::test();
+    //  alloc_unit::test();
+    //  uninitialized_unit::test();
     other_unit::test();
  
     system("pause");

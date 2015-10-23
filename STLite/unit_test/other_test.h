@@ -9,7 +9,6 @@
 #define _OTHER_TEST_H_
 
 #include <iostream>
-
 using std::cout;
 using std::cin;
 using std::endl;
