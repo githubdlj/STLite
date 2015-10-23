@@ -8,12 +8,7 @@
 #ifndef _CONSTRUCT_TEST_H_
 #define _CONSTRUCT_TEST_H_
 
-#include <iostream>
 #include "../stlite_construct.h"
-
-using std::cout;
-using std::cin;
-using std::endl;
 using namespace STLite;
 
 namespace construct_unit
@@ -21,8 +16,9 @@ namespace construct_unit
 const int OBJECT_NUM = 5;
 
 // 
-void test_POD_object()
+void testCase1()
 {
+    cout << "testCase1 for int*" << endl;
     //  allocate memory
     int *p = (int *) ::operator new(sizeof(int) * OBJECT_NUM);
   
@@ -43,11 +39,32 @@ void test_POD_object()
 
     //  free memory
     ::operator delete(p);   //  operator delete有两种形式，operator delete(pointer *p), operator delete(pointer *p, size)
+    
+    cout << endl;
 }
 
-//  
-void test_NotPOD_object()
+void testCase2()
 {
+    cout << "testCase2 for int a[]" << endl;
+    int arr[OBJECT_NUM];
+
+    for (int i = 0; i < OBJECT_NUM; i++)
+    {
+        construct(arr + i, i);
+    }
+
+    for (int i = 0; i < OBJECT_NUM; i++)
+    {
+        cout << arr[i] << endl;
+    }
+
+    destroy(arr, arr + OBJECT_NUM);  //  do nothing
+    cout << endl;
+}
+//  
+void testCase3()
+{
+    cout << "testCase3" << endl;
     //  struct A is not POD type, it's has constructor & deconstructor
     struct A
     {
@@ -83,17 +100,17 @@ void test_NotPOD_object()
 
     //  free memory
     ::operator delete(p);
+
+    cout << endl;
 }
 
 void test()
 {
     cout << "construct_test" << endl;
     
-    test_POD_object();
-
-    cout << endl << endl;
-
-    test_NotPOD_object();    
+    testCase1();
+    testCase2();
+    testCase3();
 }
 
 }

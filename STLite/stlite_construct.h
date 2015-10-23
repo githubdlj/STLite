@@ -16,8 +16,6 @@
 
 #include <new.h>    //  placement new
 
-using namespace STLite;
-
 namespace STLite
 {
     //  construct
@@ -44,6 +42,7 @@ namespace STLite
     inline void destroy_aux(ForwardIterator first, ForwardIterator last, __true_type)
     {
         //  if has_trivial_deconstructor, do nothing
+        cout << "do nothing" << endl;
     }
 
     template<class ForwardIterator>
@@ -59,11 +58,8 @@ namespace STLite
     template<class ForwardIterator>
     inline void destroy(ForwardIterator first, ForwardIterator last)
     {
-        //  note this!!
-        //  typedef typename iterator_traits<first>::value_type value_type(first);  //  error
-        typedef typename iterator_traits<ForwardIterator>::value_type value_type(ForwardIterator);  //  获取迭代器所指类型
-        typedef typename __type_traits<value_type>::has_trivial_deconstructor has_trivial_deconstructor;
-        
+        //  note! 先获取迭代器所指类型，再根据类型判断是否has trivial deconstructor
+        typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::has_trivial_deconstructor has_trivial_deconstructor;  
         destroy_aux(first, last, has_trivial_deconstructor());
     }
     /*
