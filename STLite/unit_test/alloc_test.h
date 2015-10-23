@@ -25,7 +25,7 @@ void test_alloc_on_container()
     {
         arr[i] = i;
     }
-
+    NULL
     //  调用了两次内存分配construct函数
     //  第一次分配8Byte，第二次分配sizeof(int) * OBJECT_NUM byte
     //  通过调试，发现第一次分配的8byte内存返回类型为std::_Container_proxy *
