@@ -46,7 +46,7 @@ namespace STLite
     {
         typedef output_iterator_tag     iterator_category;   //  确定迭代器类型，类似于类型识别
         typedef void                    value_type;
-        typedef void                    Pointer;
+        typedef void                    pointer;
         typedef void                    reference;
         typedef void                    difference_type;
     };
@@ -56,7 +56,7 @@ namespace STLite
     {
         typedef forward_iterator_tag    iterator_category;   //  确定迭代器类型，类似于类型识别
         typedef T                       value_type;
-        typedef T*                      Pointer;
+        typedef T*                      pointer;
         typedef T&                      reference;
         typedef Distance                difference_type;
     };
@@ -65,7 +65,7 @@ namespace STLite
     {
         typedef bidirectional_iterator_tag  iterator_category;   //  确定迭代器类型，类似于类型识别
         typedef T                           value_type;
-        typedef T*                          Pointer;
+        typedef T*                          pointer;
         typedef T&                          reference;
         typedef Distance                    difference_type;
     };
@@ -84,12 +84,12 @@ namespace STLite
     //  迭代器萃取器
     template<class Iterator>
     struct iterator_traits
-    {
+    {                              
         typedef typename Iterator::iterator_category    iterator_category;
         typedef typename Iterator::value_type           value_type;
         typedef typename Iterator::pointer              pointer;
         typedef typename Iterator::reference            reference;
-        typedef typename Iterator::difference_type       diffrence_type;
+        typedef typename Iterator::difference_type      difference_type;
     };
     //////////////////////////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ namespace STLite
         typedef T                           value_type;
         typedef T*                          pointer;
         typedef T&                          reference;
-        typedef ptrdiff_t                   diffrence_type;
+        typedef ptrdiff_t                   difference_type;
     };
 
     template<class T>
@@ -111,7 +111,7 @@ namespace STLite
         typedef T                           value_type;
         typedef T*                          pointer;
         typedef T&                          reference;
-        typedef ptrdiff_t                   diffrence_type;
+        typedef ptrdiff_t                   difference_type;
     };
 
     //  识别函数，分别可以识别出迭代器category, value_type, difference_type。内联函数
@@ -131,10 +131,10 @@ namespace STLite
     }
 
     template<class Iterator>
-    inline typename iterator_traits<Iterator>::diffrence_type*
+    inline typename iterator_traits<Iterator>::difference_type*
     distance_type(const Iterator &)
     {
-        return static_cast<typename iterator_traits<Iterator>::diffrence_type *>(0);
+        return static_cast<typename iterator_traits<Iterator>::difference_type *>(0);
     }
     
     /*
