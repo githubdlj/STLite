@@ -14,7 +14,7 @@
 #ifndef _STLITE_ALLOC_H_
 #define _STLITE_ALLOC_H_
 
-#include "stlite_construct.h    //  for construct, destroy
+#include "stlite_construct.h"    //  for construct, destroy
 #include <new.h>    //  placement new, set_new_handler
 #include <iostream>
 using std::cout;
