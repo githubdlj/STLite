@@ -6,8 +6,8 @@
 	Purpose:  主测试函数，用于测试各个测试单元
 *********************************************************************/
 
-#include "type_traits_test.h"
 #include "iterator_test.h"
+#include "type_traits_test.h"
 #include "construct_test.h"
 #include "alloc_test.h"
 #include "uninitialized_test.h"

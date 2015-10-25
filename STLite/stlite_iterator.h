@@ -8,6 +8,8 @@
 #ifndef _STLITE_ITERATOR_H_
 #define _STLITE_ITERATOR_H_
 
+#include <crtdefs.h>    //  for ptrdiff_t
+
 namespace STLite
 {
     //  五种迭代器类型
@@ -37,7 +39,7 @@ namespace STLite
     {
         typedef input_iterator_tag  iterator_category;      //  确定迭代器类型，类似于类型识别
         typedef T                   value_type;
-        typedef T*                  Pointer;
+        typedef T*                  pointer;
         typedef T&                  reference;
         typedef Distance            difference_type;
     };

@@ -15,6 +15,15 @@
 #define _STLITE_CONSTRUCT_H_
 
 #include <new.h>    //  placement new
+#include "stlite_type_traits.h"
+#include "stlite_iterator.h"
+
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::endl;
+
+using namespace STLite;
 
 namespace STLite
 {
@@ -62,22 +71,6 @@ namespace STLite
         typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::has_trivial_deconstructor has_trivial_deconstructor;  
         destroy_aux(first, last, has_trivial_deconstructor());
     }
-    /*
-        注意：
-        逻辑上，destroy逻辑上应该对迭代器[first, last)进行类型判断
-        destroy(ForwardIterator first, ForwardIterator last)
-        {
-            for (; first < last; first++)
-            {
-                typedef typename iterator_traits<first>::value_type value_type(first);  //  获取迭代器所指类型
-                typedef typename __type_traits<value_type>::has_trivial_deconstructor has_trivial_deconstructor;
-
-                destroy_aux(has_trivial_deconstructor);
-            }
-        }
-        
-        之所以仅仅对first进行了类型判断，是否是因为[first, last)中所有的迭代器所指类型都一致？
-    */
 
     /*
         为什么construct不和destroy保持一致，即定义
