@@ -20,7 +20,7 @@ namespace STLite
     struct random_access_iterator_tag : public bidirectional_iterator_tag{};
 
     //  迭代器基类，若自定义迭代器，可以继承它,参见unit_test/iterator_traits_test.h
-    template<class Category, class T, class Pointer = T*, class Reference = T&, class Distance = ptrdiff_t>
+    template<class Category, class T, class Pointer = T*, class Reference = T&, class Distance = std::ptrdiff_t>
     struct iterator
     {
         typedef Category    iterator_category;
@@ -103,7 +103,7 @@ namespace STLite
         typedef T                           value_type;
         typedef T*                          pointer;
         typedef T&                          reference;
-        typedef ptrdiff_t                   difference_type;
+        typedef std::ptrdiff_t              difference_type;
     };
 
     template<class T>
@@ -113,7 +113,7 @@ namespace STLite
         typedef T                           value_type;
         typedef T*                          pointer;
         typedef T&                          reference;
-        typedef ptrdiff_t                   difference_type;
+        typedef std::ptrdiff_t              difference_type;
     };
 
     //  识别函数，分别可以识别出迭代器category, value_type, difference_type。内联函数

@@ -59,5 +59,11 @@
     <ClInclude Include="unit_test\uninitialized_test.h">
       <Filter>源文件\unit_test</Filter>
     </ClInclude>
+    <ClInclude Include="stlite_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\list_test.h">
+      <Filter>源文件\unit_test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
