@@ -126,10 +126,10 @@ namespace STLite
     }
 
     template<class Iterator>
-    inline typename iterator_traits<Iterator>::value_type
+    inline typename iterator_traits<Iterator>::value_type*
     value_type(const Iterator &)
     {
-        return static_cast<typename iterator_traits<T>::value_type *>(0);
+        return static_cast<typename iterator_traits<Iterator>::value_type *>(0);
     }
 
     template<class Iterator>
