@@ -68,7 +68,8 @@ namespace STLite
     inline void destroy(ForwardIterator first, ForwardIterator last)
     {
         //  note! 先获取迭代器所指类型，再根据类型判断是否has trivial deconstructor
-        typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::has_trivial_deconstructor has_trivial_deconstructor;  
+        typedef typename iterator_traits<ForwardIterator>::value_type value_type;
+        typedef typename __type_traits<value_type>::has_trivial_deconstructor has_trivial_deconstructor;
         destroy_aux(first, last, has_trivial_deconstructor());
     }
 
