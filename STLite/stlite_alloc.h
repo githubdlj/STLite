@@ -47,8 +47,11 @@ namespace STLite
     template<class T>
     inline void _deallocate(T* buffer)
     {
-        cout << "free memory" << endl;
-        ::operator delete(buffer);
+        if (NULL != buffer)
+        {
+            cout << "free memory" << endl;
+            ::operator delete(buffer);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -72,12 +75,12 @@ namespace STLite
             typedef allocator<U> other;
         };
 
-        pointer allocate(size_type n)
+        static pointer allocate(size_type n)
         {
             return _allocate((difference_type)n, (pointer)0);
         }
 
-        void deallocate(pointer p, size_type n) //  VC下STL deallcate接口带2个参数
+        static void deallocate(pointer p, size_type n) //  VC下STL deallcate接口带2个参数
         {
             _deallocate(p);
         }
@@ -86,19 +89,19 @@ namespace STLite
         //  如果是SGI STL,作为容器的配置器，不必要提供下面的接口，构造对象利用了全局的construct函数。
         //  将内存配置和构造分离出来了。
         //  但是，vc下的STL版本为了配合容器必须提供以下接口。
-        void construct(pointer p, const_reference value)
+        static void construct(pointer p, const_reference value)
         {
             STLite::construct(p, value);  //  调用全局的构造函数，位于stlite_construct.h
                   
         }
 
-        void destroy(pointer p)
+        static void destroy(pointer p)
         {
             STLite::destroy(p);   //  调用全局的析构函数，位于stlite.construct.h
         }
         
         //  效率更高的destroy函数
-        void destroy(pointer first, pointer last)
+        static void destroy(pointer first, pointer last)
         {
             STLite::destroy(first, last);
         }
