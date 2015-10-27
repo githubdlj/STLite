@@ -33,7 +33,7 @@ void print_aux(__false_type)
 }
 
 template<class T>
-void print(T)
+void print_attr(T)
 {
     typedef typename __type_traits<T>::is_POD_type is_POD_type;
 
@@ -41,15 +41,26 @@ void print(T)
     print_aux(is_POD_type());
 }
 
+template<class T>
+void print_type(T)
+{
+    typedef typename _is_integer<T>::is_integer is_integer;
+
+    cout << typeid(T).name() << ": ";
+    print_aux(is_integer());
+}
+
+//////////////////////////////////////////////////////////////////////
+//  测试属性
 void testCase1()
 {
     cout << "testCase1()" << endl;
 
     int a = 0;
-    print(a);
+    print_attr(a);
 
     bool b = true;
-    print(b);
+    print_attr(b);
 
     cout << endl;
 }
@@ -59,16 +70,16 @@ void testCase2()
     cout << "testCase2()" << endl;
 
     int *pi = NULL;
-    print(pi);
+    print_attr(pi);
 
     char *pc1 = NULL;
-    print(pc1);
+    print_attr(pc1);
 
     unsigned char *pc2 = NULL;
-    print(pc2);
+    print_attr(pc2);
 
     const char *pc3 = NULL;
-    print(pc3);
+    print_attr(pc3);
 
     cout << endl;
 }
@@ -79,15 +90,49 @@ void testCase3()
 
     class A{};
     A a;
-    print(a);
+    print_attr(a);
 
     cout << endl;
 }
+//////////////////////////////////////////////////////////////////////
+//  测试数据类型
+void testCase4()
+{
+    int intType = 0;
+    print_type(intType);
+
+
+    cout << endl;
+}
+
+void testCase5()
+{
+    int *ptr = NULL;
+    print_type(ptr);
+
+    cout << endl;
+}
+
+void testCase6()
+{
+    class A{};
+    A a;
+
+    print_type(a);
+    cout << endl;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void test()
 {
-    testCase1();
-    testCase2();
-    testCase3();
+//     testCase1();
+//     testCase2();
+//     testCase3();
+    //////////////////////////////////////////////////////////////////////
+    testCase4();
+    testCase5();
+    testCase6();
 }
 
 }

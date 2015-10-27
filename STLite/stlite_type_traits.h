@@ -15,6 +15,7 @@ namespace STLite
 {
     struct __true_type{};
     struct __false_type{};
+    //////////////////////////////////////////////////////////////////////
 
     template<class T>
     struct __type_traits
@@ -183,6 +184,79 @@ namespace STLite
         typedef __true_type has_trivial_deconstructor;
         typedef __true_type is_POD_type;
     };
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    // The following could be written in terms of numeric_limits.  
+    // We're doing it separately to reduce the number of dependencies.
+    template<class T>
+    struct _is_integer
+    {
+        typedef __false_type is_integer;
+    };
+    
+    //////////////////////////////////////////////////////////////////////
+//  integer
+    template<>
+    struct _is_integer<bool>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<char>
+    {
+        typedef __true_type is_integer;
+    };
+    
+    template<>
+    struct _is_integer<signed char>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<unsigned char>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<short>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<unsigned short>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<int>
+    {
+        typedef __true_type is_integer;
+    };
+        
+    template<>
+    struct _is_integer<unsigned int>
+    {
+        typedef __true_type is_integer;
+    };
+    
+    template<>
+    struct _is_integer<long>
+    {
+        typedef __true_type is_integer;
+    };
+    
+    template<>
+    struct _is_integer<unsigned long>
+    {
+        typedef __true_type is_integer;
+    };
+
 }
 
 #endif
