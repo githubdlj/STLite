@@ -25,7 +25,13 @@ namespace STLite
     template<class InputIterator, class ForwardIterator>
     inline ForwardIterator uninitialized_copy_aux(InputIterator first, InputIterator last, ForwardIterator result, __true_type)
     {
-        return std::copy(first, last, result);
+    //    return std::copy(first, last, result);
+       //   暂时用这个代替标准库std::copy()
+        while (first != last)
+        {
+            *result++ = *first++;
+        }
+        return result;
     }
 
     template<class InputIterator, class ForwardIterator>
@@ -44,10 +50,10 @@ namespace STLite
     inline ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result)
     {
         //  先获取迭代器所指类型，然后获取类型属性，根据属性调用对应的函数
-        typedef typename __type_traits<iterator_traits<InputIterator>::value_type>::is_POD_type is_POD_type;
-        //  cout << typeid(is_POD_type()).name();
+        typedef typename iterator_traits<InputIterator>::value_type value_type;
+        //  cout << typeid(value_type).name() << endl;
+        typedef typename __type_traits<value_type>::is_POD_type is_POD_type;
         return uninitialized_copy_aux(first, last, result, is_POD_type());
-            
     }
 
     //  特化的const char *版本
