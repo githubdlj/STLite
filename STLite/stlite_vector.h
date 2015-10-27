@@ -8,12 +8,18 @@
 #ifndef _STLITE_VECTOR_H_
 #define _STLITE_VECTOR_H_
 #include "stlite_iterator.h"        //  iterator  
+#include "stlite_alloc.h"           //  allocator
+#include "stlite_uninitialized.h"   //  uninitialized_fill_n
+#include "stlite_type_traits.h"
 #include <crtdefs.h>                //  std::ptrdiff_t
+
 #include <iostream>
 using namespace STLite;
 
 namespace STLite
 {
+    //////////////////////////////////////////////////////////////////////
+    //  vectorIterator
     template<class T>
     class vectorIterator : public iterator<random_access_iterator<T, std::ptrdiff_t>, T>
     {
@@ -22,12 +28,19 @@ namespace STLite
     
     //////////////////////////////////////////////////////////////////////
     //  construct, copy, assignment, destroy
+    //  注意，vectorIterator并不负责内存分配和释放，它仅仅是原始指针的一个封装
+    //  所以这些函数都可以使用默认的
     public:
+        //  construct
         explicit vectorIterator(T *ptr = NULL) : m_ptr(ptr) {} 
+        
+        //  copy
         vectorIterator(const vectorIterator &vIter)
         {
             m_ptr = vIter.m_ptr;
         }
+
+        // assignment
         vectorIterator & operator =(const vectorIterator &vIter)
         {
             if (this != &vIter)
@@ -36,6 +49,9 @@ namespace STLite
             }
             return *this;
         }
+
+        //  destroy, do nothing,
+        ~vectorIterator() { }
     //////////////////////////////////////////////////////////////////////
     //  defer
     public:
@@ -88,6 +104,11 @@ namespace STLite
             return temp += n;
         }
 
+        difference_type operator +(const vectorIterator &lhs) const     //  迭代器加法
+        {
+            return m_ptr + lhs.m_ptr;
+        }
+        //////////////////////////////////////////////////////////////////////
         vectorIterator & operator -=(difference_type n)
         {
             *this += -n;    //  call operator +=(difference_type n)
@@ -98,7 +119,12 @@ namespace STLite
             vectorIterator temp = *this;    //  call operator -=(difference_type n)
             return temp -= n;
         }
-    
+        
+        difference_type operator -(const vectorIterator &lhs) const     //  迭代器减法
+        {
+            return m_ptr - lhs.m_ptr;
+        }
+        //////////////////////////////////////////////////////////////////////
         reference operator [](difference_type n) const
         {
             return *(*this + n);
@@ -115,6 +141,141 @@ namespace STLite
         {
             return !(*this == lhs);
         }
+    };
+
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //  vector
+    template<class T, class Alloc = allocator<T>>
+    class vector
+    {
+    //////////////////////////////////////////////////////////////////////
+    //  嵌套型别定义
+    public:
+        typedef T               value_type;
+        typedef T*              pointer;
+        typedef T&              reference;
+        typedef size_t          size_type;
+        typedef std::ptrdiff_t  difference_type;
+
+    //////////////////////////////////////////////////////////////////////
+    //   内部数据,  为了方便测试，先声明为public
+    public:
+        pointer start;
+        pointer finish;
+        pointer end_of_storage;     //  指向存储空间的末尾
+    
+    //////////////////////////////////////////////////////////////////////
+    //  iterator
+    public:
+        typedef vectorIterator<T> iterator;
+    
+    //////////////////////////////////////////////////////////////////////
+    //  allocator
+    typedef allocator<T> data_allocator;
+
+    //////////////////////////////////////////////////////////////////////
+    //  private member function
+    private:
+        pointer allocate(size_type n)
+        {
+            return data_allocator::allocate(n);
+        }
+        
+        void deallocate()
+        {
+            data_allocator::deallocate(start, end_of_storage - start);
+        }
+        
+        
+        //  初始化空间
+        void allocate_and_fill(size_type n, const value_type &value)
+        {
+            start = allocate(n);
+            uninitialized_fill_n(start, n, value);
+            
+            finish = start + n;
+            end_of_storage = finish;
+        }
+        
+        template<class InputIterator>
+        void allocate_and_copy(InputIterator first, InputIterator last)
+        {
+             start = allocate(last - first);     //  重载迭代器减法
+             finish = uninitialized_copy(first, last, start);
+             end_of_storage = finish;
+        }
+        
+        void destroy_and_deallocate()
+        {
+            destroy(start, finish); 
+            deallocate();
+        }
+        //////////////////////////////////////////////////////////////////////
+        //  辅助构造函数
+        template<class Integer>
+        void vector_aux(Integer n, const value_type &value, __true_type)
+        {
+            allocate_and_fill(n, value);
+        }
+        
+        template<class InputIterator>
+        void vector_aux(InputIterator first, InputIterator last, __false_type)
+        {
+            allocate_and_copy(first, last);
+        }   
+
+    //////////////////////////////////////////////////////////////////////
+    //  construct
+    public: 
+        vector(): start(0), finish(0), end_of_storage(0) { }
+        explicit vector(size_type n)
+        {
+            allocate_and_fill(n, value_type());
+        }
+        vector(size_type n, const value_type &value)
+        {
+            allocate_and_fill(n, value);
+        }
+        template<class InputIterator>
+        vector(InputIterator first, InputIterator last)     
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;    //  注意，和vector<size_type n, const value_type &value>参数一样，要判断参数类型
+            vector_aux(first, last, is_integer());
+        }
+        
+        //  copy
+        vector(const vector &lhs)
+        {
+            allocate_and_copy(lhs.start, lhs.finish);
+        }
+    
+        //  assignment, 注意，赋值的时候要释放原来所指向的内存空间
+        const vector & operator =(const vector &lhs)
+        {
+            //  初始化新空间
+            pointer new_start = allocate(lhs.finish - lhs.start);
+            pointer new_finish = uninitialized_copy(lhs.start, lhs.finish, new_start);
+            pointer new_end_of_storage = new_finish;
+        
+            //  释放自身空间
+            destroy_and_deallocate();
+    
+            //  初始化自身空间
+            start = new_start;
+            finish = new_finish;
+            end_of_storage = new_end_of_storage;
+
+            return *this;
+        }
+        //  destroy
+        ~vector()
+        {
+            destroy_and_deallocate();
+        }
+    //////////////////////////////////////////////////////////////////////
+  
     };
 }
 

@@ -103,7 +103,7 @@ namespace vector_detail
         vIter iter(arr);
 
         cout << *(iter + 3) << endl;
-        cout << iter[3] << endl;
+        cout << iter[3] << endl;    //  operator []
 
     }
     //////////////////////////////////////////////////////////////////////
@@ -120,6 +120,8 @@ namespace vector_detail
             cout << "equal" << endl;
         }
 
+        //  note!!, free memory by itself, vectorIterator do not free memory
+        free(p);
         cout << endl;
     }
     
@@ -137,9 +139,8 @@ namespace vector_detail
     
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
-    void test()
+    void testIterator()
     {
-        cout << "vector_detail test" << endl;
         testCase1();
         testCase2();
         testCase3();
@@ -147,6 +148,105 @@ namespace vector_detail
         testCase5();
         testCase6();
         testCase7();
+
+        cout << endl;
+    }
+    //////////////////////////////////////////////////////////////////////
+    //  test constructor
+    void testCase8()
+    {
+        const int OBJECT_NUM = 2;
+        vector<int> v1(2, 1);    //  vector(n, value)
+
+        cout << *v1.start << endl;           //  1
+        cout << *(v1.start + 1) << endl;     //  1
+
+        //////////////////////////////////////////////////////////////////////
+        int arr[OBJECT_NUM] = {1, 2};   
+        vector<int> v2(arr, arr + OBJECT_NUM);       //  vector(pointer first, pointer last)
+        cout << *v2.start << endl;                  //  1
+        cout << *(v2.start + 1) << endl;            //  2
+
+        //////////////////////////////////////////////////////////////////////
+        typedef vectorIterator<int> vIter;
+        vIter iter(arr);
+
+        vector<int> v3(iter, iter + OBJECT_NUM);  //  /  vector(iterator first, iterator last)
+        cout << *v3.start << endl;
+        cout << *(v3.start + 1) << endl;
+
+        //////////////////////////////////////////////////////////////////////
+        //  
+        struct structType
+        {
+            structType(int value = 0)
+            {
+                m_value = value;
+                cout << "construct" << endl;
+            }
+            ~structType()
+            {
+                cout << "deconstruct" << endl;
+            }
+            int m_value;
+        };
+
+        structType structArr[OBJECT_NUM] = {0, 1};
+        vector<structType> v4(structArr, structArr + OBJECT_NUM);
+        
+        cout << v4.start->m_value << endl;
+        cout << (v4.start + 1)->m_value << endl;
+
+        cout << endl;
+    }
+
+    //  copy
+    void testCase9()
+    {
+        const int OBJECT_NUM = 2;
+        int arr[OBJECT_NUM] = {0, 1};
+
+        vector<int> v1(arr, arr + OBJECT_NUM);
+        vector<int> v2(v1);     //  copy construct
+
+        cout << *(v2.start) << endl;
+        cout << *(v2.start + 1) << endl;
+
+        cout << endl;
+    }
+
+    //  test assingment
+    void testCase10()
+    {
+        const int OBJECT_NUM = 2;
+        int arr[OBJECT_NUM] = {0, 1};
+
+        vector<int> v1(arr, arr + OBJECT_NUM);
+
+        vector<int> v2;
+        v2 = v1;    //  assignment 
+
+        cout << *v2.start << endl;
+        cout << *(v2.start + 1) << endl;
+
+        v1 = v1;     //  assignment, ¼ì²â×ÔÎÒ¸³Öµ
+        cout << *v1.start << endl;
+        cout << *(v1.start + 1) << endl;
+
+        cout << endl;
+    }
+    void testContainer()
+    {
+   //     testCase8();
+        testCase9();
+    //    testCase10();
+    }
+
+    void test()
+    {
+        cout << "vector_detail test" << endl;
+    //    testIterator();
+        testContainer();
     }
 }
 
