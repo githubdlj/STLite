@@ -276,7 +276,54 @@ namespace STLite
         {
             destroy_and_deallocate();
         }
-    
+    //////////////////////////////////////////////////////////////////////
+    //  iterators
+    public:
+        iterator begin()
+        {
+            return iterator(start);
+        }
+        
+        iterator end()
+        {
+           return iterator(finish);
+        }
+    //////////////////////////////////////////////////////////////////////
+    //  element access
+    public:
+        reference operator [](size_type n)
+        {
+            return *(start + n);
+        }
+
+        reference at(size_type n)
+        {
+            return operator [](n);  //  call operator [](n)
+        }
+
+        //  
+        reference front()
+        {
+            return *begin();
+        }
+
+        reference back()
+        {
+            return *(end() - 1);
+        }
+    //////////////////////////////////////////////////////////////////////
+    //  Capacity
+    public:
+        difference_type size() const
+        {
+            return finish - start;
+        }
+
+        difference_type capacity() const
+        {
+            return end_of_storage - start;
+        }
+    //////////////////////////////////////////////////////////////////////
 }
 
 #endif
