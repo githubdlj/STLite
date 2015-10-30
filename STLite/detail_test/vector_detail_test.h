@@ -150,7 +150,8 @@ namespace vector_detail
 
         //////////////////////////////////////////////////////////////////////
         //  case1, the space is enough
-        vector<int> v1(NUM, VALUE);
+        int arr[NUM] = {0,1,2,3,4,5,6,7,8,9};
+        vector<int> v1(arr, arr + NUM);
         v1.finish = v1.finish - 5;  //  为了使剩余空间大于所需空间
 
         vectorIterator<int> pos = v1.begin() + 2;
@@ -158,19 +159,19 @@ namespace vector_detail
 
         for (pos = v1.begin(); pos != v1.end(); ++pos)
         {
-            cout << *pos;           //  1 1 2 2 2 1 1 1
+            cout << *pos;           //  01222234
         }
         cout << endl;
 
         //  case2, the space is not enough
-        vector<int> v2(NUM, VALUE);
+        vector<int> v2(arr, arr + NUM);
         pos = v2.begin() + 2;
 
         v2.insert(pos, ADD_NUM, NEW_VALUE);
 
         for(pos = v2.begin(); pos != v2.end(); ++pos)
         {
-            cout << *pos;
+            cout << *pos;           //  0122223456789
         }
 
         cout << endl;
@@ -213,6 +214,8 @@ namespace vector_detail
 
         cout << endl;
     }
+
+   
     //////////////////////////////////////////////////////////////////////
     void test()
     {
@@ -225,9 +228,9 @@ namespace vector_detail
 //         testCase5();
 //         testCase6();
 //         testCase7();
-//         testCase8();
+         testCase8();
 
-        testCase9();
+//        testCase9();
         cout << endl;
     }
   

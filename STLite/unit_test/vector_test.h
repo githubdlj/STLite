@@ -199,13 +199,13 @@ namespace vector_unit
 
         for (int i = 0; i < NUM; i++)
         {
-            v.push_back(i);
+            v.push_back(i);         
         }
 
-        int size = v.size();
+        int size = v.size();       
         for (int i = 0; i < size; i++)
         {
-            cout << v[i];
+            cout << v[i];           //  012
         }
         cout << endl;
         //////////////////////////////////////////////////////////////////////
@@ -214,15 +214,63 @@ namespace vector_unit
         size = v.size();
         for (int i = 0; i < size; i++)
         {
-            cout << v[i];
+            cout << v[i];       //  0
         }
+        cout << endl;
+    }
+    //////////////////////////////////////////////////////////////////////
+    //  test reserve
+    void testCase8()
+    {
+        const int NUM = 3;
+        vector<int> v;
+        
+        for (int i = 0; i < NUM; i++)
+        {
+            v.push_back(i);
+        }
+
+        cout << v.size() << endl;       //  3
+        cout << v.capacity() << endl;   //  4
+
+        v.reserve(5);
+
+        cout << v.size() << endl;       //  3
+        cout << v.capacity() << endl;   //  5
+// 
+        cout << v[5] << endl;       //  cout random number
+        int size = v.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v[i];               //  012
+        }
+        cout << endl;
+
+        //////////////////////////////////////////////////////////////////////
+        v.resize(5, 8);
+        size  = v.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v[i];               //  01288
+        }
+        cout << endl;
+        
+        //////////////////////////////////////////////////////////////////////
+        v.resize(4);            
+        size  = v.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v[i];               //  0128
+        }
+
         cout << endl;
     }
     void testModifers()
     {
         //testCase5();
         //testCase6();
-        testCase7();
+        //testCase7();
+        testCase8();
     }
     //////////////////////////////////////////////////////////////////////
     void test()

@@ -314,14 +314,52 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  Capacity
     public:
-        difference_type size() const
+        size_type size() const
         {
-            return finish - start;
+            return size_type(finish - start);
         }
 
-        difference_type capacity() const
+        void resize(size_type n, const value_type &x)
         {
-            return end_of_storage - start;
+            if (n < size())
+            {
+                erase(begin() + n, end());
+            }
+            else
+            {
+                insert(end(), n - size(), x);
+            }
+        }
+
+        void resize(size_type new_size)
+        {
+            resize(new_size, value_type());
+        }
+        //////////////////////////////////////////////////////////////////////
+        size_type capacity() const
+        {
+            return size_type(end_of_storage - start);
+        }
+
+        void reserve(size_type n)
+        {
+            if (capacity() < n)     //  reserve只能扩大容量
+            {
+                //  allocate new space
+                pointer new_start = allocate(n);
+                pointer new_end_of_storage = new_start + n;
+                
+                //  copy
+                pointer new_finish = uninitialized_copy(start, finish, new_start);
+                
+                //  free old space
+                destroy_and_deallocate();
+                
+                //  init new space
+                start = new_start;
+                finish = new_finish;
+                end_of_storage = new_end_of_storage;
+            }
         }
     //////////////////////////////////////////////////////////////////////
     //  Modifiers
@@ -334,7 +372,7 @@ namespace STLite
 
             if (locationNeed <= locationLeft)
             {
-                iterator temp = pos + 1;     //  [pos, finish) -> [pos + locationNeed, finish + locationNeed)
+                iterator temp = pos;     //  [pos, finish) -> [pos + locationNeed, finish + locationNeed)
                 while (temp != end())
                 {
                     *(temp + locationNeed) = *(temp);
@@ -376,7 +414,7 @@ namespace STLite
 
             if (locationNeed <= locationLeft)
             {
-                iterator temp = pos + 1;
+                iterator temp = pos;
                 while (temp != end())
                 {
                     *(temp + locationNeed) = *(temp);
