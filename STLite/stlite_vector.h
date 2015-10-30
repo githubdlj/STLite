@@ -324,6 +324,111 @@ namespace STLite
             return end_of_storage - start;
         }
     //////////////////////////////////////////////////////////////////////
+    //  Modifiers
+    //  insert_aux
+    private:
+        void insert_aux(iterator pos, size_type n, const T &value, __true_type)
+        {
+            size_type locationLeft = end_of_storage - finish;
+            size_type locationNeed = n;
+
+            if (locationNeed <= locationLeft)
+            {
+                iterator temp = pos + 1;     //  [pos, finish) -> [pos + locationNeed, finish + locationNeed)
+                while (temp != end())
+                {
+                    *(temp + locationNeed) = *(temp);
+                    temp++;
+                }
+                uninitialized_fill_n(pos, locationNeed, value);
+
+                finish = finish + locationNeed;
+            }
+            else
+            {
+                size_type old_size = size();
+                size_type new_capacity = old_size + std::max(old_size, locationNeed);
+                
+                //  allocate new space
+                pointer new_start = allocate(new_capacity);  
+                pointer new_end_of_storage = new_start + new_capacity;
+                
+                //  copy and fill
+                pointer new_finish = uninitialized_copy(begin(), pos, new_start);
+                new_finish = uninitialized_fill_n(new_finish, n, value);
+                new_finish = uninitialized_copy(pos, end(), new_finish);
+                
+                //  free old space
+                destroy_and_deallocate();
+
+                //  init new space
+                start = new_start;
+                finish = new_finish;
+                end_of_storage = new_end_of_storage;
+            }
+        }
+
+        template<class InputIterator>
+        void insert_aux(iterator pos, InputIterator first, InputIterator last, __false_type)
+        {
+            size_type locationLeft  = end_of_storage - finish;
+            size_type locationNeed = last - first;
+
+            if (locationNeed <= locationLeft)
+            {
+                iterator temp = pos + 1;
+                while (temp != end())
+                {
+                    *(temp + locationNeed) = *(temp);
+                    temp++;
+                }
+                uninitialized_copy(first, last, pos);
+                finish = finish + locationNeed;
+            }
+            else
+            {
+                size_type old_size = size();
+                size_type new_capacity = old_size + std::max(old_size, locationNeed);
+                
+                //  allocate new space
+                pointer new_start = allocate(new_capacity);
+                pointer new_end_of_storage = new_start + new_capacity;
+                
+                //  copy
+                pointer new_finish = uninitialized_copy(begin(), pos, new_start);
+                new_finish = uninitialized_copy(first, last, new_finish);
+                new_finish = uninitialized_copy(pos, end(), new_finish);
+
+                //  free old space
+                destroy_and_deallocate();
+                
+                //  init new space;
+                start = new_start;
+                finish = new_finish;
+                end_of_storage = new_end_of_storage;
+            }
+              
+        }
+    //  insert
+    public:
+        void insert(iterator pos, size_type n, const T &value)
+        {
+            insert_aux(pos, n, value, __true_type());
+        }
+
+        template<class InputIterator>
+        void insert(iterator pos, InputIterator first, InputIterator last)
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;
+            insert_aux(pos, first, last, is_integer());
+        }
+
+        iterator insert(iterator pos, const T &value)
+        {
+            insert(pos, 1, value);  //  call insert(pos, n, value)
+
+            return pos;
+        }
 }
 
 #endif
