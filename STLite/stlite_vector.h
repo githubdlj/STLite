@@ -447,6 +447,18 @@ namespace STLite
         {
             return erase(pos, pos + 1);    //  call erase(first, last)
         }
+    //////////////////////////////////////////////////////////////////////
+    //  push_back, pop_back
+    public:
+        void push_back(const value_type &x)
+        {
+            insert(end(), x);
+        }
+        
+        void pop_back()
+        {
+            erase(end() - 1);
+        }
     };
 
 }

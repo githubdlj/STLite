@@ -189,11 +189,40 @@ namespace vector_unit
         }
         cout << endl;
     }
-   
+    
+    //////////////////////////////////////////////////////////////////////
+    //  test push_back, pop_back
+    void testCase7()
+    {
+        const int NUM = 3;
+        vector<int> v;
+
+        for (int i = 0; i < NUM; i++)
+        {
+            v.push_back(i);
+        }
+
+        int size = v.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v[i];
+        }
+        cout << endl;
+        //////////////////////////////////////////////////////////////////////
+        v.pop_back();
+        v.pop_back();
+        size = v.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v[i];
+        }
+        cout << endl;
+    }
     void testModifers()
     {
-        testCase5();
-        testCase6();
+        //testCase5();
+        //testCase6();
+        testCase7();
     }
     //////////////////////////////////////////////////////////////////////
     void test()
