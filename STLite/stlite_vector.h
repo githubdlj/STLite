@@ -429,6 +429,26 @@ namespace STLite
 
             return pos;
         }
+    //////////////////////////////////////////////////////////////////////
+    //  erase
+    public:
+        iterator erase(iterator first, iterator last)
+        {   
+            //  copy and destroy
+            iterator i = uninitialized_copy(last, end(), first);   
+            destroy(i, end());
+    
+            finish = finish - (last - first);
+            
+            return first;
+        }
+
+        iterator erase(iterator pos)
+        {
+            return erase(pos, pos + 1);    //  call erase(first, last)
+        }
+    };
+
 }
 
 #endif
