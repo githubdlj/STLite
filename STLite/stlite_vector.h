@@ -111,7 +111,7 @@ namespace STLite
         //////////////////////////////////////////////////////////////////////
         vectorIterator & operator -=(difference_type n)
         {
-            *this += -n;    //  call operator +=(difference_type n)
+            return *this += -n;    //  call operator +=(difference_type n)
         }
 
         vectorIterator operator -(difference_type n) const
@@ -187,9 +187,8 @@ namespace STLite
         {
             data_allocator::deallocate(start, end_of_storage - start);
         }
+        //////////////////////////////////////////////////////////////////////
         
-        
-        //  初始化空间
         void allocate_and_fill(size_type n, const value_type &value)
         {
             start = allocate(n);
@@ -209,11 +208,14 @@ namespace STLite
         
         void destroy_and_deallocate()
         {
-            destroy(start, finish); 
-            deallocate();
+            if (start != end_of_storage)
+            {
+                destroy(start, finish); 
+                deallocate();
+            }
         }
         //////////////////////////////////////////////////////////////////////
-        //  辅助构造函数
+        //  override vector_aux
         template<class Integer>
         void vector_aux(Integer n, const value_type &value, __true_type)
         {
@@ -232,11 +234,11 @@ namespace STLite
         vector(): start(0), finish(0), end_of_storage(0) { }
         explicit vector(size_type n)
         {
-            allocate_and_fill(n, value_type());
+            vector_aux(n, value_type(), __true_type());
         }
         vector(size_type n, const value_type &value)
         {
-            allocate_and_fill(n, value);
+            vector_aux(n, value, __true_type());
         }
         template<class InputIterator>
         vector(InputIterator first, InputIterator last)     
@@ -274,9 +276,7 @@ namespace STLite
         {
             destroy_and_deallocate();
         }
-    //////////////////////////////////////////////////////////////////////
-  
-    };
+    
 }
 
 #endif
