@@ -39,8 +39,8 @@ int main()
     //  alloc_unit::test();
     //  uninitialized_unit::test();
     //  list_unit::test();
-//     vector_unit::test();
-    vector_detail::test();
+      vector_unit::test();
+    //    vector_detail::test();
     other_unit::test();
  
     system("pause");

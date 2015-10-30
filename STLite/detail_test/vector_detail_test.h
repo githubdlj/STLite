@@ -77,6 +77,7 @@ namespace vector_detail
         cout << *iter3 << endl;     //  0
       
     }
+    //  test operator ++
     void testCase4()
     {
         const int OBJECT_NUM = 5;
@@ -94,7 +95,7 @@ namespace vector_detail
     }
 
     //////////////////////////////////////////////////////////////////////
-    //  测试随机存取
+    //  test operator []
     void testCase5()
     {
         const int OBJECT_NUM = 5;
@@ -107,6 +108,7 @@ namespace vector_detail
 
     }
     //////////////////////////////////////////////////////////////////////
+    //  test operator ==
     void testCase6()
     {
         int *p = new int(10);
@@ -136,118 +138,99 @@ namespace vector_detail
         cout << typeid(value_type(iter)).name() << endl;  //  int *
         cout << typeid(distance_type(iter)).name() << endl;
     }
-    
     //////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////
-    void testIterator()
-    {
-        testCase1();
-        testCase2();
-        testCase3();
-        testCase4();
-        testCase5();
-        testCase6();
-        testCase7();
-
-        cout << endl;
-    }
-    //////////////////////////////////////////////////////////////////////
-    //  test constructor
+    //  test insert
     void testCase8()
     {
-        const int OBJECT_NUM = 2;
-        vector<int> v1(2, 1);    //  vector(n, value)
+        const int NUM = 10;
+        const int VALUE = 1;
 
-        cout << *v1.start << endl;           //  1
-        cout << *(v1.start + 1) << endl;     //  1
-
-        //////////////////////////////////////////////////////////////////////
-        int arr[OBJECT_NUM] = {1, 2};   
-        vector<int> v2(arr, arr + OBJECT_NUM);       //  vector(pointer first, pointer last)
-        cout << *v2.start << endl;                  //  1
-        cout << *(v2.start + 1) << endl;            //  2
+        const int ADD_NUM = 3;
+        const int NEW_VALUE = 2;
 
         //////////////////////////////////////////////////////////////////////
-        typedef vectorIterator<int> vIter;
-        vIter iter(arr);
+        //  case1, the space is enough
+        vector<int> v1(NUM, VALUE);
+        v1.finish = v1.finish - 5;  //  为了使剩余空间大于所需空间
 
-        vector<int> v3(iter, iter + OBJECT_NUM);  //  /  vector(iterator first, iterator last)
-        cout << *v3.start << endl;
-        cout << *(v3.start + 1) << endl;
+        vectorIterator<int> pos = v1.begin() + 2;
+        v1.insert(pos, ADD_NUM, NEW_VALUE);
 
-        //////////////////////////////////////////////////////////////////////
-        //  
-        struct structType
+        for (pos = v1.begin(); pos != v1.end(); ++pos)
         {
-            structType(int value = 0)
-            {
-                m_value = value;
-                cout << "construct" << endl;
-            }
-            ~structType()
-            {
-                cout << "deconstruct" << endl;
-            }
-            int m_value;
-        };
+            cout << *pos;           //  1 1 2 2 2 1 1 1
+        }
+        cout << endl;
 
-        structType structArr[OBJECT_NUM] = {0, 1};
-        vector<structType> v4(structArr, structArr + OBJECT_NUM);
-        
-        cout << v4.start->m_value << endl;
-        cout << (v4.start + 1)->m_value << endl;
+        //  case2, the space is not enough
+        vector<int> v2(NUM, VALUE);
+        pos = v2.begin() + 2;
+
+        v2.insert(pos, ADD_NUM, NEW_VALUE);
+
+        for(pos = v2.begin(); pos != v2.end(); ++pos)
+        {
+            cout << *pos;
+        }
 
         cout << endl;
     }
-
-    //  copy
+    
     void testCase9()
     {
-        const int OBJECT_NUM = 2;
-        int arr[OBJECT_NUM] = {0, 1};
+        const int NUM = 10;
+        const int VALUE = 1;
 
-        vector<int> v1(arr, arr + OBJECT_NUM);
-        vector<int> v2(v1);     //  copy construct
+        const int ADD_NUM = 3;
 
-        cout << *(v2.start) << endl;
-        cout << *(v2.start + 1) << endl;
+        int arr[ADD_NUM] = {2, 3, 4};
+
+        //  case1, the space is enough
+        vector<int> v1(NUM, VALUE);
+        v1.finish = v1.finish - 5;
+
+        v1.insert(v1.begin() + 2, arr, arr + ADD_NUM);
+
+        int size = v1.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v1[i];
+        }
+        cout << endl;
+
+        //  case2, the space is not enough
+        vector<int> v2(NUM, VALUE);
+        v2.finish = v2.finish - 2;
+
+        v2.insert(v2.begin() + 2, arr, arr + ADD_NUM);
+
+        cout << v2.capacity() << endl;
+        size = v2.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v2[i];
+        }
 
         cout << endl;
     }
-
-    //  test assingment
-    void testCase10()
-    {
-        const int OBJECT_NUM = 2;
-        int arr[OBJECT_NUM] = {0, 1};
-
-        vector<int> v1(arr, arr + OBJECT_NUM);
-
-        vector<int> v2;
-        v2 = v1;    //  assignment 
-
-        cout << *v2.start << endl;
-        cout << *(v2.start + 1) << endl;
-
-        v1 = v1;     //  assignment, 检测自我赋值
-        cout << *v1.start << endl;
-        cout << *(v1.start + 1) << endl;
-
-        cout << endl;
-    }
-    void testContainer()
-    {
-   //     testCase8();
-        testCase9();
-    //    testCase10();
-    }
-
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "vector_detail test" << endl;
-    //    testIterator();
-        testContainer();
+
+//         testCase1();
+//         testCase2();
+//         testCase3();
+//         testCase4();
+//         testCase5();
+//         testCase6();
+//         testCase7();
+//         testCase8();
+
+        testCase9();
+        cout << endl;
     }
+  
 }
 
 #endif
