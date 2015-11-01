@@ -10,6 +10,8 @@
 
 #include "../stlite_vector.h" 
 #include <iostream>
+#include <list>
+#include <vector>
 
 using std::cout;
 using std::cin;
@@ -38,9 +40,9 @@ namespace vector_unit
         typedef vectorIterator<int> vIter;
         vIter iter(arr);
 
-        vector<int> v3(iter, iter + OBJECT_NUM);  //  /  vector(iterator first, iterator last)
+        vector<int> v3(iter, iter + OBJECT_NUM);  //   vector(iterator first, iterator last)
         cout << *v3.start << endl;
-        cout << *(v3.start + 1) << endl;
+        cout << *(v3.start + 1) << endl;          //  1 2
 
         //////////////////////////////////////////////////////////////////////
         //  
@@ -164,6 +166,47 @@ namespace vector_unit
         
         cout << endl;
     }
+    //  test insert
+    void testCase5_()
+    {
+        typedef std::list<int> list;
+        list l(2, 2);
+
+        list::iterator begin = l.begin();
+        list::iterator end = l.end();
+        
+        //  1.
+        //  compiler error, because in function insert_aux, I have locationNeed = last - first,
+        //  but begin & end are bidirectional_iterator, they do not offer operator -(iterator &lhs),
+        //  I can check the error by distance(first, last)
+       
+        //  2.
+        //  there is still compiler error
+        //  can not transfer "std::bidirectional_iterator_tag" to "STLite::input_iterator_tag"
+
+        /*
+        vector<int> v1(10, 1);
+        v1.finish = v1.finish - 5;
+        v1.insert(v1.begin(), begin, end);   
+
+        int size = v1.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v1[i];
+        }
+        cout << endl;
+        
+        vector<int> v2;
+        v2.insert(v2.begin(), begin, end);
+
+        size = v2.size();
+        for (int i = 0; i < size; i++)
+        {
+            cout << v2[i];
+        }
+        cout << endl;
+        */
+    }
     //////////////////////////////////////////////////////////////////////
     //  test erase
     void testCase6()
@@ -265,19 +308,39 @@ namespace vector_unit
 
         cout << endl;
     }
+
+    //  test clear
+    void testCase9()
+    {
+        const int NUM = 5;
+        const int arr[NUM] = {0,1,2,3,4};
+
+        vector<int> v(arr, arr + NUM);
+
+        v.clear();
+        cout << v.size() << endl;   //  0
+
+        for (int i = 0; i < NUM + 1; i++)
+        {
+            cout << v[i] << endl;   //  01234,random num
+        }
+        cout << endl;
+    }
     void testModifers()
     {
-        //testCase5();
+        testCase5();
         //testCase6();
         //testCase7();
-        testCase8();
+        //testCase8();
+        //testCase9();
+        testCase5_();
     }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "vector test" << endl;
 
-    //    testConstructor();
+     //   testConstructor();
     //    testElementAccess();
         testModifers();
     }
