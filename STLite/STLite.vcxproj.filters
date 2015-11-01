@@ -65,5 +65,20 @@
     <ClInclude Include="unit_test\list_test.h">
       <Filter>源文件\unit_test</Filter>
     </ClInclude>
+    <ClInclude Include="stlite_vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\vector_detail_test.h">
+      <Filter>源文件\detail_test</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\vector_test.h">
+      <Filter>源文件\unit_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\constructor.h">
+      <Filter>源文件\detail_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\iterator.h">
+      <Filter>源文件\detail_test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

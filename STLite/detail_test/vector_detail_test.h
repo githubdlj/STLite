@@ -11,6 +11,7 @@
 #include "../stlite_iterator.h"
 
 #include <iostream>
+#include <vector>
 using std::cout;
 using std::cin;
 using std::endl;
@@ -215,7 +216,33 @@ namespace vector_detail
         cout << endl;
     }
 
-   
+    //  test insert range
+    void testCase10()
+    {
+        typedef std::vector<int> iVec;
+        iVec v(2, 1);
+
+        v.insert(v.end() + 1, 2, 2);    //  error, valid range is [v.begin(), v.end()]
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //  test clear
+    void testCase11()
+    {
+        typedef std::vector<int> iVec;
+        iVec v(2, 1);
+
+        v.clear();
+
+        cout << v.size() << endl;
+        //  按道理是输出1,1，但是vs下STL做了下标异常保护，所以执行会出错
+        for (int i = 0; i < 2; i++)
+        {
+            cout << v[i];   //  1, 1,  random number
+        }
+        cout << endl;
+    }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
@@ -228,9 +255,10 @@ namespace vector_detail
 //         testCase5();
 //         testCase6();
 //         testCase7();
-         testCase8();
-
-//        testCase9();
+//         testCase8();
+//          testCase9();
+//        testCase10();
+        testCase11();
         cout << endl;
     }
   

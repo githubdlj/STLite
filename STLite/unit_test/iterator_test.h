@@ -77,7 +77,7 @@ void testCase3()
     cout << "testCase3 for MyIterator" << endl;
 
     //  Iterator
-    MyIterator<int> iter(new int(20));      //  30
+    MyIterator<int> iter(new int(20));      //  20
     cout << func(iter) << endl;
    
     cout << typeid(iter).name() << endl;  //  class iterator_unit::MyIterator<int>

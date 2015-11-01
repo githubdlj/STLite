@@ -13,10 +13,13 @@
 #include "alloc_test.h"
 #include "uninitialized_test.h"
 //////////////////////////////////////////////////////////////////////
-#include "../detail_test/vector_detail_test.h"
-//////////////////////////////////////////////////////////////////////
 #include "vector_test.h"
 #include "list_test.h"
+//////////////////////////////////////////////////////////////////////
+#include "../detail_test/vector_detail_test.h"
+#include "../detail_test/constructor.h"
+#include "../detail_test/iterator.h"
+//////////////////////////////////////////////////////////////////////
 #include "other_test.h"
 
 
@@ -41,8 +44,10 @@ int main()
     //  list_unit::test();
       vector_unit::test();
     //    vector_detail::test();
-    other_unit::test();
- 
+    //    constructor_detail::test();
+    //    iterator_private_unit::test();
+        //other_unit::test();
+    
     system("pause");
     return true;
 }
