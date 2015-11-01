@@ -145,5 +145,38 @@ namespace STLite
         
         在iterator.h中，还定义了reverse_itertor，istream_iterator, ostream_iterator等各类迭代器。
     */
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //  function about iterator
+    //  distance
+    template<class InputIterator>
+    inline typename iterator_traits<InputIterator>::difference_type
+    _distance(InputIterator first, InputIterator last, input_iterator_tag)
+    {
+        typedef typename iterator_traits<InputIterator>::difference_type n;
+        while (first != last)
+        {
+            first++;
+            n++
+        }
+
+        return n;
+    }
+
+    template<class RandomAccessIterator>
+    inline typename iterator_traits<RandomAccessIterator>::difference_type
+    _distance(RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag)
+    {
+        return last - first;
+    }
+
+    template<class InputIterator>
+    inline typename iterator_traits<InputIterator>::difference_type
+    distance(InputIterator first, InputIterator last)
+    {
+        typedef typename iterator_traits<InputIterator>::iterator_category category;
+        return _distance(first, last, category());
+    }
 }
 #endif
