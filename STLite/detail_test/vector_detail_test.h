@@ -7,15 +7,15 @@
 *********************************************************************/
 #ifndef _VECTOR_DETAIL_TEST_H_
 #define _VECTOR_DETAIL_TEST_H_
+
+#include "common.h"
 #include "../stlite_vector.h"
 #include "../stlite_iterator.h"
+#include "../stlite_alloc.h"
 
-#include <iostream>
 #include <vector>
-using std::cout;
-using std::cin;
-using std::endl;
 
+//////////////////////////////////////////////////////////////////////
 namespace vector_detail
 {
     //  ²âÊÔÇ°×º++£¬ºó×º++
@@ -140,7 +140,7 @@ namespace vector_detail
         cout << typeid(distance_type(iter)).name() << endl;
     }
     //////////////////////////////////////////////////////////////////////
-    //  test insert
+    //  test insert(pos, n, value)
     void testCase8()
     {
         const int NUM = 10;
@@ -178,6 +178,8 @@ namespace vector_detail
         cout << endl;
     }
     
+    //////////////////////////////////////////////////////////////////////
+    //  test insert(pos, first, last)
     void testCase9()
     {
         const int NUM = 10;
@@ -216,6 +218,78 @@ namespace vector_detail
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+    //  test insert(pos, first, last)
+    void testCase9_()
+    {
+        Widget wArr[MY_OBJECT_NUM];
+        for (int i = 0; i < MY_OBJECT_NUM; ++i)
+        {
+            wArr[i].m_value = i;
+        }
+        
+        vector<Widget> v;
+        v.start = allocator<Widget>::allocate(2 * MY_OBJECT_NUM);
+        v.finish = v.start;
+        v.end_of_storage = v.start + 2 * MY_OBJECT_NUM;
+
+        v.insert(v.begin(), wArr, wArr + MY_OBJECT_NUM);
+
+        for (int i = 0; i < 2 * MY_OBJECT_NUM; ++i)
+        {
+            cout << v[i].m_value << endl;
+        }
+        //  now, v[0, MY_OBJECT_NUM) has initialzed, but the v[MY_OBJECT_NUM, 2 * MY_OBJECT_NUM) has not initialized.
+       
+        //////////////////////////////////////////////////////////////////////
+        
+        //  I insert the value into the uninitialized range
+        //  but no error, why?
+        v.insert(v.begin(), wArr, wArr + MY_OBJECT_NUM);
+
+        for (int i = 0; i < 2 * MY_OBJECT_NUM; ++i)
+        {
+            cout << v[i].m_value << endl;
+        }
+        cout << endl;
+    }
+
+    //  test insert again
+    void testCase9__()
+    {
+        String sArr[MY_OBJECT_NUM] = {"hello world0", "hello world1", "hello world2", "hello world3", "hello world4"};
+
+//         for (int i = 0; i < MY_OBJECT_NUM; ++i)
+//         {
+//             cout << sArr[i].m_data << endl;
+//         }
+        vector<String> v;
+        v.start = allocator<String>::allocate(2 * MY_OBJECT_NUM);
+        v.finish = v.start;
+        v.end_of_storage = v.start + 2 * MY_OBJECT_NUM;
+
+        v.insert(v.begin(), sArr, sArr + MY_OBJECT_NUM);
+
+        for (int i = 0; i < MY_OBJECT_NUM; ++i)
+        {
+            cout << v[i].m_data << endl;
+        }
+        //  now, v[0, MY_OBJECT_NUM) has initialzed, but the v[MY_OBJECT_NUM, 2 * MY_OBJECT_NUM) has not initialized.
+
+        //////////////////////////////////////////////////////////////////////
+        //  now, continue insert, the v[0, MY_OBJECT_NUM) will move to the uninitialized range v[MY_OBJECT_NUM, 2 * MY_OBJECT_NUM)
+        //  it will call operator =, in the operator =, String has operation delete []m_data.
+        //  but because the range is uninitialized, so the m_data is a WILD pointer, delete it will cause exception
+        //  notice, it is safe to delete a NULL pointer. 
+
+        //  besides, in the insert function, it use uninitilized_copy() to insert the new elements to the initialized range,
+        //  int uninitialized_copy(), it will call constructor(copy) to allocate new memory for m_data without delete the old memory
+        //  thus lead to MEMORY LEAK!
+
+        
+        v.insert(v.begin(), sArr, sArr + MY_OBJECT_NUM);    //  error
+            
+    }
     //  test insert range
     void testCase10()
     {
@@ -258,7 +332,10 @@ namespace vector_detail
 //         testCase8();
 //          testCase9();
 //        testCase10();
-        testCase11();
+//        testCase11();
+            
+//            testCase9_();
+            testCase9__();
         cout << endl;
     }
   
