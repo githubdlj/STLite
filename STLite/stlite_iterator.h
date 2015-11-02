@@ -178,5 +178,48 @@ namespace STLite
         typedef typename iterator_traits<InputIterator>::iterator_category category;
         return _distance(first, last, category());
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //  advance
+    template<class InputIterator, class Distance>
+    inline void _advance(InputIterator &iter, Distance n, input_iterator_tag)
+    {
+        while (n--)
+        {
+            ++iter;
+        }
+    }
+    
+    template<class BidirectionalIterator, class Distance>
+    inline void _advance(BidirectionalIterator &iter, Distance n, bidirectional_iterator_tag)
+    {
+        if (n > 0)
+        {
+            while (n--)
+            {
+                ++iter;
+            }
+        }
+        else
+        {
+            while (n++)
+            {
+                --iter;
+            }
+        }
+    }
+        
+    template<class RandomAccessIterator, class Distance>
+    inline void _advance(RandomAccessIterator &iter, Distance n, random_access_iterator_tag)
+    {
+        iter += n;
+    }
+
+    template<class InputIterator, class Distance>
+    inline void advance(InputIterator &iter, Distance n)
+    {
+        typedef iterator_traits<InputIterator>::iterator_category category;
+        _advance(iter, n, category());
+    }
 }
 #endif
