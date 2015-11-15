@@ -10,8 +10,9 @@
 #define _STLITE_ALGORITHM_H_
 
 #include <string.h>         //  for memmove
+
+#include "commom_header_files.h"
 #include "stlite_iterator.h"
-using namespace STLite
 
 //////////////////////////////////////////////////////////////////////
 namespace STLite
@@ -77,7 +78,7 @@ namespace STLite
     inline char * copy(const char *first, const char *last, char *result)
     {
         const std::ptrdiff_t n = last - result;
-        std::memmove(result, first, n);      //  memmove(des, src, n)
+        std::memmove(result, first, n);      //  memmove(destination, source, n)
         return result + n;
     }
 

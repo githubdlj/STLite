@@ -63,9 +63,14 @@
     <ClCompile Include="unit_test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="detail_test\constructor.h" />
-    <ClInclude Include="detail_test\iterator.h" />
-    <ClInclude Include="detail_test\vector_detail_test.h" />
+    <ClInclude Include="commom_header_files.h" />
+    <ClInclude Include="detail_test\base_test.h" />
+    <ClInclude Include="detail_test\common_data.h" />
+    <ClInclude Include="detail_test\private_test.h" />
+    <ClInclude Include="detail_test\std_vector_test.h" />
+    <ClInclude Include="detail_test\common_header_files.h" />
+    <ClInclude Include="detail_test\String_test.h" />
+    <ClInclude Include="detail_test\vector_test.h" />
     <ClInclude Include="stlite_alloc.h" />
     <ClInclude Include="stlite_construct.h" />
     <ClInclude Include="stlite_iterator.h" />
@@ -73,11 +78,15 @@
     <ClInclude Include="stlite_type_traits.h" />
     <ClInclude Include="stlite_uninitialized.h" />
     <ClInclude Include="stlite_vector.h" />
+    <ClInclude Include="stlite_algorithm.h" />
     <ClInclude Include="unit_test\alloc_test.h" />
+    <ClInclude Include="unit_test\common_data.h" />
+    <ClInclude Include="unit_test\common_header_files.h" />
     <ClInclude Include="unit_test\construct_test.h" />
     <ClInclude Include="unit_test\iterator_test.h" />
     <ClInclude Include="unit_test\list_test.h" />
     <ClInclude Include="unit_test\other_test.h" />
+    <ClInclude Include="unit_test\public_test.h" />
     <ClInclude Include="unit_test\type_traits_test.h" />
     <ClInclude Include="unit_test\uninitialized_test.h" />
     <ClInclude Include="unit_test\vector_test.h" />

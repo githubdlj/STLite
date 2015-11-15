@@ -5,117 +5,116 @@
 	
 	Purpose:  vector≤‚ ‘
 *********************************************************************/
-#ifndef _VECTOR_TEST_H_
-#define _VECTOR_TEST_H_
+#ifndef _PUBLIC_VECTOR_TEST_H_
+#define _PUBLIC_VECTOR_TEST_H_
 
-#include "../stlite_vector.h" 
-#include <iostream>
 #include <list>
 #include <vector>
 
-using std::cout;
-using std::cin;
-using std::end;
-using namespace STLite;
+#include "common_header_files.h"
+#include "../stlite_vector.h" 
 
-namespace vector_unit
+//////////////////////////////////////////////////////////////////////
+namespace vector_public
 {
-    //////////////////////////////////////////////////////////////////////
     //  test constructor
     void testCase1()
     {
-        const int OBJECT_NUM = 2;
-        vector<int> v1(2, 1);    //  vector(n, value)
+        vector<int> v1(OBJECT_NUM, 1);    //  vector(n, value)
 
-        cout << *v1.start << endl;           //  1
-        cout << *(v1.start + 1) << endl;     //  1
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(v1.start + i) << "\t";    //  1 1 1 1 1 
+        }
+        cout << endl;
 
         //////////////////////////////////////////////////////////////////////
-        int arr[OBJECT_NUM] = {1, 2};   
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};   
         vector<int> v2(arr, arr + OBJECT_NUM);       //  vector(pointer first, pointer last)
-        cout << *v2.start << endl;                  //  1
-        cout << *(v2.start + 1) << endl;            //  2
+        
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(v1.start + i) << "\t";    //  0 1 2 3 4 
+        }
+        cout << endl;
 
         //////////////////////////////////////////////////////////////////////
         typedef vectorIterator<int> vIter;
         vIter iter(arr);
 
         vector<int> v3(iter, iter + OBJECT_NUM);  //   vector(iterator first, iterator last)
-        cout << *v3.start << endl;
-        cout << *(v3.start + 1) << endl;          //  1 2
-
-        //////////////////////////////////////////////////////////////////////
-        //  
-        struct structType
+        
+        for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            structType(int value = 0)
-            {
-                m_value = value;
-                cout << "construct" << endl;
-            }
-            ~structType()
-            {
-                cout << "deconstruct" << endl;
-            }
-            int m_value;
-        };
-
-        structType structArr[OBJECT_NUM] = {0, 1};
-        vector<structType> v4(structArr, structArr + OBJECT_NUM);
-
-        cout << v4.start->m_value << endl;
-        cout << (v4.start + 1)->m_value << endl;
-
+            cout << *(v1.start + i) << "\t";    //  0 1 2 3 4 
+        }
         cout << endl;
+
+
+        Widget w[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        vector<Widget> v4(w, w + OBJECT_NUM);   //  vector(iterator first, iterator last)
+
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << (v4.start + i)->m_value << "\t";
+        }
+        cout << endl;
+
+        // String
     }
 
+    //////////////////////////////////////////////////////////////////////
     //  copy
     void testCase2()
     {
-        const int OBJECT_NUM = 2;
-        int arr[OBJECT_NUM] = {0, 1};
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
 
         vector<int> v1(arr, arr + OBJECT_NUM);
         vector<int> v2(v1);     //  copy construct
 
-        cout << *(v2.start) << endl;
-        cout << *(v2.start + 1) << endl;
-
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(v2.start + i) << "\t";
+        }
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
     //  test assingment
     void testCase3()
     {
-        const int OBJECT_NUM = 2;
-        int arr[OBJECT_NUM] = {0, 1};
-
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
         vector<int> v1(arr, arr + OBJECT_NUM);
 
         vector<int> v2;
         v2 = v1;    //  assignment 
 
-        cout << *v2.start << endl;
-        cout << *(v2.start + 1) << endl;
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(v2.start + i) << "\t";
+        }
+        cout << endl;
 
-        v1 = v1;     //  assignment, ºÏ≤‚◊‘Œ“∏≥÷µ
-        cout << *v1.start << endl;
-        cout << *(v1.start + 1) << endl;
 
+        v1 = v1;     //  self assignment
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(v1.start + i) << "\t";
+        }
         cout << endl;
     }
 
     void testConstructor()
     {
+        cout << "testConstructor" << endl;
         testCase1();
         testCase2();
         testCase3();
+        cout << endl;
     }
 
     //////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////
     //  test elements access
-
     void testCase4()
     {
         vector<int> v(2, 3);
@@ -140,11 +139,10 @@ namespace vector_unit
     //  test insert
     void testCase5()
     {
-        const int NUM = 2;
         const int VALUE = 3;
         
         vector<int> v1;
-        v1.insert(v1.begin(), NUM, VALUE);
+        v1.insert(v1.begin(), OBJECT_NUM, VALUE);
 
         vectorIterator<int> begin = v1.begin();
         for (; begin != v1.end(); ++begin)
@@ -154,20 +152,20 @@ namespace vector_unit
         cout << endl;
 
         //////////////////////////////////////////////////////////////////////
-        int arr[NUM] = {0, 1};
-        vector<int> v2(NUM, VALUE);
-        v2.insert(v2.begin() + 1, arr, arr + NUM);
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        vector<int> v2(OBJECT_NUM, VALUE);
+        v2.insert(v2.begin() + 1, arr, arr + OBJECT_NUM);
 
         int size = v2.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v2[i];
         }
-        
         cout << endl;
     }
+
     //  test insert
-    void testCase5_()
+    void testCase6()
     {
         typedef std::list<int> list;
         list l(2, 2);
@@ -190,7 +188,7 @@ namespace vector_unit
         v1.insert(v1.begin(), begin, end);   
 
         int size = v1.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v1[i];
         }
@@ -200,7 +198,7 @@ namespace vector_unit
         v2.insert(v2.begin(), begin, end);
 
         size = v2.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v2[i];
         }
@@ -209,24 +207,24 @@ namespace vector_unit
     }
     //////////////////////////////////////////////////////////////////////
     //  test erase
-    void testCase6()
+    void testCase7()
     {
-        const int NUM = 5;
-        int arr[NUM] = {0, 1, 2, 3, 4};
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
         
-        vector<int> v1(arr, arr + NUM);
+        vector<int> v1(arr, arr + OBJECT_NUM);
         v1.erase(v1.begin() + 1, v1.begin() + 3);
 
         int size =v1.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << *(v1.start + i);    //  0 3 4
         }
         cout << endl;
+
         //////////////////////////////////////////////////////////////////////
         v1.erase(v1.end() - 1, v1.end());   //  erase the last element
         size = v1.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v1[i];
         }
@@ -235,40 +233,40 @@ namespace vector_unit
     
     //////////////////////////////////////////////////////////////////////
     //  test push_back, pop_back
-    void testCase7()
+    void testCase8()
     {
-        const int NUM = 3;
         vector<int> v;
 
-        for (int i = 0; i < NUM; i++)
+        for (int i = 0; i < OBJECT_NUM; ++i)
         {
             v.push_back(i);         
         }
 
         int size = v.size();       
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
-            cout << v[i];           //  012
+            cout << v[i];           //  0 1 2 3 4 
         }
         cout << endl;
         //////////////////////////////////////////////////////////////////////
         v.pop_back();
         v.pop_back();
+        
         size = v.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
-            cout << v[i];       //  0
+            cout << v[i];       //  0 1 2
         }
         cout << endl;
     }
     //////////////////////////////////////////////////////////////////////
     //  test reserve
-    void testCase8()
+    void testCase9()
     {
         const int NUM = 3;
         vector<int> v;
         
-        for (int i = 0; i < NUM; i++)
+        for (int i = 0; i < NUM; ++i)
         {
             v.push_back(i);
         }
@@ -283,7 +281,7 @@ namespace vector_unit
 // 
         cout << v[5] << endl;       //  cout random number
         int size = v.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v[i];               //  012
         }
@@ -292,7 +290,7 @@ namespace vector_unit
         //////////////////////////////////////////////////////////////////////
         v.resize(5, 8);
         size  = v.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v[i];               //  01288
         }
@@ -301,7 +299,7 @@ namespace vector_unit
         //////////////////////////////////////////////////////////////////////
         v.resize(4);            
         size  = v.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
             cout << v[i];               //  0128
         }
@@ -310,7 +308,7 @@ namespace vector_unit
     }
 
     //  test clear
-    void testCase9()
+    void testCase10()
     {
         const int NUM = 5;
         const int arr[NUM] = {0,1,2,3,4};
@@ -320,29 +318,32 @@ namespace vector_unit
         v.clear();
         cout << v.size() << endl;   //  0
 
-        for (int i = 0; i < NUM + 1; i++)
+        for (int i = 0; i < NUM + 1; ++i)
         {
             cout << v[i] << endl;   //  01234,random num
         }
         cout << endl;
     }
-    void testModifers()
+
+    void testModifiers()
     {
+        cout << "testModifers" << endl;
         testCase5();
-        //testCase6();
-        //testCase7();
-        //testCase8();
-        //testCase9();
-        testCase5_();
+        testCase6();
+        testCase7();
+        testCase8();
+        testCase9();
+        testCase10();
+        cout << endl;
     }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
-        cout << "vector test" << endl;
-
-     //   testConstructor();
-    //    testElementAccess();
-        testModifers();
+        cout << "vector_public test" << endl;
+        testConstructor();
+        testElementAccess();
+        testModifiers();
+        cout << endl;
     }
 }
 #endif

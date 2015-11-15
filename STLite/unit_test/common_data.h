@@ -1,26 +1,27 @@
 /********************************************************************
-	Time:	  2015/11/02
-	Filename: private_test
+	Time:	  2015/11/04
+	Filename: common_data
 	Author:	  dinglj
 	
-	Purpose:  include some common header files and data
+	Purpose:  Include some common data that the files need in public_test
 *********************************************************************/
-#ifndef _PRIVATE_TEST_H_
-#define _PRIVATE_TEST_H_
+#ifndef _PUBLIC_COMMON_DATA_H_
+#define _PUBLIC_COMMON_DATA_H_
+
+#include <string.h>     //  for strlen
+#include "common_header_files.h"
 
 //////////////////////////////////////////////////////////////////////
-//  common header files
-#include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
 
-//////////////////////////////////////////////////////////////////////
+namespace public_data
+{
+
 //  common data
 class Widget
 {
 public:
-    explicit Widget(int value = 0)
+    //   explicit Widget(int value = 0)
+    Widget(int value = 0)
     {
         cout << "constructor" << endl;
         m_value = value;
@@ -44,13 +45,14 @@ public:
         cout << "destroy" << endl;
     }
 
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 public:
     int m_value;
 
 };
 
-//  
+//////////////////////////////////////////////////////////////////////
+//  String has a pointer  
 class String
 {
 public:
@@ -87,7 +89,7 @@ public:
         int len = strlen(lhs.m_data);
         char *temp = new char[len + 1];
         strcpy(temp, lhs.m_data);
-        
+
         delete []m_data;
         m_data = temp;
         return *this;
@@ -98,13 +100,16 @@ public:
         cout << "destroy" << endl;
         delete []m_data;
     }
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 public:
     char *m_data;
 
 };
 //////////////////////////////////////////////////////////////////////
 
-const int MY_OBJECT_NUM = 5;
+const int OBJECT_NUM = 5;
 
+}
+
+using namespace public_data;
 #endif

@@ -3,20 +3,26 @@
 	Filename: type_traits
 	Author:	  dinglj
 	
-	Purpose:  实现type_traits,类型识别， type_traits可以萃取出类型的性质，判断
-              类型是否具有trivial性质的default_costructor、copy_constructor、
-              assignment_operator、deconstructor以及是否是POD，根据性质调用相对应的函数。
+    Purpose:  1. type_traits, it can get the ATTRIBUTION(attribution) of the data type
+              for example, distinguish whether the data type has CONSTRUCTOR,COPY CONSTRUCTOR, ASSINGMENT, DECONSTRUCTOR or POD_TYPE.
+              the override function can call the corresponding version according to the attribution. 
+
+              2. distinguish the data type(int? pointer? iterator?), now, I can distinguish whether the data type is integer.
 *********************************************************************/
 
 #ifndef _TYPE_TRAITS_H_
 #define _TYPE_TRAITS_H_
 
+#include "commom_header_files.h"
+
+//////////////////////////////////////////////////////////////////////
 namespace STLite
-{
+{ 
     struct __true_type{};
     struct __false_type{};
     //////////////////////////////////////////////////////////////////////
 
+    //  generalization
     template<class T>
     struct __type_traits
     {
@@ -35,10 +41,9 @@ namespace STLite
     };
     //////////////////////////////////////////////////////////////////////
 
-    //  偏特化数据类型有
+    //  specialization
     //  bool, char, signed char, unsigned char, short, unsigned short, int, unsigned int,
     //  long, unsigned long, float, double, pointer
-    //  其它数据类型 w_char, long long等不常用类型暂时没有偏特化处理
     
     //  bool
     template<>
@@ -187,8 +192,9 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
-    // The following could be written in terms of numeric_limits.  
-    // We're doing it separately to reduce the number of dependencies.
+    //  data_type
+    //  The following could be written in terms of numeric_limits.  
+    //  We're doing it separately to reduce the number of dependencies.
     template<class T>
     struct _is_integer
     {
@@ -196,7 +202,8 @@ namespace STLite
     };
     
     //////////////////////////////////////////////////////////////////////
-//  integer
+    //  integer
+    //  bool, char, short, int, long are INT type
     template<>
     struct _is_integer<bool>
     {

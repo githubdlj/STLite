@@ -3,31 +3,30 @@
 	Filename: stlite_alloc
 	Author:	  dinglj
 	
-	Purpose:  内存配置器设计
-              1、   最简单的内存配置器 allocator(也是SGI标准的内存配置器)
-              2、   一级配置器 __malloc_alloc_template
-              3、   二级配置器 __default_alloc_template
+	Purpose:  allocator
+              1. allocator
+              2. __malloc_alloc_template, simple allocator. 
+              3. __default_alloc_template, complex allocator.
 
-              4、   simple_alloc 对内存配置器的封装
+              4. simple_alloc, packaging __malloc_alloc_template or __default_alloc_temple.
 *********************************************************************/
 
 #ifndef _STLITE_ALLOC_H_
 #define _STLITE_ALLOC_H_
 
+#include <new.h>        //  placement new, set_new_handler
+#include <crtdefs.h>    //  std::ptrdiff_t
+#include <stdlib.h>     //  exit(0)
+
+#include "commom_header_files.h"
 #include "stlite_construct.h"    //  for construct, destroy
-#include <new.h>    //  placement new, set_new_handler
-#include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
 
-using namespace STLite;
-
+//////////////////////////////////////////////////////////////////////
 namespace STLite
 {
-    //  allocate，deallocate
+    //  allocate, deallocate
     template<class T>
-    inline T* _allocate(ptrdiff_t size, T*)
+    inline T* _allocate(std::ptrdiff_t size, T*)    //  the parameter T * used to deduce tempate 
     {
         set_new_handler(0);
         T *result = (T *) ::operator new((size_t) (size * sizeof(T)));
@@ -56,12 +55,11 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  allocator
-    //  allocator符合VC版本的STL标准接口，可以直接使用
+    //  In order to test, the interface must to conform to the VC STL. 
     template<class T>
     class allocator
     {
     public:
-        //  如果是SGI STL，则作为容器的内存配置器必须满足如下的接口
         typedef T           value_type;
         typedef T*          pointer;
         typedef const T*    const_pointer;
@@ -80,38 +78,38 @@ namespace STLite
             return _allocate((difference_type)n, (pointer)0);
         }
 
-        static void deallocate(pointer p, size_type n) //  VC下STL deallcate接口带2个参数
+        static void deallocate(pointer p, size_type n)      //  offering 2 parameters to conform to the VC STL
         {
             _deallocate(p);
         }
 
         //////////////////////////////////////////////////////////////////////
-        //  如果是SGI STL,作为容器的配置器，不必要提供下面的接口，构造对象利用了全局的construct函数。
-        //  将内存配置和构造分离出来了。
-        //  但是，vc下的STL版本为了配合容器必须提供以下接口。
+        //  to conform to VC STL, I must to offer the interface as follows.
+        //  in fact, the SGI STL separate the ALLOCATE and CONSTRUCT 
         static void construct(pointer p, const_reference value)
         {
-            STLite::construct(p, value);  //  调用全局的构造函数，位于stlite_construct.h
-                  
+            STLite::construct(p, value);    
         }
 
         static void destroy(pointer p)
         {
-            STLite::destroy(p);   //  调用全局的析构函数，位于stlite.construct.h
+            STLite::destroy(p);   
         }
         
-        //  效率更高的destroy函数
+        //  has greater efficiency compared to destroy(pointer),
+        //  because it calls corresponding destroy version according to the pointer type 
         static void destroy(pointer first, pointer last)
         {
             STLite::destroy(first, last);
         }
+
         //////////////////////////////////////////////////////////////////////
         size_type max_size()const
         {
-            return size_type(-1) / sizeof(T);
+            return size_type(-1) / sizeof(T);       //  size_type is unsigned int
         }
         
-        //  constructor，为了符合VC版本STL接口标准
+        //  constructor
         allocator() {}
         allocator(const allocator &) {}
         
@@ -120,31 +118,26 @@ namespace STLite
          
     };
 
-    //  一级配置器，符合SGI STL版本接口
-    //  简单的封装了malloc，free
+    //////////////////////////////////////////////////////////////////////
+    //  simple allocator
     class __malloc_alloc
     {
 
     };
 
     //////////////////////////////////////////////////////////////////////
-    //  二级配置器，符合SGI STL版本接口
-    //  维护内存空闲链表
+    //  complex allocator
     class __default_alloc
     {
 
     };
 
-    //  对一、二级配置器进行包装，使得其符合相应的STL版本接口
-    //  VC版本的STL和SGI STL接口不一样。
+    //  
     template<class T, class Alloc>
     class simple_alloc
     {
 
     };
-    //////////////////////////////////////////////////////////////////////
-
-    //  
 }
 
 #endif

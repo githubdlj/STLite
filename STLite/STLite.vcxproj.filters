@@ -13,24 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\unit_test">
-      <UniqueIdentifier>{96c36dca-823d-4071-b0b1-ad708110dd89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\detail_test">
+    <Filter Include="源文件\private_test">
       <UniqueIdentifier>{b46b83e2-33b7-429d-ba35-5c5ad74363b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\public_test">
+      <UniqueIdentifier>{96c36dca-823d-4071-b0b1-ad708110dd89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="unit_test\main.cpp">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unit_test\type_traits_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\other_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_type_traits.h">
       <Filter>头文件</Filter>
@@ -39,46 +39,73 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\iterator_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_construct.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\construct_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_alloc.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\alloc_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_uninitialized.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\uninitialized_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_list.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit_test\list_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
     <ClInclude Include="stlite_vector.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="detail_test\vector_detail_test.h">
-      <Filter>源文件\detail_test</Filter>
-    </ClInclude>
     <ClInclude Include="unit_test\vector_test.h">
-      <Filter>源文件\unit_test</Filter>
+      <Filter>源文件\public_test</Filter>
     </ClInclude>
-    <ClInclude Include="detail_test\constructor.h">
-      <Filter>源文件\detail_test</Filter>
+    <ClInclude Include="stlite_algorithm.h">
+      <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="detail_test\iterator.h">
-      <Filter>源文件\detail_test</Filter>
+    <ClInclude Include="detail_test\common_data.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\std_vector_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\String_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\vector_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\base_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\common_data.h">
+      <Filter>源文件\public_test</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\common_header_files.h">
+      <Filter>源文件\public_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\common_header_files.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="unit_test\public_test.h">
+      <Filter>源文件\public_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\private_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="commom_header_files.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

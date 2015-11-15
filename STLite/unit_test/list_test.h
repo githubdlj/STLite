@@ -3,24 +3,20 @@
 	Filename: list_test
 	Author:	  dinglj
 	
-	Purpose:  list²âÊÔº¯Êý
+	Purpose:  test list
 *********************************************************************/
-#ifndef _LIST_TEST_H_
-#define _LIST_TEST_H_
+#ifndef _PUBLIC_LIST_TEST_H_
+#define _PUBLIC_LIST_TEST_H_
 
+#include "common_header_files.h"
 #include "../stlite_list.h"
-#include <iostream>
-using std::cout;
 
-using std::cin;
-using std::endl;
-using namespace STLite;
-
-namespace list_unit
+//////////////////////////////////////////////////////////////////////
+namespace list_public
 {
     void test()
     {
-        cout << "list test" << endl;        
+        cout << "list_public test" << endl;        
     }
 }
 #endif

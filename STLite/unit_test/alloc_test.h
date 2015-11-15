@@ -3,81 +3,94 @@
 	Filename: alloc_test
 	Author:	  dinglj
 	
-	Purpose:  测试alloc内存配置器
+	Purpose:  test allocator
 *********************************************************************/
+#ifndef _PUBLIC_ALLOC_TEST_H_
+#define _PUBLIC_ALLOC_TEST_H_
 
-#include "../stlite_alloc.h"
 #include <vector>
-#include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
 
-using namespace STLite;
+#include "common_header_files.h"
+#include "common_data.h"
+#include "../stlite_alloc.h"
 
-namespace alloc_unit
+//////////////////////////////////////////////////////////////////////
+namespace alloc_public
 {
-const int OBJECT_NUM = 10;
-
-void testCase1()
-{
-    cout << "testCase1" << endl;
-
-    allocator<int> alloc;
-
-    //  alloc memory
-    int *ptr = alloc.allocate(OBJECT_NUM);
-
-    //  construct;
-    for (int i = 0; i < OBJECT_NUM; i++)
+    //  alloc, constructor, destroy elements, destroy space
+    void testCase1()
     {
-        alloc.construct(ptr + i, i);    
+        cout << "testCase1" << endl;
+
+        allocator<int> alloc;
+
+        //  alloc memory
+        int *ptr = alloc.allocate(OBJECT_NUM);
+
+        //  construct
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            alloc.construct(ptr + i, i);    
+        }
+
+        //  print
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << ptr[i] << "\t";
+        }
+        cout << endl;
+
+        //////////////////////////////////////////////////////////////////////
+        //  destroy, destroy has 2 version, 
+        //  version 1, has a higher performance
+        alloc.destroy(ptr, ptr + OBJECT_NUM); 
+
+        //  version 2
+    //     for (int i = 0; i < OBJECT_NUM; ++i)
+    //     {
+    //         alloc.destroy(ptr + i);     
+    //                                    
+    //     }
+
+        //  deallocate
+        alloc.deallocate(ptr, OBJECT_NUM);
+
+        cout << endl;
     }
 
-    //  print
-    for (int i = 0; i < OBJECT_NUM; i++)
+    //  
+    void testCase2()
     {
-        cout << ptr[i];
+        cout << "testCase2" << endl; 
+
+        int arr[OBJECT_NUM];
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            arr[i] = i;
+        }
+       
+        //  it calls 2 times constructor 
+        //  the first one allocate 8 byte, the second allocate OBJECT_NUM * sizof(int) byte
+        //  debug it, I find that the first allocate returns std::_Container_proxy *
+        std::vector< int, STLite::allocator<int> > v(arr, arr + OBJECT_NUM);
+
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << v[i] << "\t";
+        }
+        cout << endl;
     }
 
-    //  destroy, 两个版本，版本一效率高
-    alloc.destroy(ptr, ptr + OBJECT_NUM); 
-//     for (int i = 0; i < OBJECT_NUM; i++)
-//     {
-//         alloc.destroy(ptr + i);     
-//                                    
-//     }
-    //  deallocate
-    alloc.deallocate(ptr, OBJECT_NUM);
-
-    cout << endl;
-}
-
-void testCase2()
-{
-    cout << "testCase2" << endl;
-
-    int arr[OBJECT_NUM];
-    for (int i = 0; i < OBJECT_NUM; i++)
+    //////////////////////////////////////////////////////////////////////
+    void test()
     {
-        arr[i] = i;
-    }
-   
-    //  调用了两次内存分配construct函数
-    //  第一次分配8Byte，第二次分配sizeof(int) * OBJECT_NUM byte
-    //  通过调试，发现第一次分配的8byte内存返回类型为std::_Container_proxy *
-    std::vector< int, STLite::allocator<int> > v(arr, arr + OBJECT_NUM);
+        cout << "alloc_public test" << endl;
 
-    for (int i = 0; i < OBJECT_NUM; i++)
-    {
-        cout << v[i];
+        testCase1();
+        testCase2();
+
+        cout << endl;
     }
-    cout << endl;
 }
 
-void test()
-{
-     testCase1();
-     testCase2();
-}
-}
+#endif

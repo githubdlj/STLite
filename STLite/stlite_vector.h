@@ -7,34 +7,34 @@
 *********************************************************************/
 #ifndef _STLITE_VECTOR_H_
 #define _STLITE_VECTOR_H_
+
+#include <crtdefs.h>                //  std::ptrdiff_t
+
+#include "commom_header_files.h"
 #include "stlite_iterator.h"        //  iterator  
 #include "stlite_alloc.h"           //  allocator
 #include "stlite_uninitialized.h"   //  uninitialized_fill_n
 #include "stlite_type_traits.h"
-#include <crtdefs.h>                //  std::ptrdiff_t
+#include "stlite_algorithm.h"       //  fill 
 
-#include <iostream>
-using namespace STLite;
-
+//////////////////////////////////////////////////////////////////////
 namespace STLite
 {
     //////////////////////////////////////////////////////////////////////
     //  vectorIterator
     template<class T>
-//    class vectorIterator : public iterator<random_access_iterator<T, std::ptrdiff_t>, T>
-    class vectorIterator : public iterator<random_access_iterator_tag, std::ptrdiff_t>
+    //  class vectorIterator : public iterator<random_access_iterator<T, std::ptrdiff_t>, T>
+    class vectorIterator : public iterator<random_access_iterator_tag, T>
     {
     private:
         T *m_ptr;
     
     //////////////////////////////////////////////////////////////////////
-    //  construct, copy, assignment, destroy
-    //  注意，vectorIterator并不负责内存分配和释放，它仅仅是原始指针的一个封装
-    //  所以这些函数都可以使用默认的
+    //  note, vectorIterator is NOT a smart pointer, it is not responsible for allocating and deallocating memory.
     public:
         //  construct
-        explicit vectorIterator(T *ptr = NULL) : m_ptr(ptr) {} 
-        
+        explicit vectorIterator(T *ptr = NULL) : m_ptr(ptr) {}
+   
         //  copy
         vectorIterator(const vectorIterator &vIter)
         {
@@ -56,7 +56,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  defer
     public:
-        reference operator *()      //    可以作为左值或者右值
+        reference operator *()      
         {
             return *m_ptr;
         }
@@ -67,12 +67,12 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  ++,--
     public:
-        vectorIterator & operator ++()
+        vectorIterator & operator ++()      //  ++prefix
         {
             m_ptr++;
             return *this;
         }
-        vectorIterator operator ++(int)
+        vectorIterator operator ++(int)     //  postfix++
         {
             vectorIterator temp = *this;
             ++(*this);
@@ -91,7 +91,7 @@ namespace STLite
             return temp;
         }
     //////////////////////////////////////////////////////////////////////
-    //  随机存取迭代器操作
+    //  random access operation, only the RandomAccessIterator supports.
     public:
         vectorIterator & operator +=(difference_type n)
         {
@@ -105,7 +105,7 @@ namespace STLite
             return temp += n;
         }
 
-        difference_type operator +(const vectorIterator &lhs) const     //  迭代器加法
+        difference_type operator +(const vectorIterator &lhs) const     //  
         {
             return m_ptr + lhs.m_ptr;
         }
@@ -121,7 +121,7 @@ namespace STLite
             return temp -= n;
         }
         
-        difference_type operator -(const vectorIterator &lhs) const     //  迭代器减法
+        difference_type operator -(const vectorIterator &lhs) const     //  
         {
             return m_ptr - lhs.m_ptr;
         }
@@ -152,7 +152,7 @@ namespace STLite
     class vector
     {
     //////////////////////////////////////////////////////////////////////
-    //  嵌套型别定义
+    //  
     public:
         typedef T               value_type;
         typedef T*              pointer;
@@ -161,11 +161,11 @@ namespace STLite
         typedef std::ptrdiff_t  difference_type;
 
     //////////////////////////////////////////////////////////////////////
-    //   内部数据,  为了方便测试，先声明为public
+    //   in order to test, declare them as public data
     public:
         pointer start;
         pointer finish;
-        pointer end_of_storage;     //  指向存储空间的末尾
+        pointer end_of_storage;
     
     //////////////////////////////////////////////////////////////////////
     //  iterator
@@ -199,15 +199,7 @@ namespace STLite
             end_of_storage = finish;
         }
  
-//         //   SGI STL源码中，针对InputIterator和ForwardIterator有单独的实现       
-//         template<class InputIterator>
-//         void allocate_and_copy(InputIterator first, InputIterator last)
-//         {
-//              start = allocate(last - first);     //  重载迭代器减法
-//              finish = uninitialized_copy(first, last, start);
-//              end_of_storage = finish;
-//         }
-
+        //   in SGI STL, the InputIterator and the ForwardIterator have different allocate_adn_copy version   
         template<class InputIterator>
         void allocate_and_copy(InputIterator first, InputIterator last, input_iterator_tag)
         {
@@ -265,6 +257,7 @@ namespace STLite
         {
             vector_aux(n, value_type(), __true_type());
         }
+    
         vector(size_type n, const value_type &value)
         {
             vector_aux(n, value, __true_type());
@@ -272,7 +265,8 @@ namespace STLite
         template<class InputIterator>
         vector(InputIterator first, InputIterator last)     
         {
-            typedef typename _is_integer<InputIterator>::is_integer is_integer;    //  注意，和vector<size_type n, const value_type &value>参数一样，要判断参数类型
+            //  to determine call vector_aux(size_type, value_type) or vector_aux(iterator, iterator)
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;   
             vector_aux(first, last, is_integer());
         }
         
@@ -285,29 +279,30 @@ namespace STLite
             end_of_storage = finish;
         }
     
-        //  assignment, 注意，赋值的时候要释放原来所指向的内存空间
+        //  assignment, it should destruct the old objects and deallocate the old memory.
         const vector & operator =(const vector &lhs)
         {
-            //  初始化新空间
+            //  allocate new memory, construct objects.
             pointer new_start = allocate(lhs.finish - lhs.start);
             pointer new_finish = uninitialized_copy(lhs.start, lhs.finish, new_start);
             pointer new_end_of_storage = new_finish;
         
-            //  释放自身空间
+            //  destruct old objects and deallocate old memory.
             destroy_and_deallocate();
     
-            //  初始化自身空间
+            //  assign
             start = new_start;
             finish = new_finish;
             end_of_storage = new_end_of_storage;
 
             return *this;
         }
-        //  destroy
+
         ~vector()
         {
             destroy_and_deallocate();
         }
+
     //////////////////////////////////////////////////////////////////////
     //  iterators
     public:
@@ -320,6 +315,7 @@ namespace STLite
         {
            return iterator(finish);
         }
+
     //////////////////////////////////////////////////////////////////////
     //  element access
     public:
@@ -375,7 +371,7 @@ namespace STLite
 
         void reserve(size_type n)
         {
-            if (capacity() < n)     //  reserve只能扩大容量
+            if (capacity() < n)     //  reserve can only add capacity
             {
                 //  allocate new space
                 pointer new_start = allocate(n);
@@ -442,7 +438,7 @@ namespace STLite
         template<class InputIterator>
         void range_insert(iterator pos, InputIterator first, InputIterator last, input_iterator_tag)
         {
-            //  can not calculate the capacity that the new elements need, it only can be insertrd one by one 
+            //  can not calculate the capacity that the new elements need, it only can be inserted one by one 
 
             //  insert one by one, like this
 //             for (; first != last; first++)
@@ -564,6 +560,62 @@ namespace STLite
         {
             erase(end() - 1);
         }
+    
+    //////////////////////////////////////////////////////////////////////
+    //  assign
+    //  some auxiliary functions
+    private:
+        void fill_assign(size_type n, const value_type &value)
+        {
+            if (n > capacity())
+            {
+                vector<T> temp(n, value);
+                
+                std::swap(start, temp.start);
+                std::swap(finish, temp.finish);
+                std::swap(end_of_storage, temp.end_of_storage);
+                
+                //  the temp vector will be destroyed when the func exit
+            }
+            else if (n > size())
+            {
+                fill(begin(), end(), value);
+                finish = uninitialized_fill(end(), n - size(), value);
+            }
+            else
+            {
+                erase(fill_n(begin(), n, value), end());
+            }
+        }
+        
+        //////////////////////////////////////////////////////////////////////
+        //  the SGI STL has different range_insert version for InputIterator & ForwardIterator
+        template<class InputIterator>
+        void range_assign(InputIterator first, InputIterator last, input_iterator_tag)
+        {
+            //  InputIterator can not calculate the [first, last) 's length
+            iterator cur = begin();
+            for (; first != last && cur != end(); ++first, ++cur)
+            {
+                *cur = *first;
+            } 
+        
+            if (first == last)          //  size() > [first, last)'s length
+            {
+                erase(cur, end());
+            }
+            else
+            {
+                insert(end(), first, last);     //  call range_insert(first, last, input_iterator_tag)
+            }
+        }
+        
+        template<class ForwardIterator>
+        void range_assign(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
+        {
+            
+        }
+    };
 }
 
 #endif

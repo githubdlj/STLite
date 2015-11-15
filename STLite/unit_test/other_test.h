@@ -3,28 +3,22 @@
 	Filename: other_test
 	Author:	  dinglj
 	
-	Purpose:  代表其他测试函数，主要测试命名空间的使用
+	Purpose:  other test, test namespace 
 *********************************************************************/
-#ifndef _OTHER_TEST_H_
-#define _OTHER_TEST_H_
+#ifndef _PUBLIC_OTHER_TEST_H_
+#define _PUBLIC_OTHER_TEST_H_
 
-#include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
+#include "common_header_files.h"
 
-using namespace STLite;
-
-
-//  采用命名空间原因是可以在不同的测试文件中拥有相同的函数名，如test，如果调用该文件中的test，
-//  则采用other_test::test()
-namespace other_unit
+//////////////////////////////////////////////////////////////////////
+//  if we use the namespace, we can have the same function name among different files
+//  if we want to call a function, we can do it like this:  other_public::test()
+namespace other_public
 {
-
-void test()
-{
-    cout << "other test" << endl;
-}
+    void test()
+    {
+        cout << "other_public test" << endl;
+    }
 
 }
 #endif

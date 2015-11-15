@@ -1,20 +1,23 @@
 /********************************************************************
 	Time:	  2015/11/02
-	Filename: my_string
+	Filename: String_test
 	Author:	  dinglj
 	
 	Purpose:  test my String
 *********************************************************************/
-#ifndef _MY_STRING_TEST_H_
-#define _MY_STRING_TEST_H_
+#ifndef _PRIVATE_STRING_TEST_H_
+#define _PRIVATE_STRING_TEST_H_
 
-#include "common.h"
+#include "common_header_files.h"
+#include "common_data.h"
 
 //////////////////////////////////////////////////////////////////////
-namespace string_detail
+namespace String_private
 {
     void testCase1()
     {
+        cout << "testCase1" << endl;
+
         String s1;      //  constructor
         cout << s1.m_data << endl;
 
@@ -32,23 +35,31 @@ namespace string_detail
         cout << s4.m_data << endl;
 
         //  destroy 4 times
+        cout << endl;
     }
 
     //  test self assignment
     void testCase2()
     {
+        cout << "testCase2" << endl;
+
         String s1("hello world");   //  constructor
         s1 = s1;
 
         cout << s1.m_data << endl;
+
+        cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
-        cout << "string_datail test" << endl;
+        cout << "String_private test" << endl;
 
-   //     testCase1();
+        testCase1();
         testCase2();
+
+        cout << endl;
     }
 }
 #endif
