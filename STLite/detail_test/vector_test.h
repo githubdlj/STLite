@@ -340,25 +340,64 @@ namespace vector_private
         cout << endl;
     }
 
-    void testVector()
+    void testInsert()
     {
-        cout << "testVector" << endl;
+        cout << "testInsert" << endl;
 
         testCase6();
         testCase7();
         testCase8();
         testCase9();
-     
+
+        cout << endl;
+    }
+   
+    //////////////////////////////////////////////////////////////////////
+    //  test erase, clear
+    void testCase10()
+    {
+        const int VALUE = 1;
+        vector<int> v1(OBJECT_NUM, VALUE);  //  v1 = [1 1 1 1 1]
+        v1.clear();
+
+        cout << v1.capacity() << endl;      //  5
+        cout << v1.size() << endl;          //  0
+
+        //  1. CLEAR dose not destroy the memory
+        //  2.  CLEAR destruct the objects, so, we should NOT access the objects. see the String case
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << v1[i] << "\t";       //  invalid, thought it print the objects.
+        }
+        cout << endl;
+
+        //  String case
+        vector<String> v2(OBJECT_NUM, "String");
+        v2.clear();
+
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << v2[i].m_data << "\t";   //  invalid, access m_data, but the m_data has deleted.
+        }
         cout << endl;
     }
 
+    void testErase()
+    {
+        cout << "testErase" << endl;
+
+        testCase10();
+
+        cout << endl;
+    }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "vector_private test" << endl;
        
         testIterator();
-        testVector();
+        testInsert();
+        testErase();
 
         cout << endl;
     }
