@@ -15,6 +15,7 @@
 #include "../stlite_vector.h"
 #include "../stlite_iterator.h"
 #include "../stlite_alloc.h"
+#include "../stlite_uninitialized.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace vector_private
@@ -135,7 +136,6 @@ namespace vector_private
     {
         cout << "testCase6" << endl;
 
-        const int NUM = 10;
         const int VALUE = 1;
 
         const int ADD_NUM = 3;
@@ -143,28 +143,38 @@ namespace vector_private
 
         //////////////////////////////////////////////////////////////////////
         //  case1, the space is enough
-        int arr[NUM] = {0,1,2,3,4,5,6,7,8,9};
-        vector<int> v1(arr, arr + NUM);
-        v1.finish = v1.finish - 5;      //  in order to let the locationLeft > LocationNeed
+        //  case error,
+        //  in fact, the [finish, end_of_storgae) is a uninitialized range,
+        //  but now, it is initialized.
+//         int arr[NUM] = {0,1,2,3,4,5,6,7,8,9};
+//         vector<int> v1(arr, arr + NUM);
+//         v1.finish = v1.finish - 5;      //  in order to let the locationLeft > LocationNeed
+                                          
+        //  the right
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        vector<int> v1;
+        v1.start = allocator<int>::allocate(2 * OBJECT_NUM);
+        v1.finish = uninitialized_copy(arr, arr + OBJECT_NUM, v1.start);
+        v1.end_of_storage = v1.start + 2 * OBJECT_NUM;     // now, v1 = [0,1,2,3,4,x,x,x,x,x]
 
         vectorIterator<int> pos = v1.begin() + 2;
         v1.insert(pos, ADD_NUM, NEW_VALUE);
 
         for (pos = v1.begin(); pos != v1.end(); ++pos)
         {
-            cout << *pos;           //  01222234
+            cout << *pos << "\t";           //  0 1 2 2 2 2 3 4 
         }
         cout << endl;
 
         //  case2, the space is not enough
-        vector<int> v2(arr, arr + NUM);
+        vector<int> v2(arr, arr + OBJECT_NUM);
         pos = v2.begin() + 2;
 
-        v2.insert(pos, ADD_NUM, NEW_VALUE);
+        v2.insert(pos, ADD_NUM, NEW_VALUE);     // now, v2 = [0 1 2 2 2 2 3 4 x x]
 
         for(pos = v2.begin(); pos != v2.end(); ++pos)
         {
-            cout << *pos;           //  0122223456789
+            cout << *pos << "\t";           //  0 1 2 2 2 2 3 4 
         }
 
         cout << endl;
@@ -175,40 +185,42 @@ namespace vector_private
     void testCase7()
     {
         cout << "testCase7" << endl;
-
-        const int NUM = 10;
+       
         const int VALUE = 1;
-
+       
         const int ADD_NUM = 3;
-
         int arr[ADD_NUM] = {2, 3, 4};
 
         //  case1, the space is enough
-        vector<int> v1(NUM, VALUE);
-        v1.finish = v1.finish - 5;
 
-        v1.insert(v1.begin() + 2, arr, arr + ADD_NUM);
+        //  the same error as testCase6
+//         vector<int> v1(NUM, VALUE);
+//         v1.finish = v1.finish - 5;
+        vector<int> v1;
+        v1.start = allocator<int>::allocate(OBJECT_NUM);
+        v1.finish = uninitialized_fill_n(v1.start, OBJECT_NUM, VALUE);
+        v1.end_of_storage = v1.start + 2 * OBJECT_NUM;      //  now, v1 = [1 1 1 1 1 x x x x x]
+
+        v1.insert(v1.begin() + 2, arr, arr + ADD_NUM);      //  now, v1 = [1 1 2 3 4 1 1 1 x x]
 
         int size = v1.size();
         for (int i = 0; i < size; ++i)
         {
-            cout << v1[i];
+            cout << v1[i] << "\t";      //  1 1 2 3 4 1 1 1 
         }
         cout << endl;
 
         //  case2, the space is not enough
-        vector<int> v2(NUM, VALUE);
-        v2.finish = v2.finish - 2;
+        vector<int> v2(OBJECT_NUM, VALUE);
 
-        v2.insert(v2.begin() + 2, arr, arr + ADD_NUM);
+        v2.insert(v2.begin() + 2, arr, arr + ADD_NUM);      // mow, v1 = [1 1 2 3 4 1 1 1 x x]
 
         cout << v2.capacity() << endl;
         size = v2.size();
         for (int i = 0; i < size; ++i)
         {
-            cout << v2[i];
+            cout << v2[i] << "\t";
         }
-
         cout << endl;
     }
 
@@ -227,33 +239,35 @@ namespace vector_private
         vector<Widget> v;
         v.start = allocator<Widget>::allocate(2 * OBJECT_NUM);
         v.finish = v.start;
-        v.end_of_storage = v.start + 2 * OBJECT_NUM;
+        v.end_of_storage = v.start + 2 * OBJECT_NUM;        //  now , v = [x x x x x x x x x x]
 
-        v.insert(v.begin(), wArr, wArr + OBJECT_NUM);
+        v.insert(v.begin(), wArr, wArr + OBJECT_NUM);       //  v = [0 1 2 3 4 x x x x x]
 
-        for (int i = 0; i < 2 * OBJECT_NUM; ++i)
+        for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            cout << v[i].m_value << endl;
+            cout << v[i].m_value << "\t";
         }
+        cout << endl;
         //  now, v[0, OBJECT_NUM) has initialzed, but the v[OBJECT_NUM, 2 * OBJECT_NUM) has not initialized.
        
         //////////////////////////////////////////////////////////////////////
         
         //  I insert the value into the uninitialized range
         //  but no error, why?
-        //  see the next testCase
-        v.insert(v.begin(), wArr, wArr + OBJECT_NUM);
+        //  see the next testCase.  //  these comments for the old version INSERT, now, it out of date.
+        v.insert(v.begin(), wArr, wArr + OBJECT_NUM);       //  v = [0 1 2 3 4 0 1 2 3 4]
 
         for (int i = 0; i < 2 * OBJECT_NUM; ++i)
         {
-            cout << v[i].m_value << endl;
+            cout << v[i].m_value << "\t";
         }
-
         cout << endl;
     }
 
     //  test insert again
     //  insert String
+    //  the testCase9 is out of data
+    /*
     void testCase9()
     {
         cout << "testCase9" << endl;
@@ -292,7 +306,40 @@ namespace vector_private
 
         cout << endl;    
     }
+    */
+
+    //  test String
+    void testCase9()
+    {
+        String arr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        
+        vector<String> v1;
+        v1.reserve(OBJECT_NUM);  //  v = [x x x x x]
+        v1.finish = uninitialized_fill_n(v1.start, 2, "String");     //  v = [String, String, x, x, x]
+       
+        //  case1, the space is enough
+        v1.insert(v1.begin() + 1, arr, arr + 2);           //  v = [String, String0, String1, String, x]
     
+        int size = v1.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v1[i].m_data << "\t";
+        }
+        cout << endl;
+// 
+        //  case2, the space is not enough
+        v1.insert(v1.begin() + 2, arr + 2, arr + OBJECT_NUM);   
+        //  v = [String, String0, String2, String3, String4, String1, String, x]
+
+        cout << v1.capacity() << endl;
+        size = v1.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v1[i].m_data <<  "\t";
+        }
+        cout << endl;
+    }
+
     void testVector()
     {
         cout << "testVector" << endl;

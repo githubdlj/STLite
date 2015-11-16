@@ -26,9 +26,10 @@ namespace STLite
     //  class vectorIterator : public iterator<random_access_iterator<T, std::ptrdiff_t>, T>
     class vectorIterator : public iterator<random_access_iterator_tag, T>
     {
-    private:
-        T *m_ptr;
-    
+//      private:
+//          T *m_ptr;
+    public:
+        value_type *m_ptr;
     //////////////////////////////////////////////////////////////////////
     //  note, vectorIterator is NOT a smart pointer, it is not responsible for allocating and deallocating memory.
     public:
@@ -398,17 +399,41 @@ namespace STLite
             size_type locationLeft = end_of_storage - finish;
             size_type locationNeed = n;
 
+//             if (locationNeed <= locationLeft)
+//             {
+//                 iterator temp = pos;     //  [pos, finish) -> [pos + locationNeed, finish + locationNeed)
+//                 while (temp != end())
+//                 {
+//                     *(temp + locationNeed) = *(temp);   
+//                     temp++;
+//                     //  bug1, [finish, finish + locationNeed) is the uninitialized range,
+//                     //  it can not call operator = on this range,
+//                     //  it will cause delete WILD(wild) pointer. see the definition of String
+//                 }
+//                 //  bug2, [pos, finish) is the initialized range, 
+//                 //  it can not call constructor on this range,
+//                 //  it will cause memory leak. see the definition of String.
+//                 uninitialized_fill_n(pos, locationNeed, value);
+// 
+//                 finish = finish + locationNeed;
+//             }
             if (locationNeed <= locationLeft)
             {
-                iterator temp = pos;     //  [pos, finish) -> [pos + locationNeed, finish + locationNeed)
-                while (temp != end())
-                {
-                    *(temp + locationNeed) = *(temp);
-                    temp++;
-                }
-                uninitialized_fill_n(pos, locationNeed, value);
+                vector<T> temp(pos, end());
+                destroy(pos, end());    //  now, [pos, end_of_storage) is uninitialized range
+                
+                //  insert new elements on the uninitialized range
+                iterator new_finish = uninitialized_fill_n(pos, n, value);
+                
+                //  copy old elements on the uninitialized range
+                new_finish = uninitialized_copy(temp.begin(), temp.end(), new_finish);
+                finish = new_finish.m_ptr;
 
-                finish = finish + locationNeed;
+                //  this way is easy, but it may cause bad performance when the insert position close to start.
+                //  but we always use the INSERT to init the vector and in the function push_back,
+                //  in this case, the INSERT perform well.
+
+                //  the SGI STL offer a higher performance but more complex INSERT version.
             }
             else
             {
@@ -444,7 +469,7 @@ namespace STLite
 //             for (; first != last; first++)
 //             {
 //                 pos = insert(pos, *first);
-//                 pos++
+//                 ++pos;
 //             }
         }
 
@@ -454,16 +479,25 @@ namespace STLite
             size_type locationLeft  = end_of_storage - finish;
             size_type locationNeed = (size_type) distance(first, last);
            
+            //  bug, see fill_insert
+//             if (locationNeed <= locationLeft)
+//             {
+//                 iterator temp = pos;
+//                 while (temp != end())
+//                 {
+//                     *(temp + locationNeed) = *(temp);
+//                     temp++;
+//                 }
+//                 STLite::uninitialized_copy(first, last, pos);
+//                 finish = finish + locationNeed;
+//             }
             if (locationNeed <= locationLeft)
             {
-                iterator temp = pos;
-                while (temp != end())
-                {
-                    *(temp + locationNeed) = *(temp);
-                    temp++;
-                }
-                STLite::uninitialized_copy(first, last, pos);
-                finish = finish + locationNeed;
+                vector<T> temp(pos, end());
+                destroy(pos, end());
+                iterator new_finish = uninitialized_copy(first, last, pos);
+                new_finish = uninitialized_copy(temp.begin(), temp.end(), new_finish);
+                finish = new_finish.m_ptr;    
             }
             else
             {
@@ -529,7 +563,9 @@ namespace STLite
         iterator erase(iterator first, iterator last)
         {   
             //  copy and destroy
-            iterator i = uninitialized_copy(last, end(), first);   
+        //    iterator i = uninitialized_copy(last, end(), first);   //   bug, see fill_insert
+            
+            iterator i = copy(last, end(), first);
             destroy(i, end());              //  erase only destroy elements, not destroy the space!!
     
             finish = finish - (last - first);
