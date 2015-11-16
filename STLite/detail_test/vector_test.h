@@ -190,14 +190,14 @@ namespace vector_private
        
         const int ADD_NUM = 3;
         int arr[ADD_NUM] = {2, 3, 4};
-
+// 
         //  case1, the space is enough
 
         //  the same error as testCase6
 //         vector<int> v1(NUM, VALUE);
 //         v1.finish = v1.finish - 5;
         vector<int> v1;
-        v1.start = allocator<int>::allocate(OBJECT_NUM);
+        v1.start = allocator<int>::allocate(2 * OBJECT_NUM);
         v1.finish = uninitialized_fill_n(v1.start, OBJECT_NUM, VALUE);
         v1.end_of_storage = v1.start + 2 * OBJECT_NUM;      //  now, v1 = [1 1 1 1 1 x x x x x]
 
@@ -311,6 +311,8 @@ namespace vector_private
     //  test String
     void testCase9()
     {
+        cout << "testCase9" << endl;
+
         String arr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
         
         vector<String> v1;
@@ -356,6 +358,8 @@ namespace vector_private
     //  test erase, clear
     void testCase10()
     {
+        cout << "testCase10" << endl;
+
         const int VALUE = 1;
         vector<int> v1(OBJECT_NUM, VALUE);  //  v1 = [1 1 1 1 1]
         v1.clear();
@@ -364,10 +368,10 @@ namespace vector_private
         cout << v1.size() << endl;          //  0
 
         //  1. CLEAR dose not destroy the memory
-        //  2.  CLEAR destruct the objects, so, we should NOT access the objects. see the String case
+        //  2. CLEAR destruct the objects, so, we should NOT access the objects. see the String case
         for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            cout << v1[i] << "\t";       //  invalid, thought it print the objects.
+        //    cout << v1[i] << "\t";       //  invalid, thought it print the objects.
         }
         cout << endl;
 
@@ -377,7 +381,7 @@ namespace vector_private
 
         for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            cout << v2[i].m_data << "\t";   //  invalid, access m_data, but the m_data has deleted.
+        //    cout << v2[i].m_data << "\t";   //  invalid, access m_data, but the m_data has deleted.
         }
         cout << endl;
     }
@@ -391,14 +395,92 @@ namespace vector_private
         cout << endl;
     }
     //////////////////////////////////////////////////////////////////////
+    //  test assign
+    //  assgin(n, value)
+    void testCase11()
+    {
+        cout << "testCase11" << endl;
+
+        vector<String> v;
+        v.reserve(OBJECT_NUM);
+
+        v.push_back("String0");
+        v.push_back("String1");     //  v = [String0, String1, x, x, x]
+
+        //  case1, n < size()
+        v.assign(1, "String");      //  v = [String, x, x, x, x]
+        
+        int size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i].m_data << "\t";
+        }
+        cout << endl;
+
+        //  case2, capacity() > n >= size()
+        v.assign(3, "String1");   //    v = [String1, String1, String1, x, x]  
+        
+        size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i].m_data << "\t";
+        }
+        cout << endl;
+        
+        //  case3, n >= capacity()
+        v.assign(6, "String2");  //     v = [String2, String2, String2, String2, String2, String2];
+
+        cout << v.capacity() << endl;        
+        size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i].m_data << "\t";
+        }
+        cout << endl;
+    }
+
+    //  assgin(first, last)
+    void testCase12()
+    {
+        cout << "testCase12" << endl;
+
+        String arr[3] = {"String0", "String1", "String2"};
+
+        vector<String> v;
+        v.reserve(OBJECT_NUM);
+        v.push_back("String");
+        v.push_back("String");  //  v = [String, String, x, x, x]
+        
+        //  case2
+        v.assign(arr, arr + 3); //  v = [string0, string1, string2, x x]
+
+        cout << v.capacity() << endl;
+        int size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i].m_data << "\t";
+        }
+        cout << endl;
+    }
+
+    void testAssign()
+    {
+        cout << "testAssign" << endl;
+
+     //   testCase11();
+        testCase12();
+
+        cout << endl;
+    }
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "vector_private test" << endl;
        
-        testIterator();
-        testInsert();
-        testErase();
-
+//         testIterator();
+//         testInsert();
+//         testErase();
+        testAssign();
         cout << endl;
     }
 }

@@ -15,6 +15,7 @@
 #include "common_header_files.h"
 #include "common_data.h"
 #include "../stlite_uninitialized.h"
+#include "../stlite_algorithm.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace std_vector_private
@@ -62,6 +63,7 @@ namespace std_vector_private
         list l(3, 2);
 
     //    STLite::uninitialized_copy(l.begin(), l.end(), v.begin());    //  error, it should call STLite::copy
+        std::copy(l.begin(), l.end(), v.begin());
 
         int vsize = v.size();
         for (int i = 0; i < vsize; ++i)
@@ -94,7 +96,7 @@ namespace std_vector_private
         v.clear();
 
         cout << v.size() << endl;
-       
+
         for (int i = 0; i < 2; ++i)
         {
             cout << v[i] << "\t";   //  1, 1, clear only destroy the elements, not destroy the space 
@@ -104,6 +106,29 @@ namespace std_vector_private
         cout << endl;
     }
 
+
+    //  test assgin
+    //  assgin(n, value)
+    void testCase5()
+    {   
+        std::vector<int> v;
+        v.assign(OBJECT_NUM, 1);
+
+        int size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i] << "\t";   //  1 1 1 1 1
+        }
+        cout << endl;
+
+        v.assign(2, 2);
+        size = v.size();
+        for (int i = 0; i < size; ++i)
+        {
+            cout << v[i] << "\t";   // 2 2
+        }
+        cout << endl;
+    }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
@@ -112,7 +137,8 @@ namespace std_vector_private
    //     testCase1();
    //     testCase2();
    //     testCase3();
-        testCase4();
+   //     testCase4();
+        testCase5();
 
         cout << endl;
     }

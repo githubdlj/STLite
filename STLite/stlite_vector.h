@@ -560,6 +560,9 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  erase
     public:
+        //  note, the argument of the erase is ITERATPR(iterator),
+        //  while the argument of the insert is InputIterator.
+        //  because erase can only erase itself elements.
         iterator erase(iterator first, iterator last)
         {   
             //  copy and destroy
@@ -616,11 +619,16 @@ namespace STLite
             else if (n > size())
             {
                 fill(begin(), end(), value);
-                finish = uninitialized_fill(end(), n - size(), value);
+                finish = uninitialized_fill_n(finish, n - size(), value);
+
+                //  another way, low efficiency.
+                //  destroy(begin(), end());
+                //  uninitialized_fill_n(begin(), n, value);
             }
             else
             {
-                erase(fill_n(begin(), n, value), end());
+                iterator mid = fill_n(begin(), n, value);
+                erase(mid, end());
             }
         }
         
@@ -630,27 +638,79 @@ namespace STLite
         void range_assign(InputIterator first, InputIterator last, input_iterator_tag)
         {
             //  InputIterator can not calculate the [first, last) 's length
-            iterator cur = begin();
-            for (; first != last && cur != end(); ++first, ++cur)
-            {
-                *cur = *first;
-            } 
-        
-            if (first == last)          //  size() > [first, last)'s length
-            {
-                erase(cur, end());
-            }
-            else
-            {
-                insert(end(), first, last);     //  call range_insert(first, last, input_iterator_tag)
-            }
+//             iterator cur = begin();
+//             for (; first != last && cur != end(); ++first, ++cur)
+//             {
+//                 *cur = *first;
+//             } 
+//         
+//             if (first == last)          //  size() > [first, last)'s length
+//             {
+//                 erase(cur, end());
+//             }
+//             else
+//             {
+//                 insert(end(), first, last);     //  call range_insert(first, last, input_iterator_tag)
+//             }
         }
         
         template<class ForwardIterator>
         void range_assign(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
-            
+            size_type n = distance(first, last);
+            if (n > capacity())
+            {
+                vector<T> temp(first, last);
+                
+                std::swap(start, temp.start);
+                std::swap(finish, temp.finish);
+                std::swap(end_of_storage, temp.end_of_storage);    
+            } 
+            else if (n > size())
+            {
+                ForwardIterator mid = first;           
+                advance(mid, size());
+
+                copy(first, mid, start);
+                finish = uninitialized_copy(mid, last, finish);
+            }
+            else
+            {
+                iterator mid = copy(first, last, begin());
+                erase(mid, end());
+            }
         }
+        
+        //////////////////////////////////////////////////////////////////////
+        template<class Integer>
+        void assign_dispatch(Integer n, const value_type &value, __true_type)
+        {
+            fill_assign(n, value);
+        }
+
+        template<class InputIterator>
+        void assign_dispatch(InputIterator first, InputIterator last, __false_type)
+        {
+            typedef typename iterator_traits<InputIterator>::iterator_category category;
+            range_assign(first, last, category());
+        }
+        
+    //////////////////////////////////////////////////////////////////////
+    //  assign
+    public:
+        void assign(size_type n, const value_type &value)
+        {
+            assign_dispatch(n, value, __true_type());
+        }
+        
+        template<class InputIterator>
+        void assign(InputIterator first, InputIterator last)
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;
+            assign_dispatch(first, last, is_integer());
+        }
+    
+    //////////////////////////////////////////////////////////////////////
     };
 }
 
