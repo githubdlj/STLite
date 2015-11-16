@@ -48,7 +48,7 @@ namespace STLite
     inline void destroy_aux(ForwardIterator first, ForwardIterator last, __false_type)
     {
         //  if the object not has_trivial_deconstructor, call destroy(&*first)
-        for (; first < last; ++first)
+        for (; first != last; ++first)
         {
             destroy(&*first);
         }
