@@ -3,7 +3,7 @@
 	Filename: vector_test
 	Author:	  dinglj
 	
-	Purpose:  vector≤‚ ‘
+	Purpose:  
 *********************************************************************/
 #ifndef _PUBLIC_VECTOR_TEST_H_
 #define _PUBLIC_VECTOR_TEST_H_
@@ -20,6 +20,8 @@ namespace vector_public
     //  test constructor
     void testCase1()
     {
+        cout << "testCase1" << endl;
+
         vector<int> v1(OBJECT_NUM, 1);    //  vector(n, value)
 
         for (int i = 0; i < OBJECT_NUM; ++i)
@@ -34,7 +36,7 @@ namespace vector_public
         
         for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            cout << *(v1.start + i) << "\t";    //  0 1 2 3 4 
+            cout << *(v2.start + i) << "\t";    //  0 1 2 3 4 
         }
         cout << endl;
 
@@ -46,7 +48,7 @@ namespace vector_public
         
         for (int i = 0; i < OBJECT_NUM; ++i)
         {
-            cout << *(v1.start + i) << "\t";    //  0 1 2 3 4 
+            cout << *(v3.start + i) << "\t";    //  0 1 2 3 4 
         }
         cout << endl;
 
@@ -67,6 +69,8 @@ namespace vector_public
     //  copy
     void testCase2()
     {
+        cout << "testCase2" << endl;
+
         int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
 
         vector<int> v1(arr, arr + OBJECT_NUM);
@@ -80,9 +84,11 @@ namespace vector_public
     }
 
     //////////////////////////////////////////////////////////////////////
-    //  test assingment
+    //  test assignment
     void testCase3()
     {
+        cout << "testCase3" << endl;
+
         int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
         vector<int> v1(arr, arr + OBJECT_NUM);
 
@@ -107,9 +113,11 @@ namespace vector_public
     void testConstructor()
     {
         cout << "testConstructor" << endl;
+     
         testCase1();
         testCase2();
         testCase3();
+      
         cout << endl;
     }
 
@@ -131,7 +139,11 @@ namespace vector_public
     //  
     void testElementAccess()
     {
+        cout << "testElementAccess" << endl;
+
         testCase4();
+    
+        cout << endl;
     }
     
     //////////////////////////////////////////////////////////////////////
@@ -147,7 +159,7 @@ namespace vector_public
         vectorIterator<int> begin = v1.begin();
         for (; begin != v1.end(); ++begin)
         {
-            cout << *begin;
+            cout << *begin << "\t";     //  3 3 3 3 3
         }
         cout << endl;
 
@@ -159,7 +171,7 @@ namespace vector_public
         int size = v2.size();
         for (int i = 0; i < size; ++i)
         {
-            cout << v2[i];
+            cout << v2[i] << "\t";      //  0 3 3 3 3 3 1 2 3 4 
         }
         cout << endl;
     }
@@ -329,20 +341,22 @@ namespace vector_public
     {
         cout << "testModifers" << endl;
         testCase5();
-        testCase6();
-        testCase7();
-        testCase8();
-        testCase9();
-        testCase10();
+//         testCase6();
+//         testCase7();
+//         testCase8();
+//         testCase9();
+//         testCase10();
         cout << endl;
     }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "vector_public test" << endl;
+      
         testConstructor();
-        testElementAccess();
+   //     testElementAccess();
         testModifiers();
+        
         cout << endl;
     }
 }

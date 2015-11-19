@@ -32,7 +32,7 @@ void public_test()
 
  
      vector_public::test();
-     list_public::test();
+//     list_public::test();
  
 //     other_public::test();
 

@@ -8,6 +8,8 @@
 #ifndef _PRIVATE_COMMON_DATA_H_
 #define _PRIVATE_COMMON_DATA_H_
 
+#include <string.h>     //  for strlen
+
 #include "common_header_files.h"
 
 //////////////////////////////////////////////////////////////////////

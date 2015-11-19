@@ -35,6 +35,7 @@ namespace STLite
         {
            *first = value;
         }
+        return first;
     }
     //////////////////////////////////////////////////////////////////////
     //  copy
@@ -53,7 +54,8 @@ namespace STLite
     //  copy_aux for RandomAccessIterator
     //  it has a higher performance than InputIterator
     template<class RandomAccessIterator, class OutputIterator>
-    inline OutputIterator copy_aux(RandomAccessIterator first, RandomAccessIterator last, OutputIterator result)
+    inline OutputIterator copy_aux(RandomAccessIterator first, RandomAccessIterator last, OutputIterator result,
+                                   random_access_iterator_tag )
     {
         typedef typename iterator_traits<RandomAccessIterator>::difference_type distance;
 
@@ -72,7 +74,7 @@ namespace STLite
     {
         typedef typename iterator_traits<InputIterator>::iterator_category category;
         return copy_aux(first, last, result, category());
-    };
+    }
 
     //  copy, specialization for const char *
     inline char * copy(const char *first, const char *last, char *result)
@@ -88,7 +90,8 @@ namespace STLite
     //  copy_backward_aux for BidirectionalIterator
     template<class BidirectionalIterator1, class BidirectionalIterator2>
     inline BidirectionalIterator2 
-    copy_backward_aux(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result, bidirectional_iterator_tag)
+    copy_backward_aux(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result, 
+                      bidirectional_iterator_tag)
     {
         while (first != last)
         {
@@ -100,7 +103,8 @@ namespace STLite
     //  copy_backward_aux for RandomAccessIterator
     template<class RandomAccessIterator, class BidirectionalIterator>
     inline BidirectionalIterator
-    copy_backward_aux(RandomAccessIterator first, RandomAccessIterator last, BidirectionalIterator result, random_access_iterator_tag) 
+    copy_backward_aux(RandomAccessIterator first, RandomAccessIterator last, BidirectionalIterator result, 
+                      random_access_iterator_tag) 
     {
         typedef typename iterator_traits<RandomAccessIterator>::difference_type distance;
 

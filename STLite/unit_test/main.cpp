@@ -15,7 +15,7 @@ int main()
 {
     cout << "Hello STLite" << endl;
     
- //   public_test();
+//    public_test();
     private_test();
     
     cout << endl;
