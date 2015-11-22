@@ -45,10 +45,7 @@ namespace STLite
         // assignment
         vectorIterator & operator =(const vectorIterator &vIter)
         {
-            if (this != &vIter)
-            {
-                m_ptr = vIter.m_ptr;
-            }
+            m_ptr = vIter.m_ptr;
             return *this;
         }
 
@@ -132,7 +129,7 @@ namespace STLite
             return *(*this + n);
         }
     //////////////////////////////////////////////////////////////////////
-    //  operator ==, !=
+    //  operator ==, !=£¬ <, >,  <=, >=
     public:
         bool operator ==(const vectorIterator &lhs) const
         {
@@ -142,6 +139,26 @@ namespace STLite
         bool operator !=(const vectorIterator &lhs) const
         {
             return !(*this == lhs);
+        }
+
+        bool operator <(const vectorIterator &lhs) const
+        {
+            return m_ptr < lhs.m_ptr;
+        }
+
+        bool operator >(const vectorIterator &lhs) const
+        {
+            return m_ptr > lhs->m_ptr;
+        }
+
+        bool operator <=(const vectorIterator &lhs) const
+        {
+            return operator <(lhs) || operator ==(lhs);
+        }
+
+        bool operator >=(const vectorIterator &lhs) const
+        {
+            return operator >(lhs) || opearator ==(lhs);
         }
     };
 
