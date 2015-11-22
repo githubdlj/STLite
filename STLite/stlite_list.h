@@ -3,14 +3,18 @@
 	Filename: stlite_list
 	Author:	  dinglj
 	
-	Purpose:  list实现
+	Purpose:  list, circular bidirectional list
 *********************************************************************/
 #ifndef _STLIST_LIST_H_
 #define _STLIST_LIST_H_
 
-#include "stlite_alloc.h"   //  allocator
-using namespace STLite;
+#include <crtdefs.h>                //  std::ptrdiff_t
 
+#include "common_header_files.h"
+#include "stlite_alloc.h"   //  allocator
+#include "stlite_iterator.h"
+
+//////////////////////////////////////////////////////////////////////
 namespace STLlite
 {
     //  node
@@ -20,17 +24,49 @@ namespace STLlite
         typedef list_node<T> pointer;
         pointer prev;
         pointer next;
+
+        T data;
+    };
+    
+    //////////////////////////////////////////////////////////////////////
+    //  iterator, BidirectionalIterator
+    template<class T>
+    struct listIterator : public iterator<bidirectional_iterator_tag, T>
+    {
+    //////////////////////////////////////////////////////////////////////
+    //  data
+        typedef list_node<T> * link_type;
+
+        link_type node;     //  point to list_node
     };
 
+    //////////////////////////////////////////////////////////////////////
     //  list
-    template<class T, class Alloc = allocator<T>>
+    template<class T, class Alloc = allocator<list_node<T> > >
     class list
     {
-    protected:
-        typedef list_node<T> list_node;
-        typedef allocator<T> list_node_allocator;   //  节点内存分配器
-    
-    };
+    public:
+        typedef T               value_type;
+        typedef T*              pointer;
+        typedef T&              reference;
+        typedef size_t          size_type;
+        typedef std::ptrdiff_t  difference_type;
+    //////////////////////////////////////////////////////////////////////
+    //  in order to test, set it as public.
+    public:
+        typedef list_node<T> * link_type;
 
+        link_type node;     //  it can present the list.
+    
+    //////////////////////////////////////////////////////////////////////
+    //  iterator
+    public:
+        typedef listIterator<T> iterator;
+
+    //////////////////////////////////////////////////////////////////////
+    //  allocator
+    public:
+        typedef allocator<list_node<T> > node_allocator;
+    };
 }
 #endif
