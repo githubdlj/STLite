@@ -298,7 +298,7 @@ namespace STLite
         }
     
         //  assignment, it should destruct the old objects and deallocate the old memory.
-        const vector & operator =(const vector &lhs)
+        vector & operator =(const vector &lhs)
         {
             //  allocate new memory, construct objects.
             pointer new_start = allocate(lhs.finish - lhs.start);
@@ -314,6 +314,19 @@ namespace STLite
             end_of_storage = new_end_of_storage;
 
             return *this;
+
+//             //  it can also rewrite like this.
+//             if (&lhs != this)   //  check self assignment
+//             {
+//                 vector<T> temp(lhs);    //  a temp vector, it will destroy when the function return
+//                 
+//                 std::swap(start, temp.start);
+//                 std::swap(finish, temp.finish);
+//                 std::swap(end_of_storage, temp.storage);
+//             }
+//             return *this;
+            
+            //  the SGI STL has a higher performance but more complex way.
         }
 
         ~vector()
