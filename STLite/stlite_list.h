@@ -206,15 +206,15 @@ namespace STLite
         {
             empty_initialize();
             
-            //  error, const list can not transfer to list 
+            //  error, end() is iterator, lhs.begin() is CONST iterator.
+            //  it can not transfer CONST iterator to iterator.
+            //  it should realized const_iterator.
+            
             //  insert(end(), lhs.begin(), lhs.end());
             
-            link_type p = lhs.node->next;
-            link_type end = lhs.node;
-            for (; end != p; p = p->next)
-            {
-                insert(this->end(), p->data);
-            }
+            link_type first = lhs.node->next;
+            link_type last = lhs.node;
+            insert(end(), iterator(first), iterator(last));
         }
 
         //  assignment
@@ -238,9 +238,9 @@ namespace STLite
                 iterator first1 = begin();
                 iterator last1 = end();
                 
-//                 //  type transfer error              
-//                 iterator first2 = lhs.begin();
-//                 iterator last2 = lhs.end();
+//                 //  type transfer error , see list(const list &lhs)             
+//                  iterator first2 = lhs.begin();
+//                  iterator last2 = lhs.end();
                 link_type first2 = lhs.node->next;
                 link_type last2 = lhs.node;
 
@@ -274,7 +274,7 @@ namespace STLite
         {
             return iterator(node->next);
         }
-
+        
         iterator end()
         {
             return iterator(node);
