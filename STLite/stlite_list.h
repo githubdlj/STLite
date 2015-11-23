@@ -205,9 +205,68 @@ namespace STLite
         list(const list &lhs)
         {
             empty_initialize();
-            insert(end(), lhs.begin(), lhs.end());
+            
+            //  error, const list can not transfer to list 
+            //  insert(end(), lhs.begin(), lhs.end());
+            
+            link_type p = lhs.node->next;
+            link_type end = lhs.node;
+            for (; end != p; p = p->next)
+            {
+                insert(this->end(), p->data);
+            }
         }
 
+        //  assignment
+        list & operator =(const list &lhs)
+        {
+//             //  swap, a simple way. 
+//             //  something wrong
+//             if (&lhs != this)   //  check self assignment
+//             {
+//                 list<T> temp(lhs);  //  a temp list, it will destroy when the function returns
+//                 
+//                 std::swap(node, lhs.node);  // compiler error
+//                 
+//             }
+//             return *this;
+
+            //  another way, it is more complex but has a higher performance.
+            //  it can reduce to allocate memory and deallocate memory.
+            if (&lhs != this)
+            {
+                iterator first1 = begin();
+                iterator last1 = end();
+                
+//                 //  type transfer error              
+//                 iterator first2 = lhs.begin();
+//                 iterator last2 = lhs.end();
+                link_type first2 = lhs.node->next;
+                link_type last2 = lhs.node;
+
+                for(; last1 != first1 && last2 != first2; ++first1, first2 = first2->next)
+                {
+                    *first1 = first2->data;
+                }
+
+                if (last1 == first1)
+                {
+                    insert(last1, iterator(first2), iterator(last2));
+                }
+                else
+                {
+                    erase(first1, last1);
+                }
+            }
+            return *this;
+        }
+
+        // destructor
+        ~list()
+        {
+            clear();
+            put_node(node);     //  destroy the header node
+        }
     //////////////////////////////////////////////////////////////////////
     //  iterators
     public:

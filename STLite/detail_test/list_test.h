@@ -166,6 +166,44 @@ namespace list_private
     {
         cout << "testCase5" << endl;
 
+        String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        list<String> list1(strArr, strArr + OBJECT_NUM);
+
+        //  copy constructor
+        list<String> list2(list1);      
+        
+        listIterator<String> it = list2.begin();
+        listIterator<String> end = list2.end();
+        for (; end != it; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+
+        //////////////////////////////////////////////////////////////////////
+        //  operator =
+        //  case1
+        list<String> list3(2, "String");     
+        list3 = list2;                 
+
+        it = list3.begin();
+        end = list3.end();
+        for (; end != it; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+
+        //  case2
+        list<String> list4(10, "String"); 
+        list4 = list2;
+
+        it = list4.begin();
+        end = list4.end();
+        for (; end != it; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
         cout << endl;
     }
 
@@ -174,8 +212,8 @@ namespace list_private
         cout << "testConstruct" << endl;
 
     //    testCase3();
-        testCase4();
-    //    testCase5();
+    //    testCase4();
+        testCase5();
 
         cout << endl;
     }
@@ -207,6 +245,16 @@ namespace list_private
             cout << it->m_data << "\t";
         }
         cout << endl;
+
+        list<String> list2;
+        list2.insert(list2.begin(), list1.begin(), list1.end());    //  insert(pos, first, last)
+        
+        end = list2.end();
+        for (it = list2.begin(); end != it; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
     }
 
     //  test erase
@@ -234,8 +282,8 @@ namespace list_private
     {
         cout << "testModifies" << endl;
 
-        //  testCase6();
-        testCase7();
+        testCase6();
+        //  testCase7();
 
         cout << endl;
     }
@@ -245,8 +293,8 @@ namespace list_private
         cout << "list_private test" << endl;
 
    //     testIterator();
-   //     testConstruct();
-        testModifies();
+        testConstruct();
+   //     testModifies();
         
         cout << endl;
     }
