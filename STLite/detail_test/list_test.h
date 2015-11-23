@@ -166,18 +166,57 @@ namespace list_private
         cout << "testConstruct" << endl;
 
     //    testCase3();
-        testCase4();
+    //    testCase4();
+        testCase5();
 
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+
+    //  test Insert
+    void testCase6()
+    {
+        cout << "testCase6" << endl;
+
+        String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        list<String> list1(strArr, strArr + OBJECT_NUM);
+
+        listIterator<String> it = list1.begin();
+        list1.insert(it, "InsertString0");      //  insert(pos, value)
+
+        ++it;
+        list1.insert(it, 2, "InsertString1_2");   //  insert(pos, n, value)
+
+        it = list1.end();
+        String insertStrArr[2] = {"InsertString3", "InsertString4"};
+        list1.insert(it, insertStrArr, insertStrArr + 2);   //  insert(pos, first, last);
+
+        //  traverse list
+        listIterator<String> end  = list1.end();
+        for (it = list1.begin(); end != it; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+    }
+
+    void testModifies()
+    {
+        cout << "testModifies" << endl;
+
+        testCase6();
+
+        cout << endl;
+    }
     void test()
     {
         cout << "list_private test" << endl;
 
    //     testIterator();
-        testConstruct();
-
+   //     testConstruct();
+        testModifies();
+        
         cout << endl;
     }
 }
