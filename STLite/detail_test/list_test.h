@@ -12,6 +12,7 @@
 #include "common_header_files.h"
 #include "common_data.h"
 #include "../stlite_list.h"
+#include "../stlite_vector.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace list_private
@@ -79,11 +80,103 @@ namespace list_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    void testCase3()
+    {
+        cout << "testCase3" << endl;
+
+        list<int> list1;    //  list()
+
+        //  list(n, value)  
+        list<int> list2(OBJECT_NUM, 1);    
+
+        list_node<int> *begin = list2.node->next;
+        while (list2.node != begin)
+        {
+            cout << begin->data << "\t";    //  1 1 1 1 1
+            begin = begin->next;
+        }
+        cout << endl;
+
+        //  list(first, last)
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        list<int> list3(arr, arr + OBJECT_NUM);
+
+        list<int>::iterator it = list3.begin();
+        list<int>::iterator end = list3.end();
+
+        for (; end != it; ++it)
+        {
+            cout << *it << "\t";    //  0 1 2 3 4
+        }
+        cout << endl;
+
+        //  list(first, last)
+        list<int> list4(list3.begin(), list3.end());
+
+        it = list4.begin();
+        end = list4.end();
+        for (; end != it; ++it)
+        {
+            cout << *it << "\t";    // 0 1 2 3 4 
+        }
+        cout << endl;
+
+        //  list(first, last)
+        vector<int> v(arr, arr + OBJECT_NUM);   
+        list<int> list5(v.begin(), v.end());
+
+        it = list5.begin();
+        end = list5.end();
+        for (; end != it; ++it)
+        {
+            cout << *it << "\t";    //  0 1 2 3 4
+        }
+        cout << endl;
+    }
+
+    void testCase4()
+    {
+        cout << "testCase4" << endl;
+
+        //  list<String>(first, last)
+        String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        list<String> list1(strArr, strArr + OBJECT_NUM);
+
+        listIterator<String> it = list1.begin();
+        listIterator<String> end = list1.end();
+        for (; end != it; ++it)
+        {
+            //  cout << (*it).m_data << "\t";
+            cout << it->m_data << "\t"; 
+        }
+        cout << endl;
+        
+    }
+
+    //  test copy && assignment
+    void testCase5()
+    {
+        cout << "testCase5" << endl;
+
+        cout << endl;
+    }
+
+    void testConstruct()
+    {
+        cout << "testConstruct" << endl;
+
+    //    testCase3();
+        testCase4();
+
+        cout << endl;
+    }
+
     void test()
     {
         cout << "list_private test" << endl;
 
-        testIterator();
+   //     testIterator();
+        testConstruct();
 
         cout << endl;
     }
