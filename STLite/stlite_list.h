@@ -85,14 +85,14 @@ namespace STLite
         listIterator & operator --()  
         {
             node = node->prev;
-            return this;
+            return *this;
         }
 
         listIterator operator --(int)
         {
             node temp(*this);
             ++(*this);
-            return node;
+            return temp;
         }
 
         //  comparison
@@ -180,6 +180,12 @@ namespace STLite
         list()
         {
             empty_initialize();
+        }
+        
+        list(size_type n)
+        {
+            empty_initialize();
+            insert(end(), n, value_type());
         }
 
         list(size_type n, const value_type &value)
@@ -271,6 +277,50 @@ namespace STLite
         {
             typedef typename _is_integer<InputIterator>::is_integer is_integer;
             insert_dispatch(pos, first, last, is_integer());
+        }
+    //////////////////////////////////////////////////////////////////////
+    //  erase, arguments: iterator
+    //         return: iterator
+    public:
+        iterator erase(iterator pos)
+        {
+            link_type prev = pos.node->prev;
+            link_type next = pos.node->next;
+            
+            prev->next = next;
+            next->prev = prev;
+            
+            destroy_node(pos.node);     //  destruct elements and destroy memory
+            
+            return iterator(next);
+        }
+        
+        //  error, because erase(pos) will destroy the pos, thus ++pos is invalid.            
+//         iterator erase(iterator first, iterator last)
+//         {
+//             for (; last != first; ++first)
+//             {
+//                 erase(first);
+//             }
+//             return first;
+//         }
+        iterator erase(iterator first, iterator last)
+        {
+            while (last != first)
+            {
+                erase(first++);     //  operator ++(int) first return the old iterator object and then ++
+            }
+            return first;
+        }
+
+    //  clear
+    public:
+        void clear()
+        {
+            erase(begin(), end());
+            
+            node->next = node;
+            node->prev = node;
         }
     };
 }

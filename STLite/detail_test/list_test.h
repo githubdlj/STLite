@@ -150,7 +150,15 @@ namespace list_private
             cout << it->m_data << "\t"; 
         }
         cout << endl;
-        
+
+        //  traverse list reversely
+        it = list1.end();
+        end = list1.begin();
+        for (; end != it; --it)
+        {
+            cout << it.node->prev->data.m_data << "\t";
+        }
+        cout << endl;
     }
 
     //  test copy && assignment
@@ -166,8 +174,8 @@ namespace list_private
         cout << "testConstruct" << endl;
 
     //    testCase3();
-    //    testCase4();
-        testCase5();
+        testCase4();
+    //    testCase5();
 
         cout << endl;
     }
@@ -201,14 +209,37 @@ namespace list_private
         cout << endl;
     }
 
+    //  test erase
+    void testCase7()
+    {
+        cout << "testCase7" << endl;
+
+        String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        list<String> list1(strArr, strArr + OBJECT_NUM);
+
+        list<String>::iterator first = ++list1.begin();
+        list<String>::iterator last = --list1.end();
+        list<String>::iterator it = list1.erase(first, last);
+        cout << it->m_data << endl;     //  String4
+       
+        list<String>::iterator end = list1.end();
+        for (it = list1.begin(); end != it; ++it)
+        {
+            cout << it->m_data << "\t";     //  String0 String4
+        }
+        cout << endl;
+    }
+
     void testModifies()
     {
         cout << "testModifies" << endl;
 
-        testCase6();
+        //  testCase6();
+        testCase7();
 
         cout << endl;
     }
+
     void test()
     {
         cout << "list_private test" << endl;
