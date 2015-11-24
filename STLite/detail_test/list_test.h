@@ -371,6 +371,7 @@ namespace list_private
         }
         cout << endl;
     }
+
     void testModifies()
     {
         cout << "testModifies" << endl;
@@ -384,14 +385,85 @@ namespace list_private
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+    //  test transfer
+    void testCase11()
+    {
+        int arr[OBJECT_NUM * 2] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        list<int> list1(arr, arr + OBJECT_NUM * 2);
+
+        list<int>::iterator pos = list1.begin();
+        list<int>::iterator first = list1.begin();
+        list<int>::iterator last = list1.begin();
+
+        advance(pos, 3);
+        advance(first, 5);
+        advance(last, 7);
+
+//         //  3, 5, 7
+//         cout << *pos << endl;
+//         cout << *first << endl;
+//         cout << *last << endl;
+
+        //  case1, transfer on 1 list
+        list1.transfer(pos, first, last);
+
+        list<int>::iterator it = list1.begin();
+        list<int>::iterator end = list1.end();
+        for (; it != end; ++it)
+        {
+            cout << *it << "\t";    // 0 1 2 5 6 3 4 7 8 9
+        }   
+        cout << endl;
+
+        //  case2, transfer on 2 lists
+        list<int> list2(arr, arr + OBJECT_NUM);     //  0 1 2 3 4 
+
+        pos = list2.begin();
+        advance(pos, 2);    //  *pos = 2
+
+        first = list1.begin();
+        last = list1.begin();
+        advance(first, 3);  //  *first = 5
+        advance(last, 5);  //  *last = 3
+
+        list1.transfer(pos, first, last);   //  it can also call list2.transfer(pos, first, last)
+
+        it = list1.begin();
+        end = list1.end();
+        for (; it != end; ++it)
+        {
+            cout << *it << "\t";    //  0 1 2 3 4 7 8 9
+        }
+        cout << endl;
+
+        it = list2.begin();
+        end = list2.end();
+        for (; it != end; ++it)
+        {
+            cout << *it << "\t";    //  0 1 5 6 2 3 4
+        }
+        cout << endl;
+    }
+
+    void testOperations()
+    {
+        cout << "testOperaions" << endl;
+
+        testCase11();
+
+        cout << endl;
+    }
+
     void test()
     {
         cout << "list_private test" << endl;
 
    //     testIterator();
    //     testConstruct();
-        testModifies();
-        
+   //     testModifies();
+        testOperations();
+
         cout << endl;
     }
 }

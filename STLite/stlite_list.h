@@ -15,6 +15,7 @@
 #include "stlite_iterator.h"
 #include "stlite_type_traits.h"
 #include "stlite_construct.h"
+#include "stlite_algorithm.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace STLite
@@ -254,7 +255,10 @@ namespace STLite
         }
     //////////////////////////////////////////////////////////////////////
     //  modifiers
-
+    //  insert, erase, clear, assign
+    //  push_back, pop_back, push_front, pop_front
+    //  swap
+ 
     //  insert
     private:
         void fill_insert(iterator pos, size_type n, const value_type &value)
@@ -456,6 +460,42 @@ namespace STLite
         void swap(list &lhs)    //  notice the parameter, list &lhs, not const list &lhs
         {
             std::swap(node, lhs.node);
+        }
+
+    //////////////////////////////////////////////////////////////////////
+    //  elements access
+    //  front, back
+    public:
+        reference front()
+        {
+            return *begin();
+        }
+
+        reference back()
+        {
+            return *(--end());
+        }
+    
+    //////////////////////////////////////////////////////////////////////
+    //  operations
+    //  splice, remove, remove_if, unique, merge, sort, reverse
+    public:     //  it should be private, in order to test, declare it public.
+        //  move the elements on range [first, last) to pos. 
+        void transfer(iterator pos, iterator first, iterator last)
+        {
+            if (pos != last)
+            {
+                link_type posPrev = pos.node->prev;
+                
+                last.node->prev->next = pos.node;
+                pos.node->prev = last.node->prev;
+                
+                first.node->prev->next = last.node;
+                last.node->prev = first.node->prev;
+
+                posPrev->next = first.node;
+                first.node->prev = posPrev;
+            }
         }
     };
 }
