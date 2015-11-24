@@ -322,13 +322,39 @@ namespace list_private
         cout << endl;
     }
 
+    //  test push, pop
+    void testCase9()
+    {
+        list<String> list1;
+
+        list1.push_back("String0");
+        list1.push_back("String1");
+
+        list1.push_front("String2");
+        
+        list1.pop_back();
+
+        list1.push_front("String3");
+        
+        list1.pop_front();
+        
+        listIterator<String> it = list1.begin();
+        listIterator<String> end = list1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  String2 String0
+        }
+        cout << endl;
+    }
+
     void testModifies()
     {
         cout << "testModifies" << endl;
 
         //  testCase6();
         //  testCase7();
-        testCase8();
+        //  testCase8();
+        testCase9();
 
         cout << endl;
     }

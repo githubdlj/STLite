@@ -253,6 +253,8 @@ namespace STLite
             return iterator(node);
         }
     //////////////////////////////////////////////////////////////////////
+    //  modifiers
+
     //  insert
     private:
         void fill_insert(iterator pos, size_type n, const value_type &value)
@@ -417,7 +419,7 @@ namespace STLite
             }
             return first;
         }
-
+    
     //  clear
     public:
         void clear()
@@ -426,6 +428,28 @@ namespace STLite
             
             node->next = node;
             node->prev = node;
+        }
+    //////////////////////////////////////////////////////////////////////
+    //  push, pop
+    public:
+        void push_back(const value_type &value)
+        {
+            insert(end(), value);
+        }
+        
+        void pop_back()
+        {
+            erase(--end());
+        }
+
+        void push_front(const value_type &value)
+        {
+            insert(begin(), value);
+        }
+        
+        void pop_front()
+        {
+            erase(begin());
         }
     };
 }
