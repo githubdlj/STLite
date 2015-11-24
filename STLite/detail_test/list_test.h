@@ -347,6 +347,30 @@ namespace list_private
         cout << endl;
     }
 
+    //  test swap
+    void testCase10()
+    {
+        list<String> list1(OBJECT_NUM, "String0");
+        list<String> list2(2, "String1");
+
+        list1.swap(list2);
+
+        list<String>::iterator it = list1.begin();
+        list<String>:: iterator end = list1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+
+        it = list2.begin();
+        end = list2.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+    }
     void testModifies()
     {
         cout << "testModifies" << endl;
@@ -354,7 +378,8 @@ namespace list_private
         //  testCase6();
         //  testCase7();
         //  testCase8();
-        testCase9();
+        //  testCase9();
+        testCase10();
 
         cout << endl;
     }

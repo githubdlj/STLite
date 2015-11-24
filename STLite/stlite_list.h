@@ -451,6 +451,12 @@ namespace STLite
         {
             erase(begin());
         }
+    //  swap
+    public:
+        void swap(list &lhs)    //  notice the parameter, list &lhs, not const list &lhs
+        {
+            std::swap(node, lhs.node);
+        }
     };
 }
 #endif
