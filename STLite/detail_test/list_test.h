@@ -278,12 +278,57 @@ namespace list_private
         cout << endl;
     }
 
+    //  test assign
+    void testCase8()
+    {
+        //  3 kinds of data type, it can reduce 3 kinds of iterators.
+        String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        vector<String> vec(strArr, strArr + OBJECT_NUM);
+        list<String> list1(vec.begin(), vec.end());
+
+        //  case1, the original list is shorter
+        list<String> list2(2, "String");
+        list2.assign(strArr, strArr + OBJECT_NUM);
+        
+        list<String>::iterator it = list2.begin();
+        list<String>::iterator end = list2.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+
+        //  case2, the origin list is longer
+        list<String> list3(10, "String");
+        list3.assign(vec.begin(), vec.end());
+
+        it = list3.begin();
+        end = list3.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+
+        //  case3, equal
+        list<String> list4(OBJECT_NUM, "String");
+        list4.assign(list1.begin(), list1.end());
+
+        it = list4.begin();
+        end = list4.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+    }
+
     void testModifies()
     {
         cout << "testModifies" << endl;
 
-        testCase6();
+        //  testCase6();
         //  testCase7();
+        testCase8();
 
         cout << endl;
     }
@@ -293,8 +338,8 @@ namespace list_private
         cout << "list_private test" << endl;
 
    //     testIterator();
-        testConstruct();
-   //     testModifies();
+   //     testConstruct();
+        testModifies();
         
         cout << endl;
     }

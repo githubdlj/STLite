@@ -337,6 +337,79 @@ namespace STLite
             typedef typename _is_integer<InputIterator>::is_integer is_integer;
             insert_dispatch(pos, first, last, is_integer());
         }
+    
+    //////////////////////////////////////////////////////////////////////
+    //  assign
+    private:
+        void fill_assign(size_type n, const value_type &value)
+        {
+            iterator first = begin();
+            iterator last = end();
+
+            for (; first != last && n > 0; ++first, --n)
+            {
+                *first = value;
+            }
+
+            if (0 == n)     //  the list's size > n
+            {
+                erase(first, last);
+            }
+            else            //  the list's size < n
+            {
+                insert(first, n, value);
+            }
+        }
+
+        template<class InputIterator>
+        void range_assign(InputIterator first, InputIterator last)
+        {
+            //  way1, swap. it is simple but has more operations on memory 
+
+            //  way2
+            iterator thisFirst = begin();
+            iterator thisLast = end();
+
+            for (; thisFirst != thisLast && first != last; ++thisFirst, ++first)
+            {
+                *thisFirst = *first;
+            }
+
+            if (thisFirst == thisLast)   //  the original list is shorter.
+            {
+                insert(thisFirst, first, last);
+            }
+            else                        //  the original list is longer
+            {
+                erase(thisFirst, thisLast);
+            }
+        }
+
+    private:
+        template<class Integer>
+        void assign_dispatch(Integer n, const value_type &value, __true_type)
+        {
+            fill_assign(n, value);
+        }
+
+        template<class InputIterator>
+        void assign_dispatch(InputIterator first, InputIterator last, __false_type)
+        {
+            range_assign(first, last);
+        }
+
+    public:
+        void assign(size_type n, const value_type &value)
+        {
+            assign_dispatch(n, value, __true_type());
+        }
+
+        template<class InputIterator>
+        void assign(InputIterator first, InputIterator last)
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;
+            assign_dispatch(first, last, is_integer());
+        }
     //////////////////////////////////////////////////////////////////////
     //  erase, arguments: iterator
     //         return: iterator
