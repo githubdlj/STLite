@@ -104,6 +104,91 @@ namespace base_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    void swap0(int *p, int *q)
+    {
+        int temp = *p;
+        *p = *q;
+        *q = temp;
+    }
+
+    void swap1(int &p, int &q)
+    {
+        int temp = p;
+        p = q;
+        q = temp;
+    }
+
+    void swap2(int * &p, int * &q)
+    {
+        int *temp = p;
+        p = q;
+        q = temp;
+    }
+
+    void swap3(int * &p, int * &q)
+    {
+        int temp = *p;
+        *p = *q;
+        *q = temp;
+    }
+
+    void swap4(int **p, int **q)
+    {
+        int *temp = *p;
+        *p = *q;
+        *q = temp;
+    }
+
+    void swap5(int **p, int **q)
+    {
+        int temp = **p;
+        **p = **q;
+        **q = temp;
+    }
+
+    void testCase3()
+    {
+        cout << "testCase3" << endl;
+        int a = 3;
+        int b = 4;
+
+        //  all the swap can work right
+        swap0(&a, &b);
+        swap1(a, b);
+
+        cout << a << endl;     
+        cout << b << endl;
+    }
+
+    void testCase4()
+    {
+        cout << "testCase4" << endl;
+
+        int a = 3;
+        int b = 4;
+        int *p = &a;
+        int *q = &b;
+
+        //  all the swap can work right
+        swap2(p, q);
+        swap3(p, q);
+
+        swap4(&p, &q);
+        swap5(&p, &q);
+
+        cout << endl;
+    }
+
+    void testSwap()
+    {
+        cout << "testSwap" << endl;
+
+        testCase3();
+        testCase4();
+
+        cout << endl;
+    }
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "base_private test" << endl;
