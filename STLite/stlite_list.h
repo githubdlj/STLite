@@ -220,43 +220,16 @@ namespace STLite
         //  assignment
         list & operator =(const list &lhs)
         {
-//             //  swap, a simple way. 
-//             //  something wrong
-//             if (&lhs != this)   //  check self assignment
-//             {
-//                 list<T> temp(lhs);  //  a temp list, it will destroy when the function returns
-//                 
-//                 std::swap(node, lhs.node);  // compiler error
-//                 
-//             }
-//             return *this;
-
-            //  another way, it is more complex but has a higher performance.
-            //  it can reduce to allocate memory and deallocate memory.
+            //  call range_assign, but first check self assignment.
             if (&lhs != this)
             {
-                iterator first1 = begin();
-                iterator last1 = end();
+                //  transfer error, see list(const list &lhs)
+                //  range_assign(lhs.begin(), lhs.end());
                 
-//                 //  type transfer error , see list(const list &lhs)             
-//                  iterator first2 = lhs.begin();
-//                  iterator last2 = lhs.end();
-                link_type first2 = lhs.node->next;
-                link_type last2 = lhs.node;
+                link_type first = lhs.node->next;
+                link_type last = lhs.node;
 
-                for(; last1 != first1 && last2 != first2; ++first1, first2 = first2->next)
-                {
-                    *first1 = first2->data;
-                }
-
-                if (last1 == first1)
-                {
-                    insert(last1, iterator(first2), iterator(last2));
-                }
-                else
-                {
-                    erase(first1, last1);
-                }
+                range_assign(iterator(first), iterator(last));
             }
             return *this;
         }
@@ -339,7 +312,7 @@ namespace STLite
         }
     
     //////////////////////////////////////////////////////////////////////
-    //  assign
+    //  assign, assignment does NOT check self assignment, because fill_assign can not do it(range_assign can)
     private:
         void fill_assign(size_type n, const value_type &value)
         {
