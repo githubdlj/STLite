@@ -14,6 +14,7 @@
 #include "../stlite_list.h"
 #include "../stlite_vector.h"
 #include "../stlite_algorithm.h"    //  for print
+#include "../stlite_function.h"     //  for greater, less
 
 //////////////////////////////////////////////////////////////////////
 namespace list_private
@@ -477,13 +478,66 @@ namespace list_private
         list3.reverse();
     }
 
+    //  test sort
+    bool isLess(int first, int second)
+    {
+        return first < second;
+    }
+
+    bool isGreater(int first, int second)
+    {
+        return first > second;
+    }
+
+    void testCase14()
+    {
+        cout << "testCase14" << endl;
+        const int NUM = 2 * OBJECT_NUM;
+        int order1[NUM] = {3,4,4,1,2,6,5,2,3,0};
+        int order2[NUM] = {0,1,2,2,3,3,4,4,5,6};
+        int order3[NUM] = {6,5,4,4,3,3,2,2,1,0};
+        list<int> list1;
+        
+        //  case1
+        list1.assign(order1, order1 + NUM);
+        print(list1.begin(), list1.end());
+
+        list1.sort(greater<int>());
+        print(list1.begin(), list1.end());
+        cout << endl;
+
+        //  print the elements reversely, make sure that the list is right.
+        listIterator<int> it = list1.end();
+        listIterator<int> end = list1.begin();
+        while (it != end)
+        {
+            cout << *(--it) <<  "\t";
+        }
+        cout << endl;
+
+        //  case2
+        list1.assign(order2, order2 + NUM);
+        print(list1.begin(), list1.end());
+
+        list1.sort();
+        print(list1.begin(), list1.end());
+
+        //  case3
+        list1.assign(order3, order3 + NUM);
+        print(list1.begin(), list1.end());
+
+        list1.sort();
+        print(list1.begin(), list1.end());
+        cout << endl;
+    }
+
     void testOperations()
     {
         cout << "testOperaions" << endl;
 
         //  testCase11();
-          testCase12();
-
+        //  testCase12();
+        testCase14();
         cout << endl;
     }
 
@@ -520,8 +574,8 @@ namespace list_private
    //     testIterator();
    //     testConstruct();
    //     testModifies();
-   //     testOperations();
-        testCapacity();
+        testOperations();
+   //     testCapacity();
 
         cout << endl;
     }

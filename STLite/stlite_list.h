@@ -16,6 +16,7 @@
 #include "stlite_type_traits.h"
 #include "stlite_construct.h"
 #include "stlite_algorithm.h"
+#include "stlite_function.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace STLite
@@ -521,6 +522,44 @@ namespace STLite
             }
         }
 
+        //  sort
+        //  SGI STL use the merge sort, it is hard to understand.
+        //  I use the directly insert method.
+        template<class Compare>     //  functional
+        void sort(Compare comp)
+        {
+            iterator endPos = end();
+
+            iterator ordered = begin();
+            iterator unOrdered = ++begin();
+
+            //  init the ordered list with the first node.
+            ordered.node->next = endPos.node;
+            endPos.node->prev = ordered.node;
+
+            while (unOrdered != endPos)
+            {
+                iterator needInsert = unOrdered;
+                ++unOrdered;
+
+                //  locate the insert position.
+                iterator pos = begin();
+                for (; pos != endPos && comp(*pos, *needInsert); ++pos);
+
+                //  insert
+                needInsert.node->prev = pos.node->prev;
+                pos.node->prev->next = needInsert.node;
+                
+                needInsert.node->next = pos.node;
+                pos.node->prev = needInsert.node;
+            }
+        }
+
+        void sort()     //  default functional, less
+        {
+           sort(less<int>());
+        }
+        //  merge
     //////////////////////////////////////////////////////////////////////
     //  capacity
     //  size, max_size, empty, resize
