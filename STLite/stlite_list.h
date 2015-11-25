@@ -479,7 +479,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  operations
     //  splice, remove, remove_if, unique, merge, sort, reverse
-    public:     //  it should be private, in order to test, declare it public.
+    public:     //  it should be private, in order to test, it can be declared public temporary.
         //  move the elements on range [first, last) to pos. 
         void transfer(iterator pos, iterator first, iterator last)
         {
@@ -495,6 +495,29 @@ namespace STLite
 
                 posPrev->next = first.node;
                 first.node->prev = posPrev;
+            }
+        }
+
+    public:
+        void reverse()
+        {
+            iterator beginPos = begin();
+            iterator endPos = end();
+
+            iterator first = beginPos;   
+            iterator last = beginPos;
+
+            advance(first, 1);      //  reverse from the SECOND node.
+            advance(last, 2);
+            
+            while (first != endPos)        //  if the list has 0 or 1 node, first equals end directly.
+            {
+                transfer(begin(), first, last);
+              
+                first = last;
+                ++last;
+                
+            //    print(begin(), end());
             }
         }
     };

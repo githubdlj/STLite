@@ -13,6 +13,7 @@
 #include "common_data.h"
 #include "../stlite_list.h"
 #include "../stlite_vector.h"
+#include "../stlite_algorithm.h"    //  for print
 
 //////////////////////////////////////////////////////////////////////
 namespace list_private
@@ -281,6 +282,8 @@ namespace list_private
     //  test assign
     void testCase8()
     {
+        cout << "testCase8" << endl;
+
         //  3 kinds of data type, it can reduce 3 kinds of iterators.
         String strArr[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
         vector<String> vec(strArr, strArr + OBJECT_NUM);
@@ -325,6 +328,8 @@ namespace list_private
     //  test push, pop
     void testCase9()
     {
+        cout << "testCase9" << endl;
+
         list<String> list1;
 
         list1.push_back("String0");
@@ -350,6 +355,8 @@ namespace list_private
     //  test swap
     void testCase10()
     {
+        cout << "testCase10" << endl;
+
         list<String> list1(OBJECT_NUM, "String0");
         list<String> list2(2, "String1");
 
@@ -389,6 +396,8 @@ namespace list_private
     //  test transfer
     void testCase11()
     {
+        cout << "testCase11" << endl;
+
         int arr[OBJECT_NUM * 2] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         list<int> list1(arr, arr + OBJECT_NUM * 2);
 
@@ -446,11 +455,34 @@ namespace list_private
         cout << endl;
     }
 
+    //  test reverse
+    void testCase12()
+    {
+        cout << "testCase12" << endl;
+
+        int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        list<int> list1(arr, arr + OBJECT_NUM);
+        print(list1.begin(), list1.end());
+
+        list1.reverse();
+        print(list1.begin(), list1.end());
+
+        //
+        list<int> list2(arr, arr + 1);  //  1 nodes
+        list2.reverse();
+        print(list2.begin(), list2.end());
+
+        // 
+        list<int> list3;    //  0 nodes
+        list3.reverse();
+    }
+
     void testOperations()
     {
         cout << "testOperaions" << endl;
 
-        testCase11();
+        //  testCase11();
+          testCase12();
 
         cout << endl;
     }
