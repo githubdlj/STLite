@@ -487,6 +487,32 @@ namespace list_private
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+    void testCase13()
+    {
+        cout << "testCase13" << endl;
+
+        list<int> list1(OBJECT_NUM, 1);
+
+        //  case1, newSize > size()
+        list1.resize(2 * OBJECT_NUM, 2);
+        print(list1.begin(), list1.end());
+
+        //  case2, newSize < size()
+        list1.resize(OBJECT_NUM, 3);
+        print(list1.begin(), list1.end());
+
+        cout << endl;
+    }
+
+    void testCapacity()
+    {
+        cout << "testCapacity" << endl;
+    
+        testCase13();
+
+        cout << endl;
+    }
     void test()
     {
         cout << "list_private test" << endl;
@@ -494,7 +520,8 @@ namespace list_private
    //     testIterator();
    //     testConstruct();
    //     testModifies();
-        testOperations();
+   //     testOperations();
+        testCapacity();
 
         cout << endl;
     }

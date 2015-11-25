@@ -520,6 +520,51 @@ namespace STLite
             //    print(begin(), end());
             }
         }
+
+    //////////////////////////////////////////////////////////////////////
+    //  capacity
+    //  size, max_size, empty, resize
+    public:
+        size_type size() const
+        {
+            size_type n = 0;
+            distance(begin(), end(), n);
+            return n;
+        }
+
+        size_type max_size() const
+        {
+            return size_type(-1);
+        }
+
+        bool empty() const
+        {
+            //  call size(), call distance, call begin(), call end().
+            //  return 0 == size(); 
+
+            return node == node->next;
+        }
+
+        void resize(size_type newSize, const value_type &value)
+        {
+            iterator first = begin();
+            iterator last = end();
+            for (; first != last && newSize > 0; ++first, --newSize);
+
+            if (newSize > 0)
+            {
+                insert(last, newSize, value);
+            }
+            else
+            {
+                erase(first, last);
+            }
+        }
+
+        void resize(size_type newSize)
+        {
+            resize(newSize, value_type());
+        }
     };
 }
 #endif
