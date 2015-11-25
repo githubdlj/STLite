@@ -131,5 +131,17 @@ namespace STLite
         std::memmove(result - n, first, n);
         return result - n;
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //  print, print the container's elements
+    template<class InputIterator>
+    void print(InputIterator first, InputIterator last)
+    {
+        for (; first != last; ++first)
+        {
+            cout << *first << "\t";
+        }
+        cout << endl;
+    }
 }
 #endif
