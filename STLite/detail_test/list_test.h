@@ -541,11 +541,60 @@ namespace list_private
         list<int> list1(arr1, arr1 + OBJECT_NUM);
         list<int> list2(arr2, arr2 + OBJECT_NUM);
 
-        list1.merge(list2, greater<int>());
+        list1.merge(list2, less<int>());
 
         print(list1.begin(), list1.end());
         print(list2.begin(), list2.end());
 
+        cout << endl;
+    }
+
+    //  test unique
+    struct same_integer_part
+    {
+        bool operator() (double first, double second)
+        {
+            return int(first) == int(second);
+        }
+    };
+
+    void testCase16()
+    {
+        cout << "testCase16" << endl;
+
+        const int NUM = 2 * OBJECT_NUM;
+        int arr1[NUM] = {3,4,4,1,2,6,5,2,3,0};
+        int arr2[NUM] = {0,1,2,2,3,3,4,5,6,6};
+
+        list<int> list1;
+        list1.assign(arr1, arr1 + NUM);
+        print(list1.begin(), list1.end());
+
+        list1.unique();
+        print(list1.begin(), list1.end());
+
+        list1.assign(arr2, arr2 + NUM);
+        print(list1.begin(), list1.end());
+
+        list1.unique(equal_to<int>());
+        print(list1.begin(), list1.end());
+
+        cout << endl;
+    }
+
+    void testCase17()
+    {
+        cout << "testCase17" << endl;
+
+        double arr1[OBJECT_NUM * 2] = {2.72,  3.14, 12.15, 12.77, 12.77,
+            15.3, 72.25, 72.25, 73.0, 73.35};
+
+        list<double> list1(arr1, arr1 + OBJECT_NUM * 2);
+        print(list1.begin(), list1.end());
+
+        list1.unique(same_integer_part());
+        print(list1.begin(), list1.end());
+        
         cout << endl;
     }
 
@@ -556,7 +605,9 @@ namespace list_private
         //  testCase11();
         //  testCase12();
         //  testCase14();
-        testCase15();
+        //  testCase15();
+        //  testCase16();
+        testCase17();
 
         cout << endl;
     }

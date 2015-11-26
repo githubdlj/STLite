@@ -597,6 +597,34 @@ namespace STLite
             merge(x, less<value_type>());
         }
 
+        //  unique
+        //  removes all but the first element from every consecutive group of equal elements in the list container.
+        template<class BinaryPredicate>
+        void unique(BinaryPredicate binaryPred)
+        {
+            iterator first = begin();
+            iterator last = end();
+            iterator next = first;
+            
+            while (++next != last)
+            {
+                if (binaryPred(*first, *next))
+                {
+                    erase(next);        //  notice!, erase(next) cause the iterator valid.
+                    next = first;       //  assign next
+                }
+                else
+                {
+                    first = next;
+                }
+            }
+        }
+
+        void unique()
+        {
+            unique(equal_to<value_type>());
+        }
+
     //////////////////////////////////////////////////////////////////////
     //  capacity
     //  size, max_size, empty, resize
