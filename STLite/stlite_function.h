@@ -38,6 +38,15 @@ namespace STLite
             return x > y;
         }
     };
+
+    template<class T>
+    struct equal_to : binary_function<T, T, bool>
+    {
+        result operator ()(const arg1 &x, const arg2 &y)
+        {
+            return x == y;
+        }
+    };
 }
 
 #endif
