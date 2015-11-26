@@ -327,6 +327,7 @@ namespace STLite
 //             return *this;
             
             //  the SGI STL has a higher performance but more complex way.
+            //  see range_assign()
         }
 
         ~vector()
@@ -376,6 +377,16 @@ namespace STLite
         size_type size() const
         {
             return size_type(finish - start);
+        }
+
+        size_type max_size() const
+        {
+            return size_type(-1) / sizeof(value_type);
+        }
+
+        bool empty() const
+        {
+            return 0 == size();
         }
 
         void resize(size_type n, const value_type &x)
