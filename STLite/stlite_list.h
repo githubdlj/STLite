@@ -557,9 +557,46 @@ namespace STLite
 
         void sort()     //  default functional, less
         {
-           sort(less<int>());
+           sort(less<value_type>());
         }
+        
         //  merge
+        //  merge requires the list ordered.
+        //  if the list is ascending order, the comp should be less, otherwise greater.
+        template<class Compare>
+        void merge(list &x, Compare comp)
+        {
+            iterator first1 = begin();
+            iterator last1 = end();
+            iterator first2 = x.begin();    
+            iterator last2 = x.end();
+
+            while (first1 != last1 && first2 != last2)
+            {
+                if (comp(*first2, *first1))
+                {
+                    iterator next = first2;
+                    transfer(first1, first2, ++next);
+                    first2 = next;
+                }
+                else
+                {
+                    ++first1;
+                }
+            }
+            
+            if (first2 != last2) 
+            {
+                transfer(last1, first2, last2);
+            }
+        }
+        
+        //  default, it requires the lists descending ordered.
+        void merge(list &x)
+        {
+            merge(x, less<value_type>());
+        }
+
     //////////////////////////////////////////////////////////////////////
     //  capacity
     //  size, max_size, empty, resize

@@ -531,13 +531,33 @@ namespace list_private
         cout << endl;
     }
 
+    //  test merge
+    void testCase15()
+    {
+        cout << "testCase15" << endl;
+
+        int arr1[OBJECT_NUM] = {0, 2, 4, 6, 8};
+        int arr2[OBJECT_NUM] = {1, 3, 5, 7, 9};
+        list<int> list1(arr1, arr1 + OBJECT_NUM);
+        list<int> list2(arr2, arr2 + OBJECT_NUM);
+
+        list1.merge(list2, greater<int>());
+
+        print(list1.begin(), list1.end());
+        print(list2.begin(), list2.end());
+
+        cout << endl;
+    }
+
     void testOperations()
     {
         cout << "testOperaions" << endl;
 
         //  testCase11();
         //  testCase12();
-        testCase14();
+        //  testCase14();
+        testCase15();
+
         cout << endl;
     }
 

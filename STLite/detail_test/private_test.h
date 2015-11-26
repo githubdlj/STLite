@@ -12,6 +12,7 @@
 #include "String_test.h"
 
 #include "std_vector_test.h"
+#include "std_list_test.h"
 
 #include "vector_test.h"
 #include "list_test.h"
@@ -25,6 +26,7 @@ void private_test()
 //    String_private::test();
 // 
 //     std_vector_private::test();
+//    std_list_private::test();
 // 
 //     vector_private::test();
      list_private::test();
