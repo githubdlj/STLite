@@ -131,7 +131,38 @@ namespace STLite
         std::memmove(result - n, first, n);
         return result - n;
     }
+    
+    //////////////////////////////////////////////////////////////////////
+    //  reverse
+    template<class BidirectionalIterator>
+    void reverse_aux(BidirectionalIterator first, BidirectionalIterator last, bidirectional_iterator_tag)
+    {
+        while (first != last)
+        {
+            if(--last == first)     //  if the range's length is odd.
+                break;
+            std::swap(*first, *last);
+            ++first;
+        }
+    }
 
+    template<class RandomAccessIterator>
+    void reverse_aux(RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag)
+    {
+        while (first < last)    //  only the RandomAccessIterator supports operator <
+        {
+            --last;
+            std::swap(*first, *last);
+            ++first;
+        }
+    }
+
+    template<class BidirectionalIterator>
+    void reverse(BidirectionalIterator first, BidirectionalIterator last)
+    {
+        typedef typename iterator_traits<BidirectionalIterator>::iterator_category category;
+        reverse_aux(first, last, category());
+    }
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>

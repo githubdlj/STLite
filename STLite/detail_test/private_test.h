@@ -17,6 +17,7 @@
 #include "vector_test.h"
 #include "list_test.h"
 
+#include "algorithm_test.h"
 //////////////////////////////////////////////////////////////////////
 void private_test()
 {
@@ -29,7 +30,8 @@ void private_test()
 //    std_list_private::test();
 // 
 //     vector_private::test();
-     list_private::test();
+//     list_private::test();
 
+    algorithm_private::test();
     cout << endl;
 }
