@@ -598,6 +598,40 @@ namespace list_private
         cout << endl;
     }
 
+    //  test remove
+    struct is_odd
+    {
+        bool operator() (const int value) const
+        {
+            return 1 == value % 2;
+        }
+    };
+
+    void testCase18()
+    {
+        cout << "testCase18" << endl;
+
+        const int NUM = 2 * OBJECT_NUM;
+        int arr1[NUM] = {0,1,3,2,4,5,6,8,7,9};
+        int arr2[NUM] = {3,4,4,1,2,6,5,2,3,0};
+
+        //  case1
+        list<int> list1(arr1, arr1 + NUM);
+        print(list1.begin(), list1.end());
+        
+        list1.remove_if(is_odd());
+        print(list1.begin(), list1.end());
+
+        //  case2
+        list<int> list2(arr2, arr2 + NUM);
+        print(list2.begin(), list2.end());
+
+        list2.remove(3);
+        print(list2.begin(), list2.end());
+
+        cout << endl;
+    }
+
     void testOperations()
     {
         cout << "testOperaions" << endl;
@@ -607,8 +641,8 @@ namespace list_private
         //  testCase14();
         //  testCase15();
         //  testCase16();
-        testCase17();
-
+        //  testCase17();
+        testCase18();
         cout << endl;
     }
 

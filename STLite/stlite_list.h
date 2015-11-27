@@ -624,6 +624,44 @@ namespace STLite
         {
             unique(equal_to<value_type>());
         }
+        
+        //  remove
+        void remove(const value_type &value)
+        {
+            iterator first = begin();
+            iterator last = end();
+            
+            while (first != last)
+            {
+                if (value == *first)
+                {
+                    first = erase(first);
+                }
+                else
+                {
+                    ++first;
+                }
+            }
+        }
+
+        template<class Predicate>
+        void remove_if(Predicate pred)
+        {
+            iterator first = begin();
+            iterator last = end();
+            
+            while (first != last)
+            {
+                if (pred(*first))
+                {
+                    first = erase(first);
+                }
+                else
+                {
+                    ++first;
+                }
+            }
+        }
 
     //////////////////////////////////////////////////////////////////////
     //  capacity
