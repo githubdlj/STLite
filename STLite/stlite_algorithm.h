@@ -165,7 +165,39 @@ namespace STLite
     }
 
     //////////////////////////////////////////////////////////////////////
-    
+    //  adjacent_find
+    template<class ForwardIterator, class BinaryPredicate>
+    ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate BinaryPred)
+    {
+        if (first == last)
+        {
+            return last;
+        }
+
+        ForwardIterator next = first;
+        ++next;
+        for (; next != last; ++next)
+        {
+            if (!BinaryPred(*first, *next))    //  *first != *next;
+            {
+                ++first;
+            }
+            else
+            {
+                return first;
+            }
+        }
+        return last;
+    }
+
+    template<class ForwardIterator>
+    ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
+    {
+        typedef typename iterator_traits<ForwardIterator>::value_type value_type;
+        adjacent_find(first, last, equal_to<value_type>());
+    }
+
+    //////////////////////////////////////////////////////////////////////
     //  unique_copy
     template<class InputIterator, class ForwardIterator, class BinaryPredicate>
     ForwardIterator 
