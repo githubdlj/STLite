@@ -163,6 +163,63 @@ namespace STLite
         typedef typename iterator_traits<BidirectionalIterator>::iterator_category category;
         reverse_aux(first, last, category());
     }
+
+    //////////////////////////////////////////////////////////////////////
+    
+    //  unique_copy
+    template<class InputIterator, class ForwardIterator, class BinaryPredicate>
+    ForwardIterator 
+    unique_copy_aux(InputIterator first, InputIterator last, 
+                    ForwardIterator result, forward_iterator_tag, BinaryPredicate BinaryPred)
+    {
+        *result = *first;
+        ++first;
+        for (; first != last; ++first)
+        {
+            //  *result != *first
+            //  the list's unique is *result == *first(BinaryPre(*result, *first))
+            //  so, it should call !BinaryPred
+            if (!BinaryPred(*result, *first))      
+            {
+                *(++result) = *first;
+            }
+        }
+        return ++result;
+    }
+
+    template<class InputIterator, class OutputIterator, class BinaryPredicate>
+    OutputIterator 
+    unique_copy_aux(InputIterator first, InputIterator last, 
+                    OutputIterator result, output_iterator_tag, BinaryPredicate BinaryPred)
+    {
+        //  the version for OutputIterator
+        //  ...
+
+        return result;
+    }
+
+    template<class InputIterator, class OutputIterator, class BinaryPredicate>
+    inline OutputIterator
+    unique_copy(InputIterator first, InputIterator last, OutputIterator result, BinaryPredicate BinaryPred)
+                                
+    {
+        if (first == last)
+        {
+            return result;
+        }
+
+        typedef typename iterator_traits<OutputIterator>::iterator_category category;
+        return unique_copy_aux(first, last, result, category(), BinaryPred);
+    }
+
+    template<class InputIterator, class OutputIterator>
+    inline OutputIterator
+    unique_copy(InputIterator first, InputIterator last, OutputIterator result)
+    {
+        typedef typename iterator_traits<OutputIterator>::value_type value_type;
+        return unique_copy(first, last, result, equal_to<value_type>());
+    }
+
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>

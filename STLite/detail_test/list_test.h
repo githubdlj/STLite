@@ -541,10 +541,10 @@ namespace list_private
         list<int> list1(arr1, arr1 + OBJECT_NUM);
         list<int> list2(arr2, arr2 + OBJECT_NUM);
 
-        list1.merge(list2, less<int>());
+        list1.merge(list2, less<int>());    
 
-        print(list1.begin(), list1.end());
-        print(list2.begin(), list2.end());
+        print(list1.begin(), list1.end());  //  0 1 2 3 4 5 6 7 8 9
+        print(list2.begin(), list2.end());  //  empty
 
         cout << endl;
     }
@@ -571,13 +571,13 @@ namespace list_private
         print(list1.begin(), list1.end());
 
         list1.unique();
-        print(list1.begin(), list1.end());
+        print(list1.begin(), list1.end());  //  3 4 1 2 6 5 2 3 0
 
         list1.assign(arr2, arr2 + NUM);
-        print(list1.begin(), list1.end());
+        print(list1.begin(), list1.end());  //  0 1 2 3 4 5 6
 
-        list1.unique(equal_to<int>());
-        print(list1.begin(), list1.end());
+        list1.unique(equal_to<int>());      
+        print(list1.begin(), list1.end());  //  
 
         cout << endl;
     }
@@ -593,7 +593,7 @@ namespace list_private
         print(list1.begin(), list1.end());
 
         list1.unique(same_integer_part());
-        print(list1.begin(), list1.end());
+        print(list1.begin(), list1.end());  //  2.72, 3.14, 12.15, 15.3, 72.25, 73.0};
         
         cout << endl;
     }
@@ -620,14 +620,14 @@ namespace list_private
         print(list1.begin(), list1.end());
         
         list1.remove_if(is_odd());
-        print(list1.begin(), list1.end());
+        print(list1.begin(), list1.end());  //  0 2 4 6 8 
 
         //  case2
         list<int> list2(arr2, arr2 + NUM);
         print(list2.begin(), list2.end());
 
         list2.remove(3);
-        print(list2.begin(), list2.end());
+        print(list2.begin(), list2.end());  //  4 4 1 2 6 5 2 0 
 
         cout << endl;
     }

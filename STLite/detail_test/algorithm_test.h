@@ -9,11 +9,14 @@
 #define _ALGORITHM_TEST_H_
 
 #include <algorithm>
+#include <vector>
 #include <list>
 
 #include "common_header_files.h"
 #include "common_data.h"
 #include "../stlite_algorithm.h"
+#include "../stlite_function.h"
+#include "../stlite_vector.h"
 #include "../stlite_list.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -25,7 +28,7 @@ namespace algorithm_private
         int arr[OBJECT_NUM] = {0, 1, 2, 3, 4};
         std::list<int> list1(arr, arr + OBJECT_NUM);
 
-        std::reverse(list1.begin(), list1.end());
+        std::reverse(list1.begin(), list1.end());   //  list has it's own reverse function
         print(list1.begin(), list1.end());
 
         cout << endl;
@@ -64,11 +67,57 @@ namespace algorithm_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    //  test unique
+    void testCase3()
+    {
+        const int NUM = 2 * OBJECT_NUM; 
+        //  case1
+        int arr1[NUM] = {3,4,4,1,2,6,5,2,3,0};  //  unordered
+        std::unique_copy(arr1, arr1 + NUM, arr1, equal_to<int>());
+        print(arr1, arr1 + NUM);    //  3 4 1 2 6 5 2 3 0 [0]
+
+        //  case2
+        int arr2[NUM] = {0,1,2,2,3,3,4,5,6,6};  //  ordered
+        std::unique_copy(arr2, arr2 + NUM, arr2);
+        print(arr2, arr2 + NUM);    // 0 1 2 3 4 5 6 [5 6 6]
+
+        cout << endl;
+    }
+
+    void testCase4()
+    {
+        const int NUM = 2 * OBJECT_NUM; 
+        //  case1
+        int arr1[NUM] = {3,4,4,1,2,6,5,2,3,0};  //  unordered
+        unique_copy(arr1, arr1 + NUM, arr1, equal_to<int>());
+        print(arr1, arr1 + NUM);    //  3 4 1 2 6 5 2 3 0 [0]
+
+        //  case2
+        int arr2[NUM] = {0,1,2,2,3,3,4,5,6,6};  //  ordered
+        int *pos = unique_copy(arr2, arr2 + NUM, arr2);
+        cout << *pos << endl;       //  5
+        print(arr2, arr2 + NUM);    //  0 1 2 3 4 5 6 [5 6 6]
+
+
+        cout << endl;
+    }
+
+    void testUnique()
+    {
+        cout << "testUnique" << endl;
+
+        //  testCase3();
+        testCase4();
+
+        cout << endl;
+    }
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "algorithom_private test" << endl;
         
-        testReverse();
+        //  testReverse();
+        testUnique();
 
         cout << endl;
     }
