@@ -22,6 +22,14 @@
 //////////////////////////////////////////////////////////////////////
 namespace algorithm_private
 {
+    struct is_odd
+    {
+        bool operator() (int value)
+        {
+            return 1 == value % 2;
+        }
+    };
+
     //  test reverse
     void testCase1()
     {
@@ -167,6 +175,55 @@ namespace algorithm_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    void testCase10()
+    {
+        const int NUM = 2 * OBJECT_NUM;
+        int arr1[NUM] = {0,2,3,2,4,5,6,8,7,9};
+        
+        int *pos = find_if(arr1, arr1 + NUM, is_odd());
+        cout << *pos << endl;
+
+    }
+    //  test find, find_if
+    void testFind()
+    {
+        cout << "testFind" << endl;
+
+        testCase10();
+
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //  test remove_copy, remove
+    void testCase8()
+    {
+        const int NUM = 2 * OBJECT_NUM;
+        int arr1[NUM] = {0,1,3,2,4,5,6,8,7,9};
+
+        int *pos = remove_copy_if(arr1, arr1 + NUM, arr1, is_odd());   
+        cout << *pos << endl;       //  5
+        print(arr1, arr1 + NUM);    //  0 2 4 6 8 [5 6 7 8 9]
+
+        cout << endl;
+    }
+
+    void testCase9()
+    {
+        //  case1
+        //  case2, use remove on list
+    }
+
+    void testRemove()
+    {
+        cout << "testRemove" << endl;
+
+        testCase8();
+
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
     void testCase7()
     {
         int arr1[OBJECT_NUM] = {0, 1, 2, 3, 4};
@@ -203,7 +260,9 @@ namespace algorithm_private
         //  testReverse();
         //  testAdjacentFind();
         //  testUnique();
-        testCopy();
+        //  testCopy();
+            testFind();
+        //    testRemove();
         cout << endl;
     }
 }

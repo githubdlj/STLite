@@ -265,6 +265,65 @@ namespace STLite
         typedef typename iterator_traits<ForwardIterator>::value_type value_type;
         return unique(first, last, equal_to<value_type>());
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //  find
+    template<class InputIterator, class T>
+    InputIterator find(InputIterator first, InputIterator last, const T & value)
+    {
+        for (; first != last; ++first)
+        {
+            if (*first == value)
+            {
+                return first;
+            }
+        }
+        return last;
+    }
+    
+    template<class InputIterator, class Predicate>
+    InputIterator find_if(InputIterator first, InputIterator last, Predicate pred)
+    {
+        for (; first != last; ++first)
+        {
+            if (pred(*first))
+            {
+                return first;
+            }
+        }
+        return last;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //  remove_copy, remove
+    template<class InputIterator, class OutputIterator, class T>
+    OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T &value)
+    {
+        for (; first != last; ++first)
+        {
+            if (*first != value)
+            {
+                *result = *first;
+                ++result;
+            }
+        }
+        return result;
+    }
+
+    template<class InputIterator, class OutputIterator, class Predicate>
+    OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred)
+    {
+        for (; first != last; ++first)
+        {
+            if (!pred(*first))
+            {
+                *result = *first;
+                ++result;
+            }
+        }
+        return result;
+    }
+
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>
