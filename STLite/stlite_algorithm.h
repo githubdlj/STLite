@@ -194,7 +194,7 @@ namespace STLite
     ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
     {
         typedef typename iterator_traits<ForwardIterator>::value_type value_type;
-        adjacent_find(first, last, equal_to<value_type>());
+        return adjacent_find(first, last, equal_to<value_type>());
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -252,6 +252,19 @@ namespace STLite
         return unique_copy(first, last, result, equal_to<value_type>());
     }
 
+    template<class ForwardIterator, class BinaryPredicate>
+    ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate BinaryPred)
+    {
+        first = adjacent_find(first, last, BinaryPred);
+        return unique_copy(first, last, first, BinaryPred);
+    }
+
+    template<class ForwardIterator>
+    ForwardIterator unique(ForwardIterator first, ForwardIterator last)
+    {
+        typedef typename iterator_traits<ForwardIterator>::value_type value_type;
+        return unique(first, last, equal_to<value_type>());
+    }
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>
