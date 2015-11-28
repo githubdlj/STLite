@@ -167,14 +167,43 @@ namespace algorithm_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    void testCase7()
+    {
+        int arr1[OBJECT_NUM] = {0, 1, 2, 3, 4};
+
+        //  case1, first is RandomAccessIterator
+        list<int> list1;
+        list1.resize(OBJECT_NUM);
+        copy(arr1, arr1 + OBJECT_NUM, list1.begin());
+        print(list1.begin(), list1.end());
+
+        //  case2, first is InputIterator
+        vector<int> vec1;
+        vec1.resize(OBJECT_NUM);
+        copy(list1.begin(), list1.end(), vec1.begin());
+        print(vec1.begin(), vec1.end());
+
+        cout << endl;
+    }
+
+    void testCopy()
+    {
+        cout << "testCopy" << endl;
+
+        testCase7();
+
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "algorithom_private test" << endl;
         
         //  testReverse();
         //  testAdjacentFind();
-          testUnique();
-
+        //  testUnique();
+        testCopy();
         cout << endl;
     }
 }

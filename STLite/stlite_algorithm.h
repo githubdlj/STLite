@@ -42,7 +42,7 @@ namespace STLite
 
     //  copy_aux for InputIterator
     template<class InputIterator, class OutputIterator>
-    inline OutputIterator copu_aux(InputIterator first, InputIterator last, OutputIterator result, input_iterator_tag)
+    inline OutputIterator copy_aux(InputIterator first, InputIterator last, OutputIterator result, input_iterator_tag)
     {
         for (; first != last; ++first, ++result)
         {
