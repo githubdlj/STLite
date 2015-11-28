@@ -324,6 +324,21 @@ namespace STLite
         return result;
     }
 
+    //  remove
+    template<class ForwardIterator, class T>
+    ForwardIterator remove(ForwardIterator first, ForwardIterator last, const T &value)
+    {
+        first = find(first, last, value);
+        return remove_copy(first, last, first, value);
+    }
+
+    template<class ForwardIterator, class Predicate>
+    ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, Predicate pred)
+    {
+        first = find_if(first, last, pred);
+        return remove_copy_if(first, last, first, pred);
+    }
+
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>

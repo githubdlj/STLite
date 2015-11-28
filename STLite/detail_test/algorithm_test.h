@@ -211,14 +211,30 @@ namespace algorithm_private
     void testCase9()
     {
         //  case1
+        const int NUM = 2 * OBJECT_NUM;
+        int arr1[NUM] = {0,1,3,2,4,5,6,8,7,9};
+
+        int *pos = remove_if(arr1, arr1 + NUM, is_odd());   
+        cout << *pos << endl;       //  5
+        print(arr1, arr1 + NUM);    //  0 2 4 6 8 [5 6 7 8 9]
+
         //  case2, use remove on list
+        int arr2[NUM] = {3,4,4,1,2,6,5,2,3,0};
+        list<int> list1(arr2, arr2 + NUM);
+        
+        listIterator<int> it = remove(list1.begin(),list1.end(), 3);
+        cout << *it << endl;
+        print(list1.begin(), list1.end());  //  4 4 1 2 6 5 2 0 [3 0]
+        
+        cout << endl;
     }
 
     void testRemove()
     {
         cout << "testRemove" << endl;
 
-        testCase8();
+        //  testCase8();
+        testCase9();
 
         cout << endl;
     }
@@ -261,8 +277,9 @@ namespace algorithm_private
         //  testAdjacentFind();
         //  testUnique();
         //  testCopy();
-            testFind();
-        //    testRemove();
+        //    testFind();
+        testRemove();
+        
         cout << endl;
     }
 }
