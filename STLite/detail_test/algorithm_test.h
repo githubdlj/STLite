@@ -240,6 +240,28 @@ namespace algorithm_private
     }
 
     //////////////////////////////////////////////////////////////////////
+    void testCase11()
+    {
+        int arr1[OBJECT_NUM] = {0, 2, 4, 6, 8};
+        int arr2[OBJECT_NUM] = {1, 3, 5, 7, 9};
+        int mergeArr[2 * OBJECT_NUM];
+        
+        merge(arr1, arr1 + OBJECT_NUM, arr2, arr2 + OBJECT_NUM, mergeArr);  //  0 ~ 9
+        print(mergeArr, mergeArr + 2 * OBJECT_NUM);
+
+        cout << endl;
+    }
+
+    //  test merge
+    void testMerge()
+    {
+        cout << "testMerge" << endl;
+
+        testCase11();
+
+        cout << endl;
+    }
+
     void testCase7()
     {
         int arr1[OBJECT_NUM] = {0, 1, 2, 3, 4};
@@ -278,8 +300,9 @@ namespace algorithm_private
         //  testUnique();
         //  testCopy();
         //    testFind();
-        testRemove();
-        
+        //  testRemove();
+        testMerge();
+
         cout << endl;
     }
 }

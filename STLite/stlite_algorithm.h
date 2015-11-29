@@ -339,6 +339,35 @@ namespace STLite
         return remove_copy_if(first, last, first, pred);
     }
 
+    template<class InputIterator, class OutputIterator, class Compare>
+    OutputIterator merge(InputIterator first1, InputIterator last1,
+                         InputIterator first2, InputIterator last2, 
+                         OutputIterator result, Compare comp)
+    {
+        while (first1 != last1 && first2 != last2)
+        {
+            if (comp(*first2, *first1))
+            {
+                *result = *first2;
+                ++first2;
+            }
+            else
+            {
+                *result = *first1;
+                ++first1;
+            }
+            ++result;
+        }
+        return copy(first1, last1, copy(first2, last2, result));
+    }
+
+    template<class InputIterator, class OutputIterator>
+    OutputIterator merge(InputIterator first1, InputIterator last1,
+                         InputIterator first2, InputIterator last2, OutputIterator result)
+    {
+        typedef typename iterator_traits<InputIterator>::value_type value_type;
+        return merge(first1, last1, first2, last2, result, less<value_type>());
+    }
     //////////////////////////////////////////////////////////////////////
     //  print, print the container's elements
     template<class InputIterator>
