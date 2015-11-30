@@ -107,5 +107,20 @@
     <ClInclude Include="commom_header_files.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="detail_test\list_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="stlite_function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\std_list_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\algorithm_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\std_deque_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,7 +7,6 @@
 *********************************************************************/
 #include "common_header_files.h"
 
-
 #include "type_traits_test.h"
 #include "iterator_test.h"
 #include "construct_test.h"
@@ -31,8 +30,8 @@ void public_test()
 //     alloc_public::test();
 
  
-     vector_public::test();
-//     list_public::test();
+//     vector_public::test();
+     list_public::test();
  
 //     other_public::test();
 
