@@ -88,6 +88,12 @@ namespace STLite
             end = start + n;
         }
 
+        void destroy_and_deallocate()
+        {
+            destroy(start_of_storage + start, start_of_storage + end);
+            data_allocator::deallocate(start_of_storage, end_of_storage - start_of_storage);
+        }
+
     private:
         template<class Integer>
         void devec_aux(Integer n, const value_type &value, __true_type)
@@ -103,6 +109,7 @@ namespace STLite
         }
 
     public:
+        //  constructor
         devec() : start_of_storage(0), end_of_storage(0), start(0), end(0) {}
 
         devec(int n, const value_type &value)
@@ -120,6 +127,17 @@ namespace STLite
         {
             typedef typename _is_integer<InputIterator>::is_integer is_integer;
             devec_aux(first, last, is_integer());
+        }
+
+        //  copy constructor
+        devec(const devec &lhs)
+        {
+            devec_aux(lhs.start_of_storage + start, lhs.start_of_storage + end);
+        }
+
+        ~devec()
+        {
+            destroy_and_deallocate();
         }
     };
 }
