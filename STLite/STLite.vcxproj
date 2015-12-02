@@ -67,6 +67,7 @@
     <ClInclude Include="detail_test\algorithm_test.h" />
     <ClInclude Include="detail_test\base_test.h" />
     <ClInclude Include="detail_test\common_data.h" />
+    <ClInclude Include="detail_test\devec_test.h" />
     <ClInclude Include="detail_test\list_test.h" />
     <ClInclude Include="detail_test\private_test.h" />
     <ClInclude Include="detail_test\std_deque_test.h" />
@@ -75,6 +76,7 @@
     <ClInclude Include="detail_test\common_header_files.h" />
     <ClInclude Include="detail_test\String_test.h" />
     <ClInclude Include="detail_test\vector_test.h" />
+    <ClInclude Include="stlite_devec.h" />
     <ClInclude Include="stlite_alloc.h" />
     <ClInclude Include="stlite_construct.h" />
     <ClInclude Include="stlite_function.h" />
