@@ -188,14 +188,63 @@ namespace base_private
 
         cout << endl;
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //  test friend class
+    class Container;
+   
+    class ContainerIterator
+    {
+    public:
+        void showContainerSize(const Container &c) const;
+//         {
+//         //    cout << c.size() << endl;  //  it should NOT define here.
+//         //    cout << c.m_size << endl;
+//         }
+    };
+  
+    class Container
+    {
+    public:
+        friend class ContainerIterator;
+    private:
+        int m_size;
+
+    public:
+        Container(int size = 0) : m_size(size){}
+        int size() const
+        {
+            return m_size;
+        }
+        
+//         void showSize()
+//         {
+//             ContainerIterator it;
+//             it.showContainerSize(*this);
+//         }
+    };
+
+    void ContainerIterator::showContainerSize(const Container &c) const     //  define
+    {
+        cout << c.size() << endl;
+        cout << c.m_size << endl;
+    }
+
+    void testCase5()
+    {
+        Container c(10);
+        ContainerIterator it;
+        it.showContainerSize(c);
+    //    c.showSize();
+    }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "base_private test" << endl;
         
-        testOperator();
-        testConstructor();
-
+        //  testOperator();
+        //  testConstructor();
+        testCase5();
         cout << endl;
     }
 }
