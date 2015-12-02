@@ -14,10 +14,25 @@
 
 namespace devec_private
 {
+    //  test constructor
     void testCase1()
     {
-        devecIterator<int> it;
-        devec<int> vec;
+        //  case1
+        devec<int> vec1(OBJECT_NUM, 3);
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << *(vec1.start_of_storage + i) << "\t";
+        }
+        cout << endl;
+
+        //  case2
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        devec<String> vec2(strArr1, strArr1 + OBJECT_NUM);
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << vec2.start_of_storage[i].m_data << "\t";
+        }
+        cout << endl;
     }
 
     void test()
