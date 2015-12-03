@@ -31,7 +31,7 @@ namespace STLite
     
     //  member function
         //  constructor
-        devecIterator() : m_container(NULL), m_ptr(NULL), index(0) {}
+        devecIterator() : m_container(NULL), m_ptr(NULL), m_index(0) {}
         devecIterator(devec *container, int index)
         {
             m_container = container;
@@ -62,7 +62,7 @@ namespace STLite
 
         devecIterator operator ++(int)
         {
-            iterator temp(m_container, m_index);
+            devecIterator temp(m_container, m_index);
             m_index = (m_index + 1) % m_container->capacity();
             m_ptr = m_container->start_of_storage + m_index;
 
@@ -79,7 +79,7 @@ namespace STLite
 
         devecIterator operator --(int)
         {
-            iterator temp(m_container, m_index);
+            devecIterator temp(m_container, m_index);
             m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
             m_ptr = m_container->start + m_index;
 
@@ -97,6 +97,34 @@ namespace STLite
             return m_container == lhs.m_container && m_ptr != lhs.m_ptr;
         }   
 
+        //////////////////////////////////////////////////////////////////////
+        //  RandomAccessIterator's properties
+        //  + n, - n
+        devecIterator & operator +=(int n)
+        {
+            m_index = (m_index + n) % m_container->capacity();
+            m_ptr = m_container->start_of_storage + m_index;
+
+            return *this;
+        }
+
+        devecIterator & operator -=(int n)
+        {
+            return *this += (-n);
+        }
+
+        devecIterator operator +(int n)
+        {
+            devecIterator temp(*this);
+            return temp += n;
+        }
+        
+        devecIterator operator -(int n)
+        {
+            devecIterator temp(*this);
+            return temp -= n;
+        }
+        
     };
 
     template<class T, class Alloc = allocator<T> >

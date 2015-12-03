@@ -112,12 +112,37 @@ namespace devec_private
         cout << endl;
     }
 
+    //  test +=
+    void testCase5()
+    {
+        devec<int> vec1;
+
+        //  allocate memory
+        vec1.start_of_storage = allocator<int>::allocate(OBJECT_NUM + 1);
+        vec1.end_of_storage = vec1.start_of_storage + OBJECT_NUM + 1;
+
+        //  assign
+        *(vec1.start_of_storage + 0) = 0;
+        *(vec1.start_of_storage + 1) = 1;
+        *(vec1.start_of_storage + 4) = 2;
+        *(vec1.start_of_storage + 5) = 3;
+
+        vec1.start = 4;
+        vec1.finish = 2;    //  [0, 1, x, x, 2, 3]
+
+        //  traverse
+        devec<int>::iterator it;
+        it = vec1.begin() + 2;
+        cout << *it << endl;    //  0
+    }
+
     void testIterator()
     {
         cout << "testIterator" << endl;
 
         testCase2();
         testCase4();
+        testCase5();
 
         cout << endl;
     }
