@@ -35,11 +35,34 @@ namespace devec_private
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+    //  test iterator's constructor
+    void testCase2()
+    {
+        int arr1[OBJECT_NUM] = {0, 1, 2, 3, 4};
+        devec<int> vec1(arr1, arr1 + OBJECT_NUM);
+        devecIterator<int> it(&vec1, 2);    //  constructor
+
+        cout << *it << endl;
+
+        cout << endl;
+    }
+
+    void testIterator()
+    {
+        cout << "testIterator" << endl;
+
+        testCase2();
+
+        cout << endl;
+    }
+
     void test()
     {
         cout << "devec_private test" << endl;
 
-        testCase1();
+        //  testCase1();
+        testIterator();
 
         cout << endl;
     }

@@ -25,11 +25,31 @@ namespace STLite
     {
     //  member data
         T *m_ptr;
-        int index;      //  because the m_ptr is circular, so it need a index.
-        devec<T, Alloc> *vec;  //  the devecIterator should know the devec's attribute, so it should contain the *vec.
+        int m_index;      //  because the m_ptr is circular, so it need a index.
+        typedef devec<T, Alloc> devec;
+        devec *m_container;  //  the devecIterator should know the devec's attribute, so it should contain the *vec.
     
     //  member function
-       
+        //  constructor
+        devecIterator() : m_container(NULL), m_ptr(NULL), index(0) {}
+        devecIterator(devec *container, int index)
+        {
+            m_container = container;
+            m_index = index;
+            m_ptr = m_container->start_of_storage + index;
+        }
+        // copy, assignment, destructor use the default version    
+        
+        //  defer
+        reference operator *()
+        {
+            return *m_ptr;
+        }
+
+        pointer operator ->()
+        {
+            return m_ptr;
+        }
     };
 
     template<class T, class Alloc = allocator<T> >
@@ -139,6 +159,9 @@ namespace STLite
         {
             destroy_and_deallocate();
         }
+    //////////////////////////////////////////////////////////////////////
+    //  iterators
+    //  begin, end
     };
 }
 
