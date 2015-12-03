@@ -51,6 +51,40 @@ namespace STLite
             return m_ptr;
         }
 
+        //  ++,--
+        iterator & operator ++()
+        {
+            m_index = (m_index + 1) % m_container->capacity();
+            m_ptr = m_container->start_of_storage + m_index;
+
+            return *this;
+        }
+
+        iterator operator ++(int)
+        {
+            iterator temp(m_container, m_index);
+            m_index = (m_index + 1) % m_container->capacity();
+            m_ptr = m_container->start_of_storage + m_index;
+
+            return temp;
+        }
+
+        iterator &operator --()
+        {
+            m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
+            m_ptr = m_container->start + m_index;
+
+            return *this;
+        }
+
+        iterator operator --(int)
+        {
+            iterator temp(m_container, m_index);
+            m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
+            m_ptr = m_container->start + m_index;
+
+            return temp;
+        }
     };
 
     template<class T, class Alloc = allocator<T> >
