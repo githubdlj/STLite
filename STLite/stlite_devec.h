@@ -72,7 +72,7 @@ namespace STLite
         iterator &operator --()
         {
             m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
-            m_ptr = m_container->start + m_index;
+            m_ptr = m_container->start_of_storage + m_index;
 
             return *this;
         }

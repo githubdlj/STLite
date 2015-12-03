@@ -87,24 +87,31 @@ namespace devec_private
         //  assign
         *(vec1.start_of_storage + 0) = 0;
         *(vec1.start_of_storage + 1) = 1;
-        *(vec1.start_of_storage + 3) = 2;
-        *(vec1.start_of_storage + 4) = 3;
-        *(vec1.start_of_storage + 5) = 4;
+        *(vec1.start_of_storage + 4) = 2;
+        *(vec1.start_of_storage + 5) = 3;
 
-        vec1.start = 3;
-        vec1.finish = 2;    //  [0, 1, X, 2, 3, 4]
+        vec1.start = 4;
+        vec1.finish = 2;    //  [0, 1, x, x, 2, 3]
 
         //  traverse
         devec<int>::iterator it = vec1.begin();
         devec<int>::iterator end = vec1.end();
         for (; it.m_ptr != end.m_ptr; ++it)
         {
-            cout << *it << "\t";
+            cout << *it << "\t";    //  2 3 0 1
         }
         cout << endl;
 
-
+        devec<int>::iterator begin = vec1.begin();
+        it  = vec1.end();
+        for (; it.m_ptr != begin.m_ptr;)
+        {
+            --it;
+            cout << *it << "\t";    //  1 0 3 2
+        }
+        cout << endl;
     }
+
     void testIterator()
     {
         cout << "testIterator" << endl;
