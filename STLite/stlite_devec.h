@@ -172,6 +172,29 @@ namespace STLite
         {
             return iterator(this, finish);
         }
+    //////////////////////////////////////////////////////////////////////
+    //  Capacity
+    //  size, capacity, empty, full
+    public:
+        int capacity() const
+        {
+            return end_of_storage - start_of_storage;
+        }
+
+        int size() const
+        {
+            return finish > start ? (finish - start) : (finish + capacity() - start);
+        }
+
+        bool empty() const
+        {
+            return start == finish;
+        }
+
+        bool full() const
+        {
+            return size() + 1 == capacity();
+        }
     };
 }
 

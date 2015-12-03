@@ -35,6 +35,30 @@ namespace devec_private
         cout << endl;
     }
 
+    void testCase3()
+    {
+        //  stimulate a devec.
+        devec<int> vec;
+        vec.start_of_storage = NULL;
+        vec.end_of_storage = vec.start_of_storage + OBJECT_NUM + 1;    
+        vec.start = 4;
+        vec.finish = 2;
+
+
+        cout << vec.capacity() << endl;
+        cout << vec.size() << endl;
+
+        cout << endl;
+        
+    }
+    void testCapacity()
+    {
+        cout << "testCapacity" << endl;
+
+        testCase3();
+
+        cout << endl;
+    }
     //////////////////////////////////////////////////////////////////////
     //  test iterator's constructor
     void testCase2()
@@ -65,7 +89,8 @@ namespace devec_private
         cout << "devec_private test" << endl;
 
         //  testCase1();
-        testIterator();
+        //  testIterator();
+        testCapacity();
 
         cout << endl;
     }
