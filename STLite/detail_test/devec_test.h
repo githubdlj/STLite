@@ -96,7 +96,7 @@ namespace devec_private
         //  traverse
         devec<int>::iterator it = vec1.begin();
         devec<int>::iterator end = vec1.end();
-        for (; it.m_ptr != end.m_ptr; ++it)
+        for (; it != end; ++it)
         {
             cout << *it << "\t";    //  2 3 0 1
         }
@@ -104,7 +104,7 @@ namespace devec_private
 
         devec<int>::iterator begin = vec1.begin();
         it  = vec1.end();
-        for (; it.m_ptr != begin.m_ptr;)
+        for (; it != begin;)
         {
             --it;
             cout << *it << "\t";    //  1 0 3 2

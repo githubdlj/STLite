@@ -52,7 +52,7 @@ namespace STLite
         }
 
         //  ++,--
-        iterator & operator ++()
+        devecIterator & operator ++()
         {
             m_index = (m_index + 1) % m_container->capacity();
             m_ptr = m_container->start_of_storage + m_index;
@@ -60,7 +60,7 @@ namespace STLite
             return *this;
         }
 
-        iterator operator ++(int)
+        devecIterator operator ++(int)
         {
             iterator temp(m_container, m_index);
             m_index = (m_index + 1) % m_container->capacity();
@@ -69,7 +69,7 @@ namespace STLite
             return temp;
         }
 
-        iterator &operator --()
+        devecIterator &operator --()
         {
             m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
             m_ptr = m_container->start_of_storage + m_index;
@@ -77,7 +77,7 @@ namespace STLite
             return *this;
         }
 
-        iterator operator --(int)
+        devecIterator operator --(int)
         {
             iterator temp(m_container, m_index);
             m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
@@ -85,6 +85,18 @@ namespace STLite
 
             return temp;
         }
+        
+        //  =, !=
+        bool operator ==(const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && m_ptr == lhs.m_ptr;
+        }
+
+        bool operator !=(const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && m_ptr != lhs.m_ptr;
+        }   
+
     };
 
     template<class T, class Alloc = allocator<T> >
