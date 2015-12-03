@@ -45,6 +45,9 @@ namespace devec_private
 
         cout << *it << endl;
 
+        devec<int>::iterator it2 = vec1.begin();    //  begin
+        cout << *it2 << endl;
+
         cout << endl;
     }
 

@@ -162,6 +162,15 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  iterators
     //  begin, end
+        iterator begin()
+        {
+            return iterator(this, start);
+        }
+
+        iterator end()
+        {
+            return iterator(this, finish);
+        }
     };
 }
 
