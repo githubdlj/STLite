@@ -72,11 +72,11 @@ namespace STLite
 
         //  object space
         int start;
-        int end;
+        int finish;
     //////////////////////////////////////////////////////////////////////
     //  iterator 
     public:
-        typedef devecIterator<T> iterator;
+        typedef devecIterator<T, Alloc> iterator;
     //////////////////////////////////////////////////////////////////////
     //  allocator
     public:
@@ -93,7 +93,7 @@ namespace STLite
             end_of_storage = start_of_storage + n;
             
             start = 0;
-            end = start + n;
+            finish = start + n;
         }
 
         template<class ForwardIterator>
@@ -105,12 +105,12 @@ namespace STLite
             end_of_storage = start_of_storage + n;
 
             start = 0;
-            end = start + n;
+            finish = start + n;
         }
 
         void destroy_and_deallocate()
         {
-            destroy(start_of_storage + start, start_of_storage + end);
+            destroy(start_of_storage + start, start_of_storage + finish);
             data_allocator::deallocate(start_of_storage, end_of_storage - start_of_storage);
         }
 
@@ -130,7 +130,7 @@ namespace STLite
 
     public:
         //  constructor
-        devec() : start_of_storage(0), end_of_storage(0), start(0), end(0) {}
+        devec() : start_of_storage(0), end_of_storage(0), start(0), finish(0) {}
 
         devec(int n, const value_type &value)
         {
@@ -152,7 +152,7 @@ namespace STLite
         //  copy constructor
         devec(const devec &lhs)
         {
-            devec_aux(lhs.start_of_storage + start, lhs.start_of_storage + end);
+            devec_aux(lhs.start_of_storage + start, lhs.start_of_storage + finish);
         }
 
         ~devec()
