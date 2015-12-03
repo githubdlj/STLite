@@ -50,6 +50,7 @@ namespace STLite
         {
             return m_ptr;
         }
+
     };
 
     template<class T, class Alloc = allocator<T> >
@@ -88,9 +89,9 @@ namespace STLite
     private:
         void allocate_and_fill(size_type n, const value_type &value)
         {
-            start_of_storage = data_allocator::allocate(n);
+            start_of_storage = data_allocator::allocate(n + 1);     //  a free space, to determine full or empty
             uninitialized_fill_n(start_of_storage, n, value);
-            end_of_storage = start_of_storage + n;
+            end_of_storage = start_of_storage + n + 1;
             
             start = 0;
             finish = start + n;
@@ -100,9 +101,9 @@ namespace STLite
         void allocate_and_copy(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
             difference_type n = distance(first, last);
-            start_of_storage = data_allocator::allocate(n);
+            start_of_storage = data_allocator::allocate(n + 1);
             uninitialized_copy(first, last, start_of_storage);
-            end_of_storage = start_of_storage + n;
+            end_of_storage = start_of_storage + n + 1;
 
             start = 0;
             finish = start + n;
