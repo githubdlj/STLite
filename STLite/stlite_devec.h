@@ -248,7 +248,7 @@ namespace STLite
 
         void destroy_and_deallocate()
         {
-            destroy(start_of_storage + start, start_of_storage + finish);
+            destroy(begin(), end());
             data_allocator::deallocate(start_of_storage, end_of_storage - start_of_storage);
         }
 
