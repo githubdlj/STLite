@@ -162,7 +162,11 @@ namespace STLite
         }
     };
 
-
+    template<class T>
+    vectorIterator<T> operator +(typename vectorIterator<T>::difference_type n, vectorIterator<T> lhs)
+    {
+        return lhs + n;                                             //  const vectorIterator<T> &lhs
+    }
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
     //  vector
