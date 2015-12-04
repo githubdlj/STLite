@@ -313,12 +313,12 @@ namespace STLite
     //  Capacity
     //  size, capacity, empty, full
     public:
-        int capacity() const
+        size_type capacity() const
         {
             return end_of_storage - start_of_storage;
         }
 
-        int size() const
+        size_type size() const
         {
             return finish > start ? (finish - start) : (finish + capacity() - start);
         }
@@ -341,7 +341,86 @@ namespace STLite
         template<class ForwardIterator>
         void range_insert(iterator pos, ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
+            size_type spaceNeed = (size_type)distance(first, last);
+            size_type spaceLeft = capacity() - size() - 1;  //  note, left a space!
 
+            if (spaceLeft >= spaceNeed)
+            {
+                size_type numOfBack = (size_type)(end() - pos);
+                //  an more complex but higher performance way
+//                 if (numOfBack <= (size() >> 1))     //  move [pos, end())
+//                 {
+//                     size_type objInsert = spaceNeed;
+//                     size_type objBack = numOfBack;
+//                     
+//                     iterator endIterator = end();
+// 
+//                     if (objBack >= objInsert)
+//                     {
+//                         //  [end() - objInsert, end()) -> [end(), end() + objInsert)
+//                         //  [pos, end() - objInsert) -> [pos + objInsert, end())
+//                         //  [first, last) -> [pos, pos + objInsert)
+// 
+//                         uninitialized_copy(endIterator - objInsert, endIterator, endIterator);
+//                         copy(pos, endIterator - objInsert, pos + objInsert);
+//                         copy(first, last, pos);
+//                     }
+//                     else
+//                     {
+//                         //  [last - (objInsert - objBack), last) -> [end(), end() + (objInsert - objBack))
+//                         //  [pos, end()) -> [end() + (objInsert - objBack), ...)
+//                         //  [first, first + objBack) -> [pos, pos + objBack)
+//                         uninitialized_copy(pos, endIterator, uninitialized_copy(last - (objInsert - objBack), last, endIterator));
+//                         copy(first, first + objBack, pos);
+//                     }
+//                     finish = (finish + objInsert) % capacity();
+//                 }
+                
+                //  an easier but low performance way               
+                if (numOfBack <= (size() >> 1))     //  move [pos, end())
+                {
+                    iterator endIterator = end();
+                    devec<T, Alloc> temp(pos, endIterator);
+                    destroy(pos, endIterator);
+                                        
+                    uninitialized_copy(temp.begin(), temp.end(), uninitialized_copy(first, last, pos));
+                    finish = (finish + spaceNeed) % capacity();
+                }
+                else    //  move [begin(), pos)
+                {
+                    iterator beginIterator = begin();
+                    devec<T, Alloc> temp(beginIterator, pos);
+                    destroy(beginIterator, pos);
+                    
+                    uninitialized_copy_backward(temp.begin(), temp.end(), 
+                                                uninitialized_copy_backward(first, last, pos));
+                    start = (start - spaceNeed + capacity()) % capacity();
+                }
+            }   
+            else
+            {
+                size_type oldSize = size();
+                size_type newSize = oldSize + spaceNeed;
+                size_type newCapacity = oldSize + std::max(oldSize, spaceNeed) + 1;
+                
+                //  allocate new space
+                pointer new_start_of_storage = data_allocator::allocate(newCapacity);
+                pointer new_end_of_storage = new_start_of_storage + newCapacity;
+
+                //  initialize objects
+                pointer pos1 = uninitialized_copy(begin(), pos, new_start_of_storage);
+                pointer pos2 = uninitialized_copy(first, last, pos1);
+                uninitialized_copy(pos, end(), pos2);
+             
+                //  destroy old devec
+                destroy_and_deallocate();
+                
+                //  initialize new devec
+                start_of_storage = new_start_of_storage;
+                end_of_storage = new_end_of_storage;
+                start = 0;
+                finish = start + newSize;
+            }    
         }
         
         template<class Integer>
