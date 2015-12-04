@@ -9,10 +9,16 @@
 #ifndef _STLITE_DEVEC_H_
 #define _STLITE_DEVEC_H_
 
+#include <crtdefs.h>    //  std::ptrdiff_t
+
 #include "common_header_files.h"
-#include "stlite_iterator.h"
+
+#include "stlite_algorithm.h"
 #include "stlite_alloc.h"
-#include "stlite_type_traits.h"
+#include "stlite_construct.h"
+#include "stlite_iterator.h"    
+#include "stlite_type_traits.h"          
+#include "stlite_uninitialized.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace STLite
@@ -325,6 +331,50 @@ namespace STLite
         bool full() const
         {
             return size() + 1 == capacity();
+        }
+    //////////////////////////////////////////////////////////////////////
+    //  modifiers
+    //  insert, erase, assign, push, pop, clear
+    
+    //  insert
+    private:
+        template<class ForwardIterator>
+        void range_insert(iterator pos, ForwardIterator first, ForwardIterator last, forward_iterator_tag)
+        {
+
+        }
+        
+        template<class Integer>
+        void fill_insert(iterator pos, Integer n, const value_type &value)
+        {
+
+        }
+
+    private:
+        template<class InputIterator>
+        void insert_dispatch(iterator pos, InputIterator first, InputIterator last, __false_type)
+        {
+            typedef typename iterator_traits<InputIterator>::iterator_category category;
+            range_insert(pos, first, last, category());
+        }           
+
+        template<class Integer>
+        void insert_dispatch(iterator pos, Integer n, const value_type &value, __true_type)
+        {
+            fill_insert(pos, n, value);
+        }
+
+    public:
+        template<class InputIterator>
+        void insert(iterator pos, InputIterator first, InputIterator last)
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;
+            insert_dispatch(pos, first, last, is_integer());
+        }
+        
+        void insert(iterator pos, size_type n, const value_type &value)
+        {
+            insert_dispatch(pos, n, value, __true_type());
         }
     };
 }
