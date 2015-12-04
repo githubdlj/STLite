@@ -173,6 +173,15 @@ namespace STLite
             return *temp;
         }
     };
+  
+    //  operator +, non_member function, supports n + iterator.
+    template<class T, class Alloc>
+    inline devecIterator<T, Alloc> operator +(typename devecIterator<T, Alloc>::difference_type n,
+                                              devecIterator<T, Alloc> lhs)  //  const devecIterator<T, Alloc> &lhs
+    {
+            return lhs + n;
+    }
+
    
     //////////////////////////////////////////////////////////////////////
     template<class T, class Alloc = allocator<T> >

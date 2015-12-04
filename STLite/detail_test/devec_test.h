@@ -130,10 +130,15 @@ namespace devec_private
         vec1.start = 4;
         vec1.finish = 2;    //  [0, 1, x, x, 2, 3]
 
-        //  traverse
+        //  iterator + n
         devec<int>::iterator it;
         it = vec1.begin() + 2;
         cout << *it << endl;    //  0
+
+        //  n + iterator
+        devec<int>::iterator it2;
+        it2 = 2 + vec1.begin();
+        cout << *it2 << endl;   //  0
 
         //  test iterator1 - iterator2
         int ptrdiff = vec1.end() - vec1.begin();
