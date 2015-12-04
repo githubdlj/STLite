@@ -61,6 +61,45 @@ namespace STLite
     }
 
     //////////////////////////////////////////////////////////////////////
+    //  uninitialized_copy_backward
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    inline BidirectionalIterator2
+    uninitialized_copy_backward_aux(BidirectionalIterator1 first, BidirectionalIterator1 last,
+                                    BidirectionalIterator2 result, __true_type)
+    {
+        while (first != last)
+        {
+            --last;
+            --result;
+            *result = *last;
+        }
+        return result;
+    }
+
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    inline BidirectionalIterator2
+    uninitialized_copy_backward_aux(BidirectionalIterator1 first, BidirectionalIterator1 last,
+                                    BidirectionalIterator2 result, __false_type)
+    {
+        while (first != last)
+        {
+            --last;
+            --result;
+            construct(&*result, *last);
+        }
+
+        return result;
+    }
+
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    inline BidirectionalIterator2
+    uninitialized_copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result)
+    {
+        typedef typename iterator_traits<BidirectionalIterator1>::value_type value_type;
+        typedef typename __type_traits<value_type>::is_POD_type is_POD_type;
+        return uninitialized_copy_backward_aux(first, last, result, is_POD_type());
+    }
+    //////////////////////////////////////////////////////////////////////
     //  uninitialized_fill
     template<class ForwardIterator, class T>
     inline void uninitialized_fill_aux(ForwardIterator first, ForwardIterator last, const T &value, __true_type)
