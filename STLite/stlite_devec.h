@@ -100,7 +100,7 @@ namespace STLite
         //////////////////////////////////////////////////////////////////////
         //  RandomAccessIterator's properties
         //  + n, - n
-        devecIterator & operator +=(int n)
+        devecIterator & operator +=(difference_type n)
         {
             m_index = (m_index + n) % m_container->capacity();
             m_ptr = m_container->start_of_storage + m_index;
@@ -108,19 +108,19 @@ namespace STLite
             return *this;
         }
 
-        devecIterator & operator -=(int n)
+        devecIterator & operator -=(difference_type n)
         {
             return *this += (-n);
         }
 
         //  it should support n + iterator
-        devecIterator operator +(int n)
+        devecIterator operator +(difference_type n)
         {
             devecIterator temp(*this);
             return temp += n;
         }
         
-        devecIterator operator -(int n)
+        devecIterator operator -(difference_type n)
         {
             devecIterator temp(*this);
             return temp -= n;
