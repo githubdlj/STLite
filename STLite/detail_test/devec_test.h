@@ -112,7 +112,7 @@ namespace devec_private
         cout << endl;
     }
 
-    //  test +=
+    //  test +=, operator -, operator []
     void testCase5()
     {
         devec<int> vec1;
@@ -134,14 +134,20 @@ namespace devec_private
         devec<int>::iterator it;
         it = vec1.begin() + 2;
         cout << *it << endl;    //  0
+
+        //  test iterator1 - iterator2
+        int ptrdiff = vec1.end() - vec1.begin();
+        cout << ptrdiff << endl;    //  4
+
+        cout << it[2] << endl;      //  0  
     }
 
     void testIterator()
     {
         cout << "testIterator" << endl;
 
-        testCase2();
-        testCase4();
+        //  testCase2();
+        //  testCase4();
         testCase5();
 
         cout << endl;

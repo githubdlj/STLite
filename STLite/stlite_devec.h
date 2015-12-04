@@ -113,6 +113,7 @@ namespace STLite
             return *this += (-n);
         }
 
+        //  it should support n + iterator
         devecIterator operator +(int n)
         {
             devecIterator temp(*this);
@@ -125,8 +126,55 @@ namespace STLite
             return temp -= n;
         }
         
-    };
+        //  an important function
+        typename devec::size_type true_index() const
+        {
+            if (m_index >= m_container->start)
+            {
+                return m_index - m_container->start;
+            }
+            else
+            {
+                return m_index + m_container->capacity() - m_container->start;
+            }
+        }
+        
+        //  iterator1 - iterator2      
+        difference_type operator -(const devecIterator &lhs)
+        {
+            return true_index() - lhs.true_index();
+        }
 
+        //  comparison
+        bool operator < (const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && true_index() < lhs.true_index();
+        }
+        
+        bool operator <=(const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && true_index() <= lhs.true_index();
+        }
+
+        bool operator > (const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && true_index() > lhs.true_index();
+        }
+
+        bool operator >= (const devecIterator &lhs) const
+        {
+            return m_container == lhs.m_container && true_index() >= lhs.true_index();
+        }
+
+        //  []
+        reference operator [](difference_type n)
+        {
+            pointer temp = m_ptr + (m_container->start + n) % m_container->capacity();
+            return *temp;
+        }
+    };
+   
+    //////////////////////////////////////////////////////////////////////
     template<class T, class Alloc = allocator<T> >
     class devec
     {
