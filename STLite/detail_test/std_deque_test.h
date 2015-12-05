@@ -20,11 +20,21 @@ namespace std_deque_private
         cout << n << endl;
     }
 
+    void testCase2()
+    {
+        std::deque<int> d(5, 1);
+        std::deque<int>::iterator it = d.begin();
+
+        it = 2 + it;
+        cout << *it << endl;
+    }
+
     void test()
     {
         cout << "std_deque_private test" << endl;
 
-        testCase1();
+        //  testCase1();
+        testCase2();
 
         cout << endl;
     }
