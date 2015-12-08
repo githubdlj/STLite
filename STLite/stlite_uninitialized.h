@@ -156,5 +156,39 @@ namespace STLite
         typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::is_POD_type is_POD_type;
         return uninitialized_fill_n_aux(first, n, value, is_POD_type());
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //  uninitialzied_fill_n_backward
+    template<class BidirectionalIterator, class Size, class T>
+    inline BidirectionalIterator
+    uninitialized_fill_n_backward_aux(BidirectionalIterator pos, Size n, const T &value, __true_type)
+    {
+        for (;n > 0; --n)
+        {
+            --pos;
+            *pos = value;
+        }
+        return pos;
+    }
+
+    template<class BidirectionalIterator, class Size, class T>
+    inline BidirectionalIterator 
+    uninitialized_fill_n_backward_aux(BidirectionalIterator pos, Size n, const T &value, __false_type)
+    {
+        for (; n > 0; --n)
+        {
+            --pos;
+            construct(&*pos, value);
+        }
+        return pos;
+    }
+
+    template<class BidirectionalIterator, class Size, class T>
+    inline BidirectionalIterator uninitialized_fill_n_backward(BidirectionalIterator pos, Size n, const T & value)
+    {
+        typedef typename iterator_traits<BidirectionalIterator>::value_type value_type;
+        typedef typename __type_traits<value_type>::is_POD_type is_POD_type;
+        return uninitialized_fill_n_backward_aux(pos, n, value, is_POD_type());
+    }
 }
 #endif

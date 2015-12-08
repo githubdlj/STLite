@@ -37,6 +37,18 @@ namespace STLite
         }
         return first;
     }
+
+    //  fill_n_backward
+    template<class ForwardIterator, class Size, class T>
+    inline ForwardIterator fill_n_backward(ForwardIterator pos, Size n, const T &value)
+    {
+        for (; n > 0; --n)
+        {
+            --pos;
+            *pos = value;
+        }
+        return pos;
+    }
     //////////////////////////////////////////////////////////////////////
     //  copy
 
