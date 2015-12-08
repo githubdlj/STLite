@@ -121,7 +121,7 @@ namespace STLite
     copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result)
     {
         typedef typename iterator_traits<BidirectionalIterator1>::iterator_category category;
-        return copy_backward(first, last, result, category());
+        return copy_backward_aux(first, last, result, category());
     }
 
     //  copy_backward, specialization
