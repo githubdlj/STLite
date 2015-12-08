@@ -346,56 +346,78 @@ namespace STLite
 
             if (spaceLeft >= spaceNeed)
             {
-                size_type numOfBack = (size_type)(end() - pos);
                 //  an more complex but higher performance way
-//                 if (numOfBack <= (size() >> 1))     //  move [pos, end())
-//                 {
-//                     size_type objInsert = spaceNeed;
-//                     size_type objBack = numOfBack;
-//                     
-//                     iterator endIterator = end();
-// 
-//                     if (objBack >= objInsert)
-//                     {
-//                         //  [end() - objInsert, end()) -> [end(), end() + objInsert)
-//                         //  [pos, end() - objInsert) -> [pos + objInsert, end())
-//                         //  [first, last) -> [pos, pos + objInsert)
-// 
-//                         uninitialized_copy(endIterator - objInsert, endIterator, endIterator);
-//                         copy(pos, endIterator - objInsert, pos + objInsert);
-//                         copy(first, last, pos);
-//                     }
-//                     else
-//                     {
-//                         //  [last - (objInsert - objBack), last) -> [end(), end() + (objInsert - objBack))
-//                         //  [pos, end()) -> [end() + (objInsert - objBack), ...)
-//                         //  [first, first + objBack) -> [pos, pos + objBack)
-//                         uninitialized_copy(pos, endIterator, uninitialized_copy(last - (objInsert - objBack), last, endIterator));
-//                         copy(first, first + objBack, pos);
-//                     }
-//                     finish = (finish + objInsert) % capacity();
-//                 }
-                
-                //  an easier but low performance way               
+                size_type numOfBack = (size_type)(end() - pos);
                 if (numOfBack <= (size() >> 1))     //  move [pos, end())
                 {
+                    size_type objInsert = spaceNeed;
+                    size_type objBack = numOfBack;
+                    
                     iterator endIterator = end();
-                    devec<T, Alloc> temp(pos, endIterator);
-                    destroy(pos, endIterator);
-                                        
-                    uninitialized_copy(temp.begin(), temp.end(), uninitialized_copy(first, last, pos));
-                    finish = (finish + spaceNeed) % capacity();
+
+                    if (objBack >= objInsert)
+                    {
+                        //  [end() - objInsert, end()) -> [end(), end() + objInsert)
+                        //  [pos, end() - objInsert) -> [pos + objInsert, end())
+                        //  [first, last) -> [pos, pos + objInsert)
+
+                        uninitialized_copy(endIterator - objInsert, endIterator, endIterator);
+                        copy(pos, endIterator - objInsert, pos + objInsert);
+                        copy(first, last, pos);
+                    }
+                    else
+                    {
+                        //  [first + objBack, last) -> [end(), end() + (objInsert - objBack))
+                        //  [pos, end()) -> [end() + (objInsert - objBack), ...)
+                        //  [first, first + objBack) -> [pos, pos + objBack)
+                        uninitialized_copy(pos, endIterator, uninitialized_copy(first + objBack, last, endIterator));
+                        copy(first, first + objBack, pos);
+                    }
+                    finish = (finish + objInsert) % capacity();
                 }
                 else    //  move [begin(), pos)
                 {
                     iterator beginIterator = begin();
-                    devec<T, Alloc> temp(beginIterator, pos);
-                    destroy(beginIterator, pos);
-                    
-                    uninitialized_copy_backward(temp.begin(), temp.end(), 
-                                                uninitialized_copy_backward(first, last, pos));
-                    start = (start - spaceNeed + capacity()) % capacity();
+
+                    size_type objInsert = spaceNeed;
+                    size_type objFront = pos - beginIterator;
+
+                    if (objFront >= objInsert)
+                    {
+                        uninitialized_copy_backward(beginIterator, beginIterator + objInsert, beginIterator);
+                        copy(beginIterator + objInsert, pos, beginIterator);
+                        copy_backward(first, last, pos);
+                    }
+                    else
+                    {
+                        uninitialized_copy_backward(beginIterator, pos, 
+                                            uninitialized_copy_backward(first, last - objFront, beginIterator));
+                        copy(last - objFront, last, beginIterator);
+                    }
+                    start = (start - objInsert + capacity()) % capacity();
                 }
+
+                //  an easier but low performance way 
+//                 size_type numOfBack = (size_type)(end() - pos);
+//                 if (numOfBack <= (size() >> 1))     //  move [pos, end())
+//                 {
+//                     iterator endIterator = end();
+//                     devec<T, Alloc> temp(pos, endIterator);
+//                     destroy(pos, endIterator);
+//                                         
+//                     uninitialized_copy(temp.begin(), temp.end(), uninitialized_copy(first, last, pos));
+//                     finish = (finish + spaceNeed) % capacity();
+//                 }
+//                 else    //  move [begin(), pos)
+//                 {
+//                     iterator beginIterator = begin();
+//                     devec<T, Alloc> temp(beginIterator, pos);
+//                     destroy(beginIterator, pos);
+//                     
+//                     uninitialized_copy_backward(temp.begin(), temp.end(), 
+//                                                 uninitialized_copy_backward(first, last, pos));
+//                     start = (start - spaceNeed + capacity()) % capacity();
+//                 }
             }   
             else
             {

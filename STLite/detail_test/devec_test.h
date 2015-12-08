@@ -186,6 +186,30 @@ namespace devec_private
         cout << endl;
     }
 
+    //  case1_, spaceLeft >= spaceNeed, move forard, objFront > objInsert
+    void testCase6_()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+
+        devec<String> vec1;
+        vec1.start_of_storage = allocator<String>::allocate(OBJECT_NUM * 2 + 1); 
+        vec1.end_of_storage = vec1.start_of_storage + OBJECT_NUM * 2 + 1;
+
+        uninitialized_fill_n(vec1.start_of_storage + 2, OBJECT_NUM, "String");  //  [x,x,S,S,S,S,S,x,x,x,x]
+        vec1.start = 2;
+        vec1.finish = 7;
+
+        vec1.insert(vec1.begin() + 2, strArr1, strArr1 + 1);   
+
+        devec<String>::iterator it = vec1.begin();
+        devec<String>::iterator end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  [x, S, S, 0, S, S, S, x,x,x,x], start = 1, finish = 6
+        }
+        cout << endl;
+    }
+
     //  case2, spaceLeft >= spaceNeed, move forward, insert begin()
     void testCase7()
     {
@@ -236,6 +260,30 @@ namespace devec_private
         cout << endl;
     }
 
+    //  case3_, spaceLeft >= spaceNeed, move backward, objBack >= objInsert, insert random position
+    void testCase8_()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+
+        devec<String> vec1;
+        vec1.start_of_storage = allocator<String>::allocate(OBJECT_NUM * 2 + 1); 
+        vec1.end_of_storage = vec1.start_of_storage + OBJECT_NUM * 2 + 1;
+
+        uninitialized_fill_n(vec1.start_of_storage + 4, OBJECT_NUM, "String");  //  [x,x,x,x,S,S,S,S,S,x,x]
+        vec1.start = 4;
+        vec1.finish = 9;
+
+
+        vec1.insert(vec1.end() - 2, strArr1, strArr1 + 1);   
+
+        devec<String>::iterator it = vec1.begin();
+        devec<String>::iterator end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  [x,x,x,x,S,S,S,0,S,S,x], start = 5, finish = 10.
+        }
+        cout << endl;
+    }
     //  case4, spaceLeft >= spaceNeed, move backward, insert end() position
     void testCase9()
     {
@@ -290,10 +338,12 @@ namespace devec_private
         cout << "testInsert" << endl;
 
         //  testCase6();
+        //  testCase6_();
         //  testCase7();
         //  testCase8();
+        //  testCase8_();
         //  testCase9();
-        testCase10();
+        //  testCase10();
 
         cout << endl;
     }
