@@ -108,7 +108,7 @@ namespace STLite
         //  + n, - n
         devecIterator & operator +=(difference_type n)
         {
-            m_index = (m_index + n) % m_container->capacity();
+            m_index = (m_index + n + m_container->capacity()) % m_container->capacity();
             m_ptr = m_container->start_of_storage + m_index;
 
             return *this;
