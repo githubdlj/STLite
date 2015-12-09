@@ -419,13 +419,64 @@ namespace devec_private
         cout << endl;
     }
 
+    void testCase14()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        devec<String> vec1(strArr1, strArr1 + OBJECT_NUM);
+
+        vec1.pop_back();
+        vec1.pop_back();
+        vec1.pop_front();   //  [x,1,2,x,x,x]
+
+        devecIterator<String> it = vec1.begin();
+        devecIterator<String> end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";   
+        }
+        cout << endl;
+
+        //
+        vec1.push_back("String3");
+        vec1.push_front("String0");
+        vec1.push_front("String-1");
+
+        it = vec1.begin();
+        end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  [0,1,2,3,x,-1]    start = 5, finish = 4
+        }
+        cout << endl;
+
+        //
+        vec1.push_back("String4");
+        
+        it = vec1.begin();
+        end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  [-1,0,1,2,3,4,x,x,x,x,x]
+        }
+        cout << endl;
+    }
+
+    void testPushAndPop()
+    {
+        cout << "testPopAndPush" << endl;
+    
+        testCase14();
+
+        cout << endl;
+    }
+
     void testModifiers()
     {
         cout << "testModifiers" << endl;
 
         //  testInsert();
-        testErase();
-
+        //  testErase();
+        testPushAndPop();
         cout << endl;
     }
 
