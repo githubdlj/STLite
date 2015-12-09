@@ -362,7 +362,7 @@ namespace STLite
                         //  [first, last) -> [pos, pos + objInsert)
 
                         uninitialized_copy(endIterator - objInsert, endIterator, endIterator);
-                        copy(pos, endIterator - objInsert, pos + objInsert);
+                        copy_backward(pos, endIterator - objInsert, endIterator);
                         copy(first, last, pos);
                     }
                     else
@@ -448,7 +448,72 @@ namespace STLite
         template<class Integer>
         void fill_insert(iterator pos, Integer n, const value_type &value)
         {
+            size_type spaceNeed = n;
+            size_type spaceLeft = capacity() - size() - 1;
+            if (spaceLeft >= spaceNeed)
+            {
+                size_type numOfBack = end() - pos;
+                if (numOfBack <= (size() >> 1))     //  move backward
+                {
+                    size_type objInsert = n;
+                    size_type objBack = numOfBack;
+                    iterator endIterator = end();
 
+                    if (objBack >= objInsert)
+                    {
+                        uninitialized_copy(endIterator - objInsert, endIterator, endIterator);
+                        copy_backward(pos, endIterator - objInsert, endIterator);
+                        fill_n(pos, objInsert, value);
+                    }
+                    else
+                    {
+                        uninitialized_copy(pos, endIterator,
+                            uninitialized_fill_n(endIterator, objInsert - objBack, value));
+                        fill_n(pos, objBack, value);
+                    }
+                    finish = (finish + objInsert) % capacity();
+                }
+                else    //  move forward
+                {
+                    iterator beginIterator = begin();
+                    size_type objInsert = n;
+                    size_type objFront = pos - beginIterator;
+
+                    if (objFront >= objInsert)
+                    {
+                        uninitialized_copy_backward(beginIterator, beginIterator + objInsert, beginIterator);
+                        copy(beginIterator + objInsert, pos, beginIterator);
+                        fill_n_backward(pos, objInsert, value);
+                    }
+                    else
+                    {
+                        uninitialized_copy_backward(beginIterator, pos, 
+                            uninitialized_fill_n_backward(beginIterator, objInsert - objFront, value));
+                        fill_n(beginIterator, objFront, value);
+                    }
+                    start = (start - objInsert + capacity()) % capacity();
+                }
+            }
+            else    //  if (spaceLeft >= spaceNeed)
+            {
+                size_type oldSize = size();
+                size_type newSize = oldSize + spaceNeed;
+                size_type newCapacity = oldSize + std::max(oldSize, spaceNeed) + 1;
+
+                pointer new_start_of_storage = data_allocator::allocate(newCapacity);
+                pointer new_end_of_storage =  new_start_of_storage + newCapacity;
+
+                pointer pos1 = uninitialized_copy(begin(), pos, new_start_of_storage);
+                pointer pos2 = uninitialized_fill_n(pos1, n, value);
+                uninitialized_copy(pos, end(), pos2);
+
+                destroy_and_deallocate();
+
+                start_of_storage = new_start_of_storage;
+                end_of_storage = new_end_of_storage;
+                start = 0;
+                finish = start + newSize;
+            }
         }
 
     private:
@@ -477,6 +542,12 @@ namespace STLite
         {
             insert_dispatch(pos, n, value, __true_type());
         }
+
+        void insert(iterator pos, const value_type &value)
+        {
+            insert(pos, 1, value);
+        }
+    
     };
 }
 
