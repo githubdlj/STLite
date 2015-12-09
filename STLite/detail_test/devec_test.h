@@ -333,6 +333,28 @@ namespace devec_private
 
     }
 
+    //  test fill insert
+    void testCase11()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+
+        devec<String> vec1;
+        vec1.start_of_storage = allocator<String>::allocate(OBJECT_NUM * 2 + 1);
+        vec1.end_of_storage = vec1.start_of_storage + OBJECT_NUM * 2 + 1;
+        uninitialized_copy(strArr1, strArr1 + OBJECT_NUM, vec1.start_of_storage + 2);   //  [x,x,0,1,2,3,4,x,x,x,x]
+        vec1.start = 2;
+        vec1.finish = vec1.start + OBJECT_NUM;
+        vec1.insert(vec1.begin() + 2, 3, "String");
+
+        devec<String>::iterator it = vec1.begin();
+        devec<String>::iterator end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  [1,S,S,S,2,3,4,x,x,x,0] start = 10, finish = 6
+        }
+        cout << endl;
+    }
+
     void testInsert()
     {
         cout << "testInsert" << endl;
@@ -344,6 +366,55 @@ namespace devec_private
         //  testCase8_();
         //  testCase9();
         //  testCase10();
+        testCase11();
+
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //  test erase
+    void testCase12()
+    {
+        String strArr1[6] = {"String0", "String1", "String2", "String3", "String4", "String5"};
+        devec<String> vec1(strArr1, strArr1 + 6);
+        
+        devecIterator<String> it = vec1.begin() + 1;
+        it = vec1.erase(it, it + 2);    //  [0, 3, 4, 5, x, x]
+        cout << it->m_data << endl;     //  String3
+        
+        it = vec1.begin();
+        devecIterator<String> end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+    }
+
+    void testCase13()
+    {
+        String strArr1[6] = {"String0", "String1", "String2", "String3", "String4", "String5"};
+        devec<String> vec1(strArr1, strArr1 + 6);
+
+        devecIterator<String> it = vec1.begin() + 3; 
+        it = vec1.erase(it, it + 2);    //  [0,1,2,5,x,x]
+        cout << it->m_data << endl;     //  String5
+
+        it = vec1.begin();
+        devecIterator<String> end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";
+        }
+        cout << endl;
+    }
+
+    void testErase()
+    {
+        cout << "testErase" << endl;
+
+        //  testCase12();
+        testCase13();
 
         cout << endl;
     }
@@ -352,7 +423,8 @@ namespace devec_private
     {
         cout << "testModifiers" << endl;
 
-        testInsert();
+        //  testInsert();
+        testErase();
 
         cout << endl;
     }

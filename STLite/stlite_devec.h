@@ -547,7 +547,40 @@ namespace STLite
         {
             insert(pos, 1, value);
         }
-    
+
+        //////////////////////////////////////////////////////////////////////
+        //  erase
+    public:
+        iterator erase(iterator first, iterator last)
+        {
+            iterator beginIterator = begin();
+            iterator endIterator = end();
+            size_type objFront = first - beginIterator;
+            size_type objBack = endIterator - last;
+            size_type objErase = last - first;
+
+            if (objBack < objFront)    //  move forward
+            {
+                iterator pos = copy(last, endIterator, first);
+                destroy(pos, endIterator);
+                finish = (finish - objErase + capacity()) % capacity();
+
+                return first;
+            }
+            else    // move backward
+            {
+                iterator pos = copy_backward(beginIterator, first, last);
+                destroy(beginIterator, pos);
+                start = (start + objErase) % capacity();
+
+                return last;
+            }
+        }
+        
+        iterator erase(iterator pos)
+        {
+            return erase(pos, pos + 1);
+        }
     };
 }
 
