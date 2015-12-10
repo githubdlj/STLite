@@ -233,11 +233,17 @@ namespace STLite
             start = 0;
             finish = start + n;
         }
+        
+        template<class InputIterator>
+        void allocate_and_copy(InputIterator first, InputIterator last, size_type n, input_iterator_tag)
+        {
+
+        }
 
         template<class ForwardIterator>
-        void allocate_and_copy(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
+        void allocate_and_copy(ForwardIterator first, ForwardIterator last, size_type n, forward_iterator_tag)
         {
-            difference_type n = distance(first, last);
+            //  difference_type n = distance(first, last);
             start_of_storage = data_allocator::allocate(n + 1);
             uninitialized_copy(first, last, start_of_storage);
             end_of_storage = start_of_storage + n + 1;
@@ -261,9 +267,10 @@ namespace STLite
 
         template<class InputIterator>
         void devec_aux(InputIterator first, InputIterator last, __false_type)
-        {
+        {   
+            size_type n = (size_type)distance(first, last);
             typedef iterator_traits<InputIterator>::iterator_category category;
-            allocate_and_copy(first, last, category());
+            allocate_and_copy(first, last, n, category());
         }
 
     public:
@@ -681,7 +688,10 @@ namespace STLite
 //                 finish = start + n;
                 
                 destroy_and_deallocate();
-                allocate_and_copy(first, last, forward_iterator_tag());
+
+                //  to avoid call distance(first, last) twice, 
+                //  rewrite allocate_and_copy(first, last, n, tag) to alternate allocate_and_copy(first, last, tag)
+                allocate_and_copy(first, last, n, forward_iterator_tag());
             }
         }
     private:
