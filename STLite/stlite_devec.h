@@ -329,6 +329,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  Capacity
     //  size, capacity, empty, full
+    //  resize, reserve
     public:
         size_type capacity() const
         {
@@ -348,6 +349,50 @@ namespace STLite
         bool full() const
         {
             return size() + 1 == capacity();
+        }
+
+    //  resize
+    public:
+        void resize(size_type n, const value_type &value)
+        {
+            size_type vecSize = size();
+            //  If n is smaller than the current vector size, 
+            //  the content is reduced to its first size() elements, the rest being dropped.
+            if (n < vecSize)
+            {
+                destroy(begin() + n, end());
+                finish = (finish - (vecSize - n) + capacity()) % capacity();
+            }
+            else
+            {
+                insert(end(), n - vecSize, value);
+            }
+        }
+
+        void resize(size_type n)
+        {
+            resize(n, value_type());
+        }
+
+    //  reserve
+    public:
+        void reserve(size_type n)
+        {
+            if (n > capacity())
+            {
+                size_type vecSize = size();
+                pointer new_start_of_storage = data_allocator::allocate(n + 1);
+                pointer new_end_of_storage = new_start_of_storage + n + 1;
+            
+                uninitialized_copy(begin(), end(), new_start_of_storage);
+                
+                destroy_and_deallocate();
+
+                start_of_storage = new_start_of_storage;
+                end_of_storage = new_end_of_storage;
+                start = 0;  
+                finish = start + vecSize;
+            }
         }
     //////////////////////////////////////////////////////////////////////
     //  modifiers
@@ -728,6 +773,14 @@ namespace STLite
         void assign(size_type n, const value_type &value)
         {
             assign_dispatch(n, value, __true_type());
+        }
+     //  clear
+    public:
+        void clear()    
+        {
+            destroy(begin(), end());
+            start = 0;
+            finish = 0;
         }
     };
 }
