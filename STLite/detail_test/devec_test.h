@@ -574,14 +574,39 @@ namespace devec_private
         cout << endl;
     }
 
+    //////////////////////////////////////////////////////////////////////
+    //  test constructor
+    void testCase19()
+    {
+        int arr[OBJECT_NUM] = {0,1,2,3,4};
+        devec<int> vec1(OBJECT_NUM, 1);     //  constructor
+        devec<int> vec2 = vec1;     //  copy constructor
+        devec<int> vec3;
+        vec3 = vec2;    //  assign
+
+        print(vec1.begin(), vec1.end());
+        print(vec2.begin(), vec2.end());
+       // print(vec3.begin(), vec3.end());
+    }
+
+    void testConstructor()
+    {
+        cout << "testConstructor" << endl;
+
+        testCase19();
+
+        cout << endl;
+    }
+
     void test()
     {
         cout << "devec_private test" << endl;
 
         //  testCase1();
         //  testIterator();
-        testCapacity();
+        //  testCapacity();
         //  testModifiers();
+        testConstructor();
 
         cout << endl;
     }

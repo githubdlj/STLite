@@ -282,7 +282,7 @@ namespace STLite
             devec_aux(n, value, __true_type());
         }
 
-        devec(int n)
+        explicit devec(int n)
         {
             devec_aux(n, value_type());
         }
@@ -297,15 +297,16 @@ namespace STLite
         //  copy constructor
         devec(const devec &lhs)
         {
-            devec_aux(lhs.start_of_storage + start, lhs.start_of_storage + finish);
+            devec_aux(lhs.start_of_storage + lhs.start, lhs.start_of_storage + lhs.finish, __false_type());
         }
 
         //  assign
         devec & operator =(const devec &lhs)
         {
-            if (this != lhs)
+            if (this != &lhs)
             {
-                assign(lhs.begin(), lhs.end());
+                //  assign(lhs.begin(), lhs.end());
+                assign(lhs.start_of_storage + lhs.start, lhs.start_of_storage + lhs.finish);
             }
             return *this;
         }
