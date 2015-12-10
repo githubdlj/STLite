@@ -185,7 +185,7 @@ namespace STLite
     inline devecIterator<T, Alloc> operator +(typename devecIterator<T, Alloc>::difference_type n,
                                               devecIterator<T, Alloc> lhs)  //  const devecIterator<T, Alloc> &lhs
     {
-            return lhs + n;
+        return lhs + n;
     }
 
    
@@ -622,17 +622,20 @@ namespace STLite
             }
             else
             {
-                pointer new_start_of_storage = data_allocator::allocate(n + 1);
-                pointer new_end_of_storage = new_start_of_storage + n + 1;
-
-                uninitialized_fill_n(new_start_of_storage, n, value);
+//                 pointer new_start_of_storage = data_allocator::allocate(n + 1);
+//                 pointer new_end_of_storage = new_start_of_storage + n + 1;
+// 
+//                 uninitialized_fill_n(new_start_of_storage, n, value);
+//                 
+//                 destroy_and_deallocate();
+// 
+//                 start_of_storage = new_start_of_storage;
+//                 end_of_storage = new_end_of_storage;
+//                 start = 0;
+//                 finish = start + n;
                 
                 destroy_and_deallocate();
-
-                start_of_storage = new_start_of_storage;
-                end_of_storage = new_end_of_storage;
-                start = 0;
-                finish = start + n;
+                allocate_and_fill(n, value);
             }
         }
 
@@ -665,17 +668,20 @@ namespace STLite
             }
             else
             {
-                pointer new_start_of_storage = data_allocator::allocate(n + 1);
-                pointer new_end_of_storage = new_start_of_storage + n + 1;
-                
-                uninitialized_copy(first, last, new_start_of_storage);
+//                 pointer new_start_of_storage = data_allocator::allocate(n + 1);
+//                 pointer new_end_of_storage = new_start_of_storage + n + 1;
+//                 
+//                 uninitialized_copy(first, last, new_start_of_storage);
+//                 
+//                 destroy_and_deallocate();
+// 
+//                 start_of_storage = new_start_of_storage;
+//                 end_of_storage = new_end_of_storage;
+//                 start = 0;
+//                 finish = start + n;
                 
                 destroy_and_deallocate();
-
-                start_of_storage = new_start_of_storage;
-                end_of_storage = new_end_of_storage;
-                start = 0;
-                finish = start + n;
+                allocate_and_copy(first, last, forward_iterator_tag());
             }
         }
     private:
