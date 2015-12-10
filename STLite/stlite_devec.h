@@ -602,6 +602,107 @@ namespace STLite
         {
             erase(begin());
         } 
+    
+    //  assign
+    private:
+        void fill_assign(size_type n, const value_type &value)
+        {
+            size_type vecSize = size();
+            if (n <= vecSize)
+            {
+                iterator pos = fill_n(begin(), n, value);
+                destroy(pos, end());
+                finish = (finish - (vecSize - n) + capacity()) % capacity();
+            }
+            else if (n <= capacity() - 1)
+            {
+                fill(begin(), end(), value);
+                uninitialized_fill_n(end(), n - size(), value);
+                finish = (finish + (n - vecSize)) % capacity();
+            }
+            else
+            {
+                pointer new_start_of_storage = data_allocator::allocate(n + 1);
+                pointer new_end_of_storage = new_start_of_storage + n + 1;
+
+                uninitialized_fill_n(new_start_of_storage, n, value);
+                
+                destroy_and_deallocate();
+
+                start_of_storage = new_start_of_storage;
+                end_of_storage = new_end_of_storage;
+                start = 0;
+                finish = start + n;
+            }
+        }
+
+        template<class InputIterator>
+        void range_assign(InputIterator first, InputIterator last, input_iterator_tag)
+        {
+
+        }
+
+        template<class ForwardIterator>
+        void range_assign(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
+        {
+            size_type n = distance(first, last);
+            size_type vecSize = size();
+
+            if (n <= vecSize)
+            {
+                iterator pos = copy(first, last, begin());
+                destroy(pos, end());
+                finish = (finish - (vecSize - n) + capacity()) % capacity();
+            }
+            else if (n <= capacity() - 1)
+            {
+                ForwardIterator mid = first;
+                advance(mid, vecSize);
+
+                copy(first, mid, begin());
+                uninitialized_copy(mid, last, end());
+                finish = (finish + (n - vecSize)) % capacity();
+            }
+            else
+            {
+                pointer new_start_of_storage = data_allocator::allocate(n + 1);
+                pointer new_end_of_storage = new_start_of_storage + n + 1;
+                
+                uninitialized_copy(first, last, new_start_of_storage);
+                
+                destroy_and_deallocate();
+
+                start_of_storage = new_start_of_storage;
+                end_of_storage = new_end_of_storage;
+                start = 0;
+                finish = start + n;
+            }
+        }
+    private:
+        template<class Integer>
+        void assign_dispatch(Integer n, const value_type &value, __true_type)
+        {
+            fill_assign(n, value);
+        }
+
+        template<class InputIterator>
+        void assign_dispatch(InputIterator first, InputIterator last, __false_type)
+        {
+            typedef typename iterator_traits<InputIterator>::iterator_category category;
+            range_assign(first, last, category());
+        }
+    public:
+        template<class InputIterator>
+        void assign(InputIterator first, InputIterator last)
+        {
+            typedef typename _is_integer<InputIterator>::is_integer is_integer;
+            assign_dispatch(first, last, is_integer());
+        }
+        
+        void assign(size_type n, const value_type &value)
+        {
+            assign_dispatch(n, value, __true_type());
+        }
     };
 }
 

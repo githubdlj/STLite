@@ -470,13 +470,78 @@ namespace devec_private
         cout << endl;
     }
 
+    //  test assign(n, value)
+    void testCase15()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        devec<String> vec1;
+        vec1.start_of_storage = allocator<String>::allocate(2 * OBJECT_NUM + 1);
+        vec1.end_of_storage = vec1.start_of_storage + 2 * OBJECT_NUM + 1;
+
+        uninitialized_copy(strArr1, strArr1 + OBJECT_NUM, vec1.start_of_storage + 2);
+        vec1.start = 2;
+        vec1.finish = vec1.start + OBJECT_NUM;
+        //  [x,x,0,1,2,3,4,x,x,x,x]
+
+        //  case1, n <= size()
+        vec1.assign(4, "String5");
+
+        devecIterator<String> it = vec1.begin();
+        devecIterator<String> end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     //  x x 5 5 5 5 x x x x x
+        }
+        cout << endl;
+
+        //  case2, size() < n <= capacity() - 1
+        vec1.assign(6, "String6");
+        it = vec1.begin();
+        end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     // x x 6 6 6 6 6 6 x x x
+        }
+        cout << endl;
+
+        //  case3, n > capacity() - 1
+        vec1.assign(11, "String11");
+        it = vec1.begin();
+        end = vec1.end();
+        for (; it != end; ++it)
+        {
+            cout << it->m_data << "\t";     // 11 11 11 11... 11
+        }
+        cout << endl;
+
+        //  test assign(first, last)
+        vec1.assign(strArr1, strArr1 + OBJECT_NUM);
+    }
+
+    //  test assign(first, last)
+    void testCase16()
+    {
+
+    }
+
+    void testAssign()
+    {
+        cout << "testAssign" << endl;
+
+        testCase15();
+        testCase16();
+
+        cout << endl;
+    }
+
     void testModifiers()
     {
         cout << "testModifiers" << endl;
 
         //  testInsert();
         //  testErase();
-        testPushAndPop();
+        //  testPushAndPop();
+        testAssign();
         cout << endl;
     }
 
