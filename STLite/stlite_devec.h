@@ -300,6 +300,16 @@ namespace STLite
             devec_aux(lhs.start_of_storage + start, lhs.start_of_storage + finish);
         }
 
+        //  assign
+        devec & operator =(const devec &lhs)
+        {
+            if (this != lhs)
+            {
+                assign(lhs.begin(), lhs.end());
+            }
+            return *this;
+        }
+
         ~devec()
         {
             destroy_and_deallocate();
