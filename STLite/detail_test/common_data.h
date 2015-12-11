@@ -99,15 +99,23 @@ namespace private_data
             delete []m_data;
         }
         //////////////////////////////////////////////////////////////////////
+        friend std::ostream & operator << (std::ostream &os, const String &str);
+
     public:
         char *m_data;
 
     };
+    
+    std::ostream & operator << (std::ostream &os, const String &str)
+    {
+        os << str.m_data;
+        return os;
+    }
     //////////////////////////////////////////////////////////////////////
 
     const int OBJECT_NUM = 5;
 
-    }
+}
 
 using namespace private_data;
 #endif
