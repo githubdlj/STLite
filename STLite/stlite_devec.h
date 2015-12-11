@@ -60,7 +60,7 @@ namespace STLite
         //  ++,--
         devecIterator & operator ++()
         {
-            m_index = (m_index + 1) % m_container->capacity();
+            m_index = (m_index + 1) % (m_container->capacity() + 1);
             m_ptr = m_container->start_of_storage + m_index;
 
             return *this;
@@ -69,7 +69,7 @@ namespace STLite
         devecIterator operator ++(int)
         {
             devecIterator temp(m_container, m_index);
-            m_index = (m_index + 1) % m_container->capacity();
+            m_index = (m_index + 1) % (m_container->capacity() + 1);
             m_ptr = m_container->start_of_storage + m_index;
 
             return temp;
@@ -77,7 +77,7 @@ namespace STLite
 
         devecIterator &operator --()
         {
-            m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
+            m_index = (m_index - 1 + m_container->capacity() + 1) % (m_container->capacity() + 1);
             m_ptr = m_container->start_of_storage + m_index;
 
             return *this;
@@ -86,7 +86,7 @@ namespace STLite
         devecIterator operator --(int)
         {
             devecIterator temp(m_container, m_index);
-            m_index = (m_index - 1 + m_container->capacity()) % m_container->capacity();
+            m_index = (m_index - 1 + (m_container->capacity() + 1)) % (m_container->capacity() + 1);
             m_ptr = m_container->start + m_index;
 
             return temp;
@@ -108,7 +108,7 @@ namespace STLite
         //  + n, - n
         devecIterator & operator +=(difference_type n)
         {
-            m_index = (m_index + n + m_container->capacity()) % m_container->capacity();
+            m_index = (m_index + n + (m_container->capacity() + 1)) % (m_container->capacity() + 1);
             m_ptr = m_container->start_of_storage + m_index;
 
             return *this;
@@ -141,7 +141,7 @@ namespace STLite
             }
             else
             {
-                return m_index + m_container->capacity() - m_container->start;
+                return m_index + (m_container->capacity() + 1) - m_container->start;
             }
         }
         
@@ -175,7 +175,7 @@ namespace STLite
         //  []
         reference operator [](difference_type n)
         {
-            pointer temp = m_ptr + (m_container->start + n) % m_container->capacity();
+            pointer temp = m_ptr + (m_container->start + n) % (m_container->capacity() + 1);
             return *temp;
         }
     };
@@ -223,10 +223,13 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  member function
     //  constructor, copy constructor, assignment, destructor
+    
+    //  notice! the devec has a free space, to determine full or empty.
+    //  if not, when the devec is full or empty, start == finish.
     private:
         void allocate_and_fill(size_type n, const value_type &value)
         {
-            start_of_storage = data_allocator::allocate(n + 1);     //  a free space, to determine full or empty
+            start_of_storage = data_allocator::allocate((n + 1));     
             uninitialized_fill_n(start_of_storage, n, value);
             end_of_storage = start_of_storage + n + 1;
             
@@ -275,7 +278,7 @@ namespace STLite
 
     public:
         //  constructor
-        devec() : start_of_storage(0), end_of_storage(0), start(0), finish(0) {}
+        devec() : start_of_storage(0), end_of_storage(start_of_storage + 1), start(0), finish(0) {}
 
         devec(int n, const value_type &value)
         {
@@ -331,15 +334,20 @@ namespace STLite
     //  Capacity
     //  size, capacity, empty, full
     //  resize, reserve
+    private:
+        size_type real_capacity() const
+        {
+            return end_of_storage - start_of_storage;
+        }
     public:
         size_type capacity() const
         {
-            return end_of_storage - start_of_storage;
+            return end_of_storage - start_of_storage - 1;
         }
 
         size_type size() const
         {
-            return finish > start ? (finish - start) : (finish + capacity() - start);
+            return (finish - start + real_capacity()) % real_capacity();
         }
 
         bool empty() const
@@ -349,7 +357,7 @@ namespace STLite
 
         bool full() const
         {
-            return size() + 1 == capacity();
+            return size() == capacity();
         }
 
     //  resize
@@ -362,7 +370,7 @@ namespace STLite
             if (n < vecSize)
             {
                 destroy(begin() + n, end());
-                finish = (finish - (vecSize - n) + capacity()) % capacity();
+                finish = (finish - (vecSize - n) + real_capacity()) % real_capacity();
             }
             else
             {
@@ -405,7 +413,7 @@ namespace STLite
         void range_insert(iterator pos, ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
             size_type spaceNeed = (size_type)distance(first, last);
-            size_type spaceLeft = capacity() - size() - 1;  //  note, left a space!
+            size_type spaceLeft = capacity() - size();
 
             if (spaceLeft >= spaceNeed)
             {
@@ -436,7 +444,7 @@ namespace STLite
                         uninitialized_copy(pos, endIterator, uninitialized_copy(first + objBack, last, endIterator));
                         copy(first, first + objBack, pos);
                     }
-                    finish = (finish + objInsert) % capacity();
+                    finish = (finish + objInsert) % real_capacity();
                 }
                 else    //  move [begin(), pos)
                 {
@@ -457,7 +465,7 @@ namespace STLite
                                             uninitialized_copy_backward(first, last - objFront, beginIterator));
                         copy(last - objFront, last, beginIterator);
                     }
-                    start = (start - objInsert + capacity()) % capacity();
+                    start = (start - objInsert + real_capacity()) % real_capacity();
                 }
 
                 //  an easier but low performance way 
@@ -469,7 +477,7 @@ namespace STLite
 //                     destroy(pos, endIterator);
 //                                         
 //                     uninitialized_copy(temp.begin(), temp.end(), uninitialized_copy(first, last, pos));
-//                     finish = (finish + spaceNeed) % capacity();
+//                     finish = (finish + spaceNeed) % real_capacity();
 //                 }
 //                 else    //  move [begin(), pos)
 //                 {
@@ -479,7 +487,7 @@ namespace STLite
 //                     
 //                     uninitialized_copy_backward(temp.begin(), temp.end(), 
 //                                                 uninitialized_copy_backward(first, last, pos));
-//                     start = (start - spaceNeed + capacity()) % capacity();
+//                     start = (start - spaceNeed + real_capacity()) % real_capacity();
 //                 }
             }   
             else
@@ -512,7 +520,7 @@ namespace STLite
         void fill_insert(iterator pos, Integer n, const value_type &value)
         {
             size_type spaceNeed = n;
-            size_type spaceLeft = capacity() - size() - 1;
+            size_type spaceLeft = capacity() - size();
             if (spaceLeft >= spaceNeed)
             {
                 size_type numOfBack = end() - pos;
@@ -534,7 +542,7 @@ namespace STLite
                             uninitialized_fill_n(endIterator, objInsert - objBack, value));
                         fill_n(pos, objBack, value);
                     }
-                    finish = (finish + objInsert) % capacity();
+                    finish = (finish + objInsert) % real_capacity();
                 }
                 else    //  move forward
                 {
@@ -554,7 +562,7 @@ namespace STLite
                             uninitialized_fill_n_backward(beginIterator, objInsert - objFront, value));
                         fill_n(beginIterator, objFront, value);
                     }
-                    start = (start - objInsert + capacity()) % capacity();
+                    start = (start - objInsert + real_capacity()) % real_capacity();
                 }
             }
             else    //  if (spaceLeft >= spaceNeed)
@@ -626,7 +634,7 @@ namespace STLite
             {
                 iterator pos = copy(last, endIterator, first);
                 destroy(pos, endIterator);
-                finish = (finish - objErase + capacity()) % capacity();
+                finish = (finish - objErase + real_capacity()) % real_capacity();
 
                 return first;
             }
@@ -634,7 +642,7 @@ namespace STLite
             {
                 iterator pos = copy_backward(beginIterator, first, last);
                 destroy(beginIterator, pos);
-                start = (start + objErase) % capacity();
+                start = (start + objErase) % real_capacity();
 
                 return last;
             }
@@ -675,13 +683,13 @@ namespace STLite
             {
                 iterator pos = fill_n(begin(), n, value);
                 destroy(pos, end());
-                finish = (finish - (vecSize - n) + capacity()) % capacity();
+                finish = (finish - (vecSize - n) + real_capacity()) % real_capacity();
             }
-            else if (n <= capacity() - 1)
+            else if (n <= capacity())
             {
                 fill(begin(), end(), value);
                 uninitialized_fill_n(end(), n - size(), value);
-                finish = (finish + (n - vecSize)) % capacity();
+                finish = (finish + (n - vecSize)) % real_capacity();
             }
             else
             {
@@ -718,9 +726,9 @@ namespace STLite
             {
                 iterator pos = copy(first, last, begin());
                 destroy(pos, end());
-                finish = (finish - (vecSize - n) + capacity()) % capacity();
+                finish = (finish - (vecSize - n) + real_capacity()) % real_capacity();
             }
-            else if (n <= capacity() - 1)
+            else if (n <= capacity())
             {
                 ForwardIterator mid = first;
                 advance(mid, vecSize);
