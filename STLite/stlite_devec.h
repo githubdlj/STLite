@@ -135,14 +135,7 @@ namespace STLite
         //  an important function
         typename devec::size_type true_index() const
         {
-            if (m_index >= m_container->start)
-            {
-                return m_index - m_container->start;
-            }
-            else
-            {
-                return m_index + (m_container->capacity() + 1) - m_container->start;
-            }
+            return (m_index - m_container->start + (m_container->capacity() + 1)) % (m_container->capacity() + 1);
         }
         
         //  iterator1 - iterator2      
