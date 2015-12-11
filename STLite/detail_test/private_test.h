@@ -28,13 +28,13 @@ void private_test()
 //    base_private::test();
 //    String_private::test();
 // 
-//     std_vector_private::test();
+     std_vector_private::test();
 //    std_list_private::test();
 //        std_deque_private::test();
 // 
 //     vector_private::test();
 //     list_private::test();
-        devec_private::test();
+//        devec_private::test();
 
 //    algorithm_private::test();
     cout << endl;

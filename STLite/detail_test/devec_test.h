@@ -91,36 +91,40 @@ namespace devec_private
     //  test +=, operator -, operator []
     void testCase5()
     {
-        devec<int> vec1;
+        devec<String> vec1;
 
         //  allocate memory
-        vec1.start_of_storage = allocator<int>::allocate(OBJECT_NUM + 1);
+        vec1.start_of_storage = allocator<String>::allocate(OBJECT_NUM + 1);
         vec1.end_of_storage = vec1.start_of_storage + OBJECT_NUM + 1;
 
-        //  assign
-        *(vec1.start_of_storage + 0) = 0;
-        *(vec1.start_of_storage + 1) = 1;
-        *(vec1.start_of_storage + 4) = 2;
-        *(vec1.start_of_storage + 5) = 3;
+        //  construct
+        construct(vec1.start_of_storage + 0, "String0");
+        construct(vec1.start_of_storage + 1, "String1");
+        construct(vec1.start_of_storage + 4, "String2");
+        construct(vec1.start_of_storage + 5, "String3");
 
         vec1.start = 4;
         vec1.finish = 2;    //  [0, 1, x, x, 2, 3]
 
         //  iterator + n
-        devec<int>::iterator it;
+        devec<String>::iterator it;
         it = vec1.begin() + 2;
-        cout << *it << endl;    //  0
+        cout << it->m_data << endl;    //  0
 
         //  n + iterator
-        devec<int>::iterator it2;
-        it2 = 2 + vec1.begin();
-        cout << *it2 << endl;   //  0
+        devec<String>::iterator it2;
+     //   it2 = 2 + vec1.begin();
+     //   cout << *it2 << endl;   //  0
 
         //  test iterator1 - iterator2
         int ptrdiff = vec1.end() - vec1.begin();
         cout << ptrdiff << endl;    //  4
 
-        cout << it[2] << endl;      //  0  
+        //  test operator []
+        cout << it[2].m_data << endl;      //  0
+        
+        it[2] = "String5";
+        cout << it[2].m_data << endl;      //  5
     }
 
     void testIterator()
@@ -603,10 +607,10 @@ namespace devec_private
         cout << "devec_private test" << endl;
 
         //  testCase1();
-        //  testIterator();
+          testIterator();
         //  testCapacity();
         //  testModifiers();
-        testConstructor();
+        //  testConstructor();
 
         cout << endl;
     }
