@@ -367,7 +367,9 @@ namespace STLite
             }
             else
             {
-                insert(end(), n - vecSize, value);
+                //  note, the SGI STL call insert.
+                //  so, it will cause that the CAPACITY may not equal to the SIZE.
+                insert(end(), n - vecSize, value);      
             }
         }
 

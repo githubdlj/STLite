@@ -496,6 +496,7 @@ namespace devec_private
 
         //  test assign(first, last)
         vec1.assign(strArr1, strArr1 + OBJECT_NUM);
+        print(vec1.begin(), vec1.end());
     }
 
     //  test assign(first, last)
@@ -607,9 +608,9 @@ namespace devec_private
         cout << "devec_private test" << endl;
 
         //  testCase1();
-          testIterator();
+        //  testIterator();
         //  testCapacity();
-        //  testModifiers();
+          testModifiers();
         //  testConstructor();
 
         cout << endl;

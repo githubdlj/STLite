@@ -137,9 +137,9 @@ namespace std_vector_private
         cout << v.size() << endl;           //  5
         cout << v.capacity() << endl;       //  5
 
-        v.resize(OBJECT_NUM + 1, 6);        //  6
-        cout << v.size() << endl;           //  7,???
-        cout << v.capacity() << endl;
+        v.resize(OBJECT_NUM + 1, 7);        
+        cout << v.size() << endl;           //  7 
+        cout << v.capacity() << endl;       //  7, it will be 10 in the SGI STL
     }
 
     //////////////////////////////////////////////////////////////////////
