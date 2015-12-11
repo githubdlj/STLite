@@ -129,6 +129,19 @@ namespace std_vector_private
         }
         cout << endl;
     }
+
+    //  test resize
+    void testCase6()
+    {
+        std::vector<int> v(OBJECT_NUM, 5);
+        cout << v.size() << endl;           //  5
+        cout << v.capacity() << endl;       //  5
+
+        v.resize(OBJECT_NUM + 1, 6);        //  6
+        cout << v.size() << endl;           //  7,???
+        cout << v.capacity() << endl;
+    }
+
     //////////////////////////////////////////////////////////////////////
     void test()
     {
@@ -138,8 +151,8 @@ namespace std_vector_private
    //     testCase2();
    //     testCase3();
    //     testCase4();
-        testCase5();
-
+   //     testCase5();
+        testCase6();
         cout << endl;
     }
 }
