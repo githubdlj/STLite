@@ -219,7 +219,7 @@ namespace STLite
     template<class ForwardIterator, class T>
     inline void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T &value)
     {
-        typedef typename iterator_traits<ForwardIterator>:iterator_category category;
+        typedef typename iterator_traits<ForwardIterator>::iterator_category category;
         typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::is_POD_type is_POD_type;
         
         uninitialized_fill_aux(first, last, value, category(), is_POD_type());
