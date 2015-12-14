@@ -9,6 +9,7 @@
 #define _PUBLIC_ALLOC_TEST_H_
 
 #include <vector>
+#include <list>
 
 #include "common_header_files.h"
 #include "common_data.h"
@@ -81,13 +82,33 @@ namespace alloc_public
         cout << endl;
     }
 
+    //  test allocator on list
+    void testCase3()
+    {
+        String strArr1[OBJECT_NUM] = {"String0", "String1", "String2", "String3", "String4"};
+        std::list<String, STLite::allocator<String> > list1;
+       
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            list1.push_back(strArr1[i]);
+        }
+
+        for (int i = 0; i < OBJECT_NUM; ++i)
+        {
+            cout << list1.back() << "\t";
+            list1.pop_back();
+        }
+        cout << endl;
+    }
+
     //////////////////////////////////////////////////////////////////////
     void test()
     {
         cout << "alloc_public test" << endl;
 
-        testCase1();
-        testCase2();
+        //  testCase1();
+        //  testCase2();
+        testCase3();
 
         cout << endl;
     }

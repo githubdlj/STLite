@@ -101,10 +101,18 @@ public:
         delete []m_data;
     }
     //////////////////////////////////////////////////////////////////////
+
+    //  
+    friend std::ostream & operator <<(std::ostream &os, const String &s);
 public:
     char *m_data;
-
 };
+
+std::ostream & operator <<(std::ostream &os, const String &s)
+{
+    os << s.m_data;
+    return os;
+}
 //////////////////////////////////////////////////////////////////////
 
 const int OBJECT_NUM = 5;

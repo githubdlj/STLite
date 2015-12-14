@@ -6,8 +6,8 @@
 	Purpose:  main,test private_tes && public_test
 *********************************************************************/
 
-//#include "public_test.h"
-#include "../detail_test/private_test.h"
+#include "public_test.h"
+//#include "../detail_test/private_test.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -15,8 +15,8 @@ int main()
 {
     cout << "Hello STLite" << endl;
     
-//    public_test();
-    private_test();
+    public_test();
+//    private_test();
     
     cout << endl;
     system("pause");
