@@ -237,6 +237,70 @@ namespace base_private
         it.showContainerSize(c);
     //    c.showSize();
     }
+
+    //////////////////////////////////////////////////////////////////////
+    template<class T>
+    class Widget_
+    {
+    private:
+        static int index;
+    public:
+        static void addIndex()
+        {
+            ++index;
+        }
+
+        static void showIndex();
+    private:
+        union Slot_ 
+        {
+            int element;
+            Slot_* next;
+        };
+    public:
+        typedef Slot_ * slot_pointer;
+    public:
+        static slot_pointer pointer;
+    };
+
+    //  init the static variables
+    template<class T>
+    int Widget<T>::index = 0;
+
+    template<class T>
+    typename Widget<T>::slot_pointer Widget<T>::pointer = 0;
+
+    //  define  static function
+    template<class T>
+    void Widget_<T>::showIndex()
+    {
+        cout << index << endl;
+    }
+
+    //  test static variables. 
+    //  test how to define a function outside the class.
+    void testCase6()
+    {
+        //  int
+        Widget_<int>::showIndex();      //  0
+        Widget_<int>::addIndex();       //  1
+        Widget_<int>::addIndex();       //  2
+        Widget_<int>::showIndex();      //  2
+
+        //
+        Widget_<double>::showIndex();   //  0
+        Widget_<double>::addIndex();    //  1
+        Widget_<double>::addIndex();    //  2
+        Widget_<double>::showIndex();   //  2
+
+        // 
+        Widget_<int>::addIndex();       //  3
+        Widget_<int>::showIndex();      //  3
+        //     Widget_<int>::index++;   //  error, can not access private member
+        //     Widget_<int>::showIndex();
+        cout << Widget_<int>::pointer << endl;  //  00000000
+    }
+
     //////////////////////////////////////////////////////////////////////
     void test()
     {
