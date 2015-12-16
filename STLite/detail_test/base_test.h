@@ -301,6 +301,66 @@ namespace base_private
         cout << Widget_<int>::pointer << endl;  //  00000000
     }
 
+    //  test malloc
+    //  what means malloc??
+    struct Node
+    {
+        int a;
+        double b;
+    };
+
+    void testCase7()
+    {
+        Node *pNode = (Node *)malloc(sizeof(Node));     //  malloc memory
+        cout << pNode << endl;
+        cout << &(pNode->a) << endl;
+        cout << &(pNode->b) << endl;                    //  sizeof(double) 8
+        ++pNode;                                        //  ++pNode
+        cout << pNode << endl;                          
+
+        pNode->a = 0;                                   //  access the next Node
+        pNode->b = 1;
+
+        cout << pNode->a << endl;
+        cout << pNode->b << endl;
+
+        --pNode;
+        cout << pNode << endl;
+        free(pNode);                                    //  error
+    }
+
+    void testCase8()
+    {
+        double *data = (double *)malloc(sizeof(double) * 12);
+        cout << data << endl;
+
+        data++;
+        free(data);     //  error
+    }
+
+    void testCase9()
+    {
+        int *data = (int *)malloc(sizeof(int));
+        cout << data;
+
+        double *ptr = (double *)data;
+        *ptr = 0;                           //  1) access invalid memory
+        cout << ptr << endl;
+        cout << *ptr << endl;
+
+        free(ptr);                          //  2) if 1) happen, it will error!
+    }
+
+    void testMalloc()
+    {
+        cout << "testMalloc" << endl;
+
+        testCase7();
+        testCase8();
+        testCase9();
+
+        cout << endl;
+    }
     //////////////////////////////////////////////////////////////////////
     void test()
     {
