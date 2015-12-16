@@ -33,7 +33,7 @@ namespace STLite
         T data;
 
         //  constructor
-        list_node(T d = T(), pointer p = NULL, pointer n = NULL) : data(d), prev(p), next(n) {}
+        //list_node(T d = T(), pointer p = NULL, pointer n = NULL) : data(d), prev(p), next(n) {}
     };
     
     //////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  list
-    template<class T, class Alloc = allocator<list_node<T> > >
+    template<class T, class Alloc = MemoryPool<list_node<T> > >
     class list
     {
     public:
@@ -135,7 +135,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  allocator
     public:
-        typedef allocator<list_node<T> > node_allocator;
+        typedef MemoryPool<list_node<T> > node_allocator;
 
     //////////////////////////////////////////////////////////////////////
     //  function
