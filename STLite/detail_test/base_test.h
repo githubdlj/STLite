@@ -301,6 +301,26 @@ namespace base_private
         cout << Widget_<int>::pointer << endl;  //  00000000
     }
 
+    //////////////////////////////////////////////////////////////////////
+    void testCase7_()
+    {
+        union slot1
+        {
+            char c[10];
+            int i;
+        };
+
+        union slot2
+        {
+            slot2 *next;
+            long long l;
+        };
+
+        cout << sizeof(slot1) << endl;      //  12, 4 * 3
+        cout << sizeof(slot2) << endl;      //  8
+    }
+
+
     //  test malloc
     //  what means malloc??
     struct Node
