@@ -30,15 +30,15 @@ namespace STLite
     {
         set_new_handler(0);
         T *result = (T *) ::operator new((size_t) (size * sizeof(T)));
-        if (0 == result)
-        {
-            std::cerr << "out of memory" << endl;
-            exit(1);
-        }
-        else
-        {
-            cout << size * sizeof(T) << "byte memory has alloc" << endl;
-        }
+//         if (0 == result)
+//         {
+//             std::cerr << "out of memory" << endl;
+//             exit(1);
+//         }
+//         else
+//         {
+//             cout << size * sizeof(T) << "byte memory has alloc" << endl;
+//         }
 
         return result;
     }
@@ -48,25 +48,25 @@ namespace STLite
     {
         if (NULL != buffer)
         {
-            cout << "free memory" << endl;
+            //  cout << "free memory" << endl;
             ::operator delete(buffer);
         }
     }
 
     //////////////////////////////////////////////////////////////////////
-    //  allocator
+    //  allocator, a simple allocator, it just call ::opearator new and ::opearator delete
     //  In order to test, the interface must to conform to the VC STL. 
     template<class T>
     class allocator
     {
     public:
-        typedef T           value_type;
-        typedef T*          pointer;
-        typedef const T*    const_pointer;
-        typedef T&          reference;
-        typedef const T&    const_reference;
-        typedef ptrdiff_t   difference_type;
-        typedef size_t      size_type;
+        typedef T               value_type;
+        typedef T*              pointer;
+        typedef const T*        const_pointer;
+        typedef T&              reference;
+        typedef const T&        const_reference;
+        typedef std::ptrdiff_t  difference_type;
+        typedef size_t          size_type;
 
         template<class U>
         struct rebind{
@@ -84,6 +84,9 @@ namespace STLite
         }
 
         //////////////////////////////////////////////////////////////////////
+        //  the VC STL call allocator<T>::construct and destroy in alloc.h
+        //  the SGI STL construct and destroy in construct.h
+
         //  to conform to VC STL, I must to offer the interface as follows.
         //  in fact, the SGI STL separate the ALLOCATE and CONSTRUCT 
         static void construct(pointer p, const_reference value)
@@ -117,6 +120,157 @@ namespace STLite
         allocator(const allocator<U> &) {}
          
     };
+
+    //////////////////////////////////////////////////////////////////////
+    //  MemoryPool
+    //template<class T, size_t BlockSize = 4096>
+    template<class T, size_t BlockSize = 21>
+    class MemoryPool
+    {
+    public:
+        typedef T               value_type;
+        typedef T*              pointer;
+        typedef const T*        const_pointer;
+        typedef T&              reference;
+        typedef const T&        const_reference;
+        typedef std::ptrdiff_t  difference_type;
+        typedef size_t          size_type;
+
+        template<class U>
+        struct rebind
+        {
+            typedef MemoryPool<U> other;
+        };
+
+        static pointer allocate(size_type n)
+        {
+            //  assert(BlockSize >= 16);
+            if (NULL != freeSlot)
+            {
+                pointer result = (pointer)freeSlot;
+                freeSlot = freeSlot->next;
+                return result;
+            }
+            else
+            {
+                if (currentSlot >= lastSlot)
+                {
+                    allocateBlock();
+                }
+               
+                slot_pointer temp = currentSlot;
+                //  cout << sizeof(value_type) << endl;
+                currentSlot = (slot_pointer)( (data_pointer)currentSlot + sizeof(value_type) );
+                return (pointer)temp;
+            }
+        }
+
+        static void deallocate(pointer ptr, size_type n)
+        {
+            if (NULL != ptr)
+            {
+                ((slot_pointer)ptr)->next = freeSlot;
+                freeSlot = (slot_pointer)ptr;
+            }
+        }
+
+        //  the VC STL call allocator<T>::construct and destroy in alloc.h
+        //  the SGI STL construct and destroy in construct.h
+        static void construct(pointer ptr, const value_type &value)
+        {
+            STLite::construct(ptr, value);
+        }
+
+        static void destroy(pointer ptr)
+        {
+            STLite::destroy(ptr);
+        }
+
+        static void destroy(pointer first, pointer last)
+        {
+            STLite::destroy(first, last);
+        }
+        
+        static void destroyMemoryPool()
+        {
+            slot_pointer curr = currentBlock;
+            while (curr != NULL)
+            {
+                slot_pointer next = curr->next;
+                ::operator delete(curr);
+                curr = next;
+            }
+        }
+
+        size_type max_size()const
+        {
+            return size_type(-1) / sizeof(T);       //  size_type is unsigned int
+        }
+
+//         //  constructor
+        MemoryPool() {}
+        MemoryPool(const MemoryPool &) {}
+
+        template<class U>
+        MemoryPool(const MemoryPool<U> &) {}
+    //
+    private:
+//         union slot
+//         {
+//             value_type element;     //  value_type can not have CONSTRUCTOR!
+//             slot *next;
+//         };
+        union slot
+        {
+            char client_data[1];
+            slot *next;
+        };
+
+    public:
+        typedef char*   data_pointer;
+        typedef slot    slot_type;
+        typedef slot*   slot_pointer;
+
+    private:
+        static slot_pointer currentBlock;
+        static slot_pointer currentSlot;
+        static slot_pointer lastSlot;
+        static slot_pointer freeSlot;
+
+        static size_type padPointer(data_pointer p, size_type align)
+        {
+            size_t result = (size_t)p;
+            return (align - result) % align;
+        }
+
+    private:
+        static void allocateBlock()
+        {
+            data_pointer newBlock = (data_pointer) ::operator new(BlockSize);
+            ((slot_pointer)(newBlock))->next =  currentBlock;
+            currentBlock = (slot_pointer)newBlock;
+
+            data_pointer body = newBlock + sizeof(slot_pointer);    //  the block's head used to link other blocks.
+            size_type bodyPading = padPointer(body, sizeof(slot_type));
+            bodyPading = 0;
+
+            currentSlot = (slot_pointer)(body + bodyPading);
+            lastSlot = (slot_pointer)(newBlock + BlockSize - sizeof(value_type) + 1);
+            //lastSlot = (data_pointer)(new)
+        }
+    };
+    
+    template<class T, size_t BlockSize>
+    typename MemoryPool<T, BlockSize>::slot_pointer MemoryPool<T, BlockSize>::currentBlock = NULL;
+
+    template<class T, size_t BlockSize>
+    typename MemoryPool<T, BlockSize>::slot_pointer MemoryPool<T, BlockSize>::currentSlot = NULL;
+
+    template<class T, size_t BlockSize>
+    typename MemoryPool<T, BlockSize>::slot_pointer MemoryPool<T, BlockSize>::lastSlot = NULL;
+
+    template<class T, size_t BlockSize>
+    typename MemoryPool<T, BlockSize>::slot_pointer MemoryPool<T, BlockSize>::freeSlot = NULL;
 
     //////////////////////////////////////////////////////////////////////
     //  simple allocator
