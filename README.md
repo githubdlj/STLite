@@ -8,3 +8,5 @@ SGI STL模拟实现
 2、 SGI STL源码v3.3 http://www.sgi.com/tech/stl/download.html
 
 3、 TinySTL https://github.com/zouxiaohang/TinySTL
+
+4、 MemoryPool  https://github.com/cacay/MemoryPool
