@@ -484,13 +484,57 @@ namespace alloc_public
         cout << endl;
     }
 
+    //  test char, short.
+    //  sizeof(char) < sizeof(slot_pointer)
+    void testCase23()
+    {
+        char *ptr[OBJECT_NUM];
+
+        ptr[0] = MemoryPool<char>::allocate(0);
+        *ptr[0] = 'a';
+        cout << ptr[0] << endl;
+        cout << *ptr[0] << endl;
+
+        ptr[1] = MemoryPool<char>::allocate(0);
+        *ptr[1] = 'b';
+        cout << ptr[1] << endl;
+        cout << *ptr[1] << endl;
+
+        ptr[2] = MemoryPool<char>::allocate(0);
+        *ptr[2] = 'c';
+        cout << ptr[2] << endl;
+        cout << *ptr[2] << endl;
+
+        MemoryPool<char>::deallocate(ptr[1]);
+        MemoryPool<char>::deallocate(ptr[2]);
+
+        ptr[3] = MemoryPool<char>::allocate(0);
+        *ptr[3] = 'd';
+        cout << ptr[3] << endl;
+        cout << *ptr[3] << endl;
+
+        MemoryPool<char>::destroyMemoryPool();
+    }
+
+    void testCase24()
+    {
+        char *ptr[2];
+        ptr[0] = allocator<char>::allocate(1);
+        *ptr[0] = 'a';
+        cout << ptr[0] << endl;
+        cout << *ptr[0] << endl;
+    }
+
     void testMemoryPool()
     {
         cout << "testMemoryPool" << endl;
 
         //  testMemoryPoolAllocate();
         //  testMemoryPoolDeallocate();
-        testPerformance();
+        //  testPerformance();
+
+        testCase23();
+        testCase24();
 
         cout << endl;
     }

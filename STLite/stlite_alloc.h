@@ -123,7 +123,7 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  MemoryPool
-    //template<class T, size_t BlockSize = 4096>
+    //  BlockSize must  greater than 8
     template<class T, size_t BlockSize = 4096>
     class MemoryPool
     {
@@ -160,7 +160,8 @@ namespace STLite
                
                 slot_pointer temp = currentSlot;
                 //  cout << sizeof(value_type) << endl;
-                currentSlot = (slot_pointer)( (data_pointer)currentSlot + sizeof(value_type) );
+                size_t offset = std::max(sizeof(value_type), sizeof(slot_pointer));
+                currentSlot = (slot_pointer)( (data_pointer)currentSlot + offset );
                 return (pointer)temp;
             }
         }
@@ -255,7 +256,8 @@ namespace STLite
             bodyPading = 0;
 
             currentSlot = (slot_pointer)(body + bodyPading);
-            lastSlot = (slot_pointer)(newBlock + BlockSize - sizeof(value_type) + 1);
+            size_type offset = std::max(sizeof(value_type), sizeof(slot_pointer));
+            lastSlot = (slot_pointer)(newBlock + BlockSize - offset + 1);
             //lastSlot = (data_pointer)(new)
         }
     };
