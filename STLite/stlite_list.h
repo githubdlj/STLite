@@ -111,7 +111,7 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  list
-    template<class T, class Alloc = MemoryPool<list_node<T> > >
+    template<class T, class Alloc = allocator<list_node<T> > >
     class list
     {
     public:
@@ -135,7 +135,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  allocator
     public:
-        typedef MemoryPool<list_node<T> > node_allocator;
+        typedef allocator<list_node<T> > node_allocator;
 
     //////////////////////////////////////////////////////////////////////
     //  function

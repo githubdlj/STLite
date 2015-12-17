@@ -240,28 +240,26 @@ namespace alloc_public
     }
 
     //  test performance
-    void testCase14()
+//     void testCase14()
+//     {
+//         list<int> l1;
+// 
+//         clock_t start;
+//         start = clock();
+// 
+//         for (int i = 0; i < 10000000; ++i)  
+//         {
+//             l1.push_back(i);
+//         }
+// 
+//         std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+//         //  1) 4.458    STLite::list<int, MemoryPool<int> >
+//         //  2) 28.158   STLite::list<int, allocator<int> >
+//         //  print(l1.begin(), l1.end());
+//     }
+
+    void testMemoryPoolAllocate()
     {
-        list<int> l1;
-
-        clock_t start;
-        start = clock();
-
-        for (int i = 0; i < 10000000; ++i)  
-        {
-            l1.push_back(i);
-        }
-
-        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
-        //  1) 4.458    STLite::list<int, MemoryPool<int> >
-        //  2) 28.158   STLite::list<int, allocator<int> >
-        //  print(l1.begin(), l1.end());
-    }
-
-    void testMemoryPool()
-    {
-        cout << "testMemoryPool" << endl;
-
         //  testCase4();
         //  testCase5();
         //  testCase6();
@@ -271,10 +269,232 @@ namespace alloc_public
         //  testCase10();
         //  testCase11();
         //  testCase12();
-          testCase13();
+        testCase13();
+    }
+
+    //  test MemoryPool::deallocate
+    void testCase15()
+    {
+        int *ptr[OBJECT_NUM];
+        ptr[0] = MemoryPool<int, 13>::allocate(0);
+        cout << ptr[0] << endl;
+
+        ptr[1] = MemoryPool<int, 13>::allocate();
+        cout << ptr[1] << endl;
+
+        ptr[2] = MemoryPool<int, 13>::allocate();
+        cout << ptr[2] << endl;
+
+        MemoryPool<int, 13>::deallocate(ptr[1]);
+        MemoryPool<int, 13>::deallocate(ptr[2]);
+
+        ptr[3] = MemoryPool<int, 13>::allocate();
+        cout << ptr[3] << endl;                         //  same to ptr[2]
+
+        ptr[4] = MemoryPool<int, 13>::allocate();       //  same to ptr[1]
+        cout << ptr[4] << endl;
+
+        MemoryPool<int, 13>::destroyMemoryPool();
+    }
+
+    void testCase16()
+    {
+        int *ptr[OBJECT_NUM];
+        ptr[0] = MemoryPool<int, 13>::allocate(0);
+        cout << ptr[0] << endl;
+
+        ptr[1] = MemoryPool<int, 13>::allocate();
+        cout << ptr[1] << endl;
+
+        ptr[2] = MemoryPool<int, 13>::allocate();
+        cout << ptr[2] << endl;
+
+        MemoryPool<int, 13>::deallocate(ptr[1]);
+        MemoryPool<int, 13>::deallocate(ptr[2]);
+        *ptr[2] = 2;    //  ptr[2] has deallocated, access it will destroy the free list!
+        cout << *ptr[2] << endl;    //  0
+
+        ptr[3] = MemoryPool<int, 13>::allocate();
+        cout << ptr[3] << endl;                         //  same to ptr[2]
+
+        ptr[4] = MemoryPool<int, 13>::allocate();       //  should same to ptr[1], but access ptr[2] has damaged it.
+        cout << ptr[4] << endl;
+
+        MemoryPool<int, 13>::destroyMemoryPool();
+    }
+
+    //  test on STLite::list
+    void testCase17()
+    {
+        //  cout << sizeof(list_node<int>) << endl;     //  12Byte
+        list<int> l1;                                   //  MemoryPool<int, 28(4 + 12 + 12)>
+        
+        l1.push_back(0);
+        l1.push_back(1);
+        l1.push_back(2);
+
+        l1.pop_front();
+        l1.pop_back();
+
+        l1.push_back(3);    //  address same to 2
+        l1.push_back(4);    //  address same to 0
+
+        print(l1.begin(), l1.end());    //  1 3 4
+    }
+    
+    //  test on std::list
+    void testCase18()
+    {
+        std::list<int, MemoryPool<int> > l1;        //  MemoryPool<int, 28(4 + 12 + 12)>
+
+        l1.push_back(0);
+        l1.push_back(1);
+        l1.push_back(2);
+
+        l1.pop_front();
+        l1.pop_back();
+
+        l1.push_back(3);    //  address same to 2
+        l1.push_back(4);    //  address same to 0
+
+        print(l1.begin(), l1.end());    //  1 3 4
+    }
+
+    void testMemoryPoolDeallocate()
+    {
+        //  testCase15();
+        //  testCase16();
+        //  testCase17();
+        testCase18();
+    }
+
+    //  test MemoryPool's performance
+    //  compare allocate
+    void testCase19()
+    {
+        clock_t start;
+        
+        start = clock();
+        for (int i = 0; i < 1000000; ++i)
+        {
+            int *ptrMemoryPool = MemoryPool<int, 4096>::allocate(0);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+
+        start = clock();
+        for (int i = 0; i < 1000000; ++i)
+        {
+            int *ptrAllocator = allocator<int>::allocate(1);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+
+        //  1000000
+        //  MemoryPool  0.045
+        //  allocator   10.041  
+    }
+
+    //  test allocate and deallocate
+    void testCase20()
+    {
+        clock_t start;
+
+        start = clock();
+        for (int i = 0; i < 1000000; ++i)
+        {
+            int *ptrMemoryPool = MemoryPool<int, 4096>::allocate(0);
+            MemoryPool<int, 4096>::deallocate(ptrMemoryPool);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+
+        start = clock();
+        for (int i = 0; i < 1000000; ++i)
+        {
+            int *ptrAllocator = allocator<int>::allocate(1);
+            allocator<int>::deallocate(ptrAllocator, 1);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+    }
+
+    //  test on STLite::list
+    void testCase21()
+    {
+        list<int> l1;
+        
+        clock_t start;
+        start = clock();
+
+        for (int i = 0; i < 100000; ++i)
+        {
+            l1.push_back(i);
+        }
+        
+        for (int i = 0; i < 50000; ++i)
+        {
+            l1.pop_back();
+        }
+
+        for (int i = 0; i < 100000; ++i)
+        {
+            l1.push_front(i);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+
+        //  STLIte::MemoryPool  0.111
+        //  STLite::allocator   8.256
+    }
+
+    //  test on std::list
+    void testCase22()
+    {
+        std::list<int> l1;
+
+        clock_t start;
+        start = clock();
+
+        for (int i = 0; i < 100000; ++i)
+        {
+            l1.push_back(i);
+        }
+
+        for (int i = 0; i < 50000; ++i)
+        {
+            l1.pop_back();
+        }
+
+        for (int i = 0; i < 100000; ++i)
+        {
+            l1.push_front(i);
+        }
+        std::cout << (((double)clock() - start) / CLOCKS_PER_SEC) << "\n\n";
+
+        //  STLite::MemoryPool  0.659
+        //  STLite::allocator   8.94
+        //  std::allocator      8.774
+    }
+
+    void testPerformance()
+    {
+        cout << "testPrformance" << endl;
+
+        //  testCase19();
+        //  testCase20();
+        //  testCase21();
+        testCase22();
 
         cout << endl;
     }
+
+    void testMemoryPool()
+    {
+        cout << "testMemoryPool" << endl;
+
+        //  testMemoryPoolAllocate();
+        //  testMemoryPoolDeallocate();
+        testPerformance();
+
+        cout << endl;
+    }
+
     //////////////////////////////////////////////////////////////////////
     void test()
     {

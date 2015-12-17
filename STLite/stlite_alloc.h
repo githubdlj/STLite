@@ -124,7 +124,7 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  MemoryPool
     //template<class T, size_t BlockSize = 4096>
-    template<class T, size_t BlockSize = 21>
+    template<class T, size_t BlockSize = 4096>
     class MemoryPool
     {
     public:
@@ -142,7 +142,7 @@ namespace STLite
             typedef MemoryPool<U> other;
         };
 
-        static pointer allocate(size_type n)
+        static pointer allocate(size_type n = 0)
         {
             //  assert(BlockSize >= 16);
             if (NULL != freeSlot)
@@ -165,7 +165,7 @@ namespace STLite
             }
         }
 
-        static void deallocate(pointer ptr, size_type n)
+        static void deallocate(pointer ptr, size_type n = 0)
         {
             if (NULL != ptr)
             {
