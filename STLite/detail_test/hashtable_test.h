@@ -17,9 +17,20 @@
 //////////////////////////////////////////////////////////////////////
 namespace hashtable_private
 {
+    void testCase1()
+    {
+        cout<< "testCase1" << endl;
+
+        hashtableIterator<int, int, int, int, int> it;
+        it++;
+
+        cout << endl;
+    }
+
     void test()
     {
         cout << "hashtable_private test" << endl;
+        testCase1();
         cout << endl;
     }
 }
