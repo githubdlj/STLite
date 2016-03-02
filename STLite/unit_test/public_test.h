@@ -27,7 +27,7 @@ void public_test()
 //    iterator_public::test();
 //     construct_public::test();
 //    uninitialized_public::test();
-     alloc_public::test();
+//     alloc_public::test();
 
  
 //     vector_public::test();

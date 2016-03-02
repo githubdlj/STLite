@@ -128,5 +128,11 @@
     <ClInclude Include="detail_test\devec_test.h">
       <Filter>源文件\private_test</Filter>
     </ClInclude>
+    <ClInclude Include="stlite_hashtable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="detail_test\hashtable_test.h">
+      <Filter>源文件\private_test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

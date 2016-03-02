@@ -18,6 +18,7 @@
 #include "vector_test.h"
 #include "list_test.h"
 #include "devec_test.h"
+#include "hashtable_test.h"
 
 #include "algorithm_test.h"
 //////////////////////////////////////////////////////////////////////
@@ -30,12 +31,13 @@ void private_test()
 // 
 //     std_vector_private::test();
 //    std_list_private::test();
-//        std_deque_private::test();
+//      std_deque_private::test();
 // 
 //     vector_private::test();
 //     list_private::test();
-        devec_private::test();
+//     devec_private::test();
+    hashtable_private::test();
 
-//    algorithm_private::test();
+    //    algorithm_private::test();
     cout << endl;
 }

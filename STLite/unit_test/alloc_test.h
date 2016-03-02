@@ -534,7 +534,7 @@ namespace alloc_public
         //  testPerformance();
 
         testCase23();
-        testCase24();
+     //   testCase24();
 
         cout << endl;
     }

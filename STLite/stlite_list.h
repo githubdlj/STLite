@@ -33,7 +33,7 @@ namespace STLite
         T data;
 
         //  constructor
-        //list_node(T d = T(), pointer p = NULL, pointer n = NULL) : data(d), prev(p), next(n) {}
+        list_node(T d = T(), pointer p = NULL, pointer n = NULL) : data(d), prev(p), next(n) {}
     };
     
     //////////////////////////////////////////////////////////////////////

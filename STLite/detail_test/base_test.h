@@ -265,10 +265,10 @@ namespace base_private
 
     //  init the static variables
     template<class T>
-    int Widget<T>::index = 0;
+    int Widget_<T>::index = 0;
 
     template<class T>
-    typename Widget<T>::slot_pointer Widget<T>::pointer = 0;
+    typename Widget_<T>::slot_pointer Widget_<T>::pointer = 0;
 
     //  define  static function
     template<class T>
