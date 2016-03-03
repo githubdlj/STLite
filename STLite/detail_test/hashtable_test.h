@@ -24,7 +24,7 @@ namespace hashtable_private
         hashtableIterator<int, int, int, int, int> it;
         it++;
 
-        hashtable<int, int, int, int, int> hb;
+        hashtable<int, int, int, int, int> hb(10);
         cout << endl;
     }
 

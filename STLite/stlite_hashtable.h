@@ -14,6 +14,7 @@
 #include "stlite_iterator.h"
 #include "stlite_alloc.h"
 #include "stlite_vector.h"
+#include "stlite_construct.h"
 
 //////////////////////////////////////////////////////////////////////
 namespace STLite
@@ -132,21 +133,29 @@ namespace STLite
     private:
         void initialize_bucket(size_type n)
         {
-
+            size_type n_buckets = n;
+            buckets.reserve(n_buckets);
+            buckets.insert(buckets.end(), n_buckets, (node*)0);
+            num_elements = 0;
         }
     //  constructor  
     public:
-        hashtable()     //  hashtable does NOT support the default constructor
+        hashtable(size_type n)     //  hashtable does NOT support the default constructor
         {
-
+            initialize_bucket(n);
         }
+
         hashtable(size_type n, const HashFunc& hf, const EqualKey& eql, const ExtraKey& ext)
                     : num_elements(n), hasher(hf), get_key(ext), equals(eql)
-        { }
+        {
+            initialize_bucket(n);
+        }
         
         hashtable(size_type n, const HashFunc& hf, const EqualKey& eql)
                     : num_elements(n), hasher(hf), get_key(ExtraKey()), equals(eql)
-        { }
+        {
+            initialize_bucket(n);
+        }
 
         hashtable(const hashtable& ht)
         {
@@ -160,7 +169,7 @@ namespace STLite
 
         ~hashtable()
         {
-
+            clear();
         }
         
     //////////////////////////////////////////////////////////////////////
@@ -274,7 +283,17 @@ namespace STLite
 
         void clear()
         {
-
+            for (int index = 0; index < bucket_count(); ++index)
+            {
+                for (node* cur = buckets[index]; cur;)
+                {
+                    node* next = cur->next;
+                    delete_node(cur);
+                    cur = next;
+                }
+                buckets[index] = (node*)0;
+            }
+            num_elements = 0;
         }
     //////////////////////////////////////////////////////////////////////
     //  find
@@ -365,13 +384,18 @@ namespace STLite
     private:
         node* new_node(const value_type& value)
         {
-            node* newNode;
+            node* newNode = node_allocator::allocate(1);
+
+            construct(newNode->val, value);
+            newNode->next = NULL;
+
             return newNode;
         }      
     
         void delete_node(node* deleteNode)
         {
-
+            destroy(&deleteNode->val);
+            node_allocator::deallocate(deleteNode, 1);
         }
 
     };
