@@ -17,6 +17,7 @@
 //////////////////////////////////////////////////////////////////////
 namespace hashtable_private
 {
+    //  test interface
     void testCase1()
     {
         cout<< "testCase1" << endl;
@@ -28,10 +29,26 @@ namespace hashtable_private
         cout << endl;
     }
 
+    //  test 
+    void testCase2()
+    {
+        hashtable<int, int, int, int, int> hb1(13);
+        hb1.insert_equal(1);
+        hb1.insert_equal(29);
+        hb1.insert_equal(17);
+        hb1.insert_equal(9);
+        hb1.insert_equal(35);
+        hb1.insert_equal(11);
+        hb1.insert_equal(12);
+        hb1.insert_equal(25);
+        hb1.insert_equal(18);
+    }
+
     void test()
     {
         cout << "hashtable_private test" << endl;
         testCase1();
+        testCase2();
         cout << endl;
     }
 }

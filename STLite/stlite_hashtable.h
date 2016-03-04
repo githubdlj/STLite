@@ -195,7 +195,28 @@ namespace STLite
 
         iterator insert_equal_noresize(const value_type& value)
         {
-            return iterator(NULL, NULL);
+            //size_type index = bkt_num_key(value);   //  bkt_num_key(get_key(value))
+            size_type index = value % bucket_count();
+            for (node* cur = buckets[index]; cur; cur = cur->next)
+            {
+                //  if find the equal value, insert it behind the cur.
+                if (value == cur->val)  //  equals(get_key(value), get_key(cur->val))
+                {
+                    node* newNode = new_node(value);
+                    newNode->next = cur->next;
+                    cur->next = newNode;
+        
+                    num_elements++;
+                    return iterator(newNode, this);
+                }
+            }
+            //  else, insert into the head of the bucket[index].
+            node* newNode = new_node(value);
+            newNode->next = buckets[index];
+            buckets[index] = newNode;
+            
+            num_elements++;
+            return iterator(newNode, this);
         }
 
     private:
@@ -229,7 +250,8 @@ namespace STLite
         //  insert_unique
         void insert_unique(const value_type& value)     //  return pair(iterator, bool)
         {
-
+            resize(num_elements + 1);
+            insert_unique_noresize(value);
         }
         
         template<class InputIterator>
@@ -242,7 +264,8 @@ namespace STLite
         //  insert_equal
         iterator insert_equal(const value_type& value)
         {
-            return iterator(NULL, NULL);
+            resize(num_elements + 1);
+            return insert_equal_noresize(value);
         }
         
         template<class InputIterator>
@@ -386,7 +409,7 @@ namespace STLite
         {
             node* newNode = node_allocator::allocate(1);
 
-            construct(newNode->val, value);
+            construct(&newNode->val, value);
             newNode->next = NULL;
 
             return newNode;
