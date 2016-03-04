@@ -86,6 +86,20 @@ namespace STLite
     hashtableIterator<Value, Key, HashFunc, ExtraKey, EqualKey>&
     hashtableIterator<Value, Key, HashFunc, ExtraKey, EqualKey>::operator ++()
     {
+        node* old = m_cur;
+        m_cur = m_cur->next;    //  if cur is not NULL, the next is cur.
+        if (!m_cur)             //  else
+        {
+            size_t bCount = m_ht->bucket_count();
+            size_t index = old->val % bCount;  //  m_ht->bkt_num(old->val)
+            
+            ++index;
+            while (!m_cur && index < bCount)
+            {
+                m_cur = m_ht->buckets[index];    //  access the hashtable private member, so, the iterator should be friend of the hashtable.
+                ++index;
+            }
+        }
         return *this;
     }
 
@@ -114,7 +128,8 @@ namespace STLite
     
     public:
         typedef hashtableIterator<Value, Key, HashFunc, ExtraKey, EqualKey> iterator;
-    
+        friend struct iterator;     //  declare the iterator be the friend of the hashtable.
+
     private:
         typedef hashtable_node<Value> node;
         typedef allocator<node> node_allocator;
@@ -177,12 +192,22 @@ namespace STLite
     public:
         iterator begin()
         {
-            return iterator(NULL, NULL);
+            size_type bCount = bucket_count();
+            for (size_type index = 0; index < bCount; ++index)
+            {
+                if (buckets[index])
+                {
+                    return iterator(buckets[index], this);
+                }
+            }
+            return iterator(NULL, this);
         }
         
-        iterator end()
+        //  note, the END point the next position of the last node,
+        //  so, it must be NULL.
+        iterator end() 
         {
-            return iterator(NULL, NULL);
+            return iterator(NULL, this);
         }
     
     //////////////////////////////////////////////////////////////////////
@@ -306,7 +331,8 @@ namespace STLite
 
         void clear()
         {
-            for (int index = 0; index < bucket_count(); ++index)
+            size_type bCount = bucket_count();
+            for (size_type index = 0; index < bCount; ++index)
             {
                 for (node* cur = buckets[index]; cur;)
                 {
