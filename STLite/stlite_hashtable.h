@@ -213,15 +213,30 @@ namespace STLite
     //////////////////////////////////////////////////////////////////////
     //  insert
     private:
-        iterator insert_unique_noresize(const value_type& value)
+        void insert_unique_noresize(const value_type& value)    //  pair
         {
-            return iterator(NULL, NULL);
+            //  size_type index  = value % bucket_count();
+            size_type index = bkt_num_key(hasher(value), bucket_count());
+            for (node* cur = buckets[index]; cur; cur = cur->next)
+            {
+                if (value == cur->val)  //  equals(get_key(value), get_ket(cur->val))
+                {
+                    //  return pair<iterator, bool>(iterator(cur, this), false);
+                } 
+            }
+
+            node* newNode = new_node(value);
+            newNode->next = buckets[index];
+            buckets[index] = newNode;
+            
+            num_elements++;
+            //  return pair<iterator, bool>(iterator(newNode, this), true);
         }
 
         iterator insert_equal_noresize(const value_type& value)
         {
-            //size_type index = bkt_num_key(value);   //  bkt_num_key(get_key(value))
-            size_type index = value % bucket_count();
+            size_type index = bkt_num_key(hasher(value), bucket_count());  
+            //  size_type index = value % bucket_count();
             for (node* cur = buckets[index]; cur; cur = cur->next)
             {
                 //  if find the equal value, insert it behind the cur.
@@ -447,7 +462,120 @@ namespace STLite
             node_allocator::deallocate(deleteNode, 1);
         }
 
+    //////////////////////////////////////////////////////////////////////
+    //  print the hashtable, just for test.
+    public:
+        void show()
+        {
+            for (size_type index = 0; index < bucket_count(); ++index)
+            {
+                cout << index << ":" << "\t";
+                for (node* cur = buckets[index]; cur; cur = cur->next)
+                {
+                    cout << cur->val << "\t";
+                }
+                cout << endl;
+            }
+        }
     };
+    
+    //////////////////////////////////////////////////////////////////////
+    //  hash, functional
+    template<class Key>
+    struct hash {};
+
+    template<>
+    struct hash<int>
+    {
+        size_t operator () (int x) const {return x;}
+    };
+
+    template<>
+    struct hash<unsigned int>
+    {
+        size_t operator ()(unsigned int x) const {return x;}
+    };
+
+    template<>
+    struct hash<short>
+    {
+        size_t operator ()(short x) const {return x;}
+    };
+
+    template<>
+    struct hash<unsigned short>
+    {
+        size_t operator ()(unsigned short x) const {return x;}
+    };
+
+    template<>
+    struct hash<long>
+    {
+        size_t operator ()(long x) const {return x;}
+    };
+
+    template<>
+    struct hash<unsigned long>
+    {
+        size_t operator ()(unsigned long x) const {return x;}
+    };
+
+    template<>
+    struct hash<char>
+    {
+        size_t operator ()(char x) const {return x;}
+    };
+
+    template<>
+    struct hash<signed char>
+    {
+        size_t operator ()(signed char x) const {return x;}
+    };
+
+    template<>
+    struct hash<unsigned char>
+    {
+        size_t operator ()(unsigned char x) const {return x;}
+    };
+
+    //  char *
+    inline size_t hash_string(const char *s)
+    {
+        unsigned long h = 0;
+        for (; *s; ++s)
+        {
+            h = 5 * h + *s;
+        }
+        return size_t(h);
+    }
+
+    template<>
+    struct hash<char*>
+    {
+        size_t operator ()(char *s) const {return hash_string(s);}
+    };
+
+    template<>
+    struct hash<const char*>
+    {
+        size_t operator ()(const char *s) const {return hash_string(s);}
+    };
+
+    //  define yourself type
+    template<>
+    struct hash<const String>
+    {
+        size_t operator ()(const String s) const {return hash_string(s.str());}
+    };
+
+    template<>
+    struct hash<String>
+    {
+        size_t operator () (String s) const {return hash_string(s.str());}
+    };   
 }
+
+
+//////////////////////////////////////////////////////////////////////
 
 #endif

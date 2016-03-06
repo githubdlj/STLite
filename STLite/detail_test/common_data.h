@@ -99,6 +99,10 @@ namespace private_data
             delete []m_data;
         }
         //////////////////////////////////////////////////////////////////////
+        char* str() const
+        {
+            return m_data;
+        }
         friend std::ostream & operator << (std::ostream &os, const String &str);
 
     public:
