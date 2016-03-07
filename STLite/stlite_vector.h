@@ -756,6 +756,14 @@ namespace STLite
         }
     
     //////////////////////////////////////////////////////////////////////
+    //  swap
+    public:
+        void swap(vector& lhs)
+        {
+            std::swap(start, lhs.start);
+            std::swap(finish, lhs.finish);
+            std::swap(end_of_storage, lhs.end_of_storage);
+        }
     };
 }
 
