@@ -129,8 +129,24 @@ namespace hashtable_private
         cout << endl;
     }
 
-    //  test for String Type
+    //  test insert(first, last)
     void testCase5()
+    {
+        cout << "testCase6" << endl;
+        const int arr[OBJECT_NUM] = {0 + 10, 1 + 10, 2 + 10, 3 + 10, 4 + 10};
+        hashtable<int, int, hash<int>, identity<int>, equal_to<int> > hb1(4);
+        hb1.insert_unique(0 + 16);
+        hb1.insert_unique(0 + 20);
+        hb1.insert_unique(1 + 8);
+        hb1.show();
+
+        hb1.insert_unique(arr, arr + OBJECT_NUM);
+        hb1.show();
+
+        cout << endl;
+    }
+    //  test for String Type
+    void testCase6()
     {
 //         hashtable<int, int, int, int, int> hb1(4);
 //         hb1.insert_unique("String0");
@@ -145,7 +161,8 @@ namespace hashtable_private
         //  testCase1();
         //  testCase2();
         //  testCase3();
-          testCase4();
+        //  testCase4();
+        testCase5();
         cout << endl;
     }
 }

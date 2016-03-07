@@ -264,26 +264,44 @@ namespace STLite
         template<class InputIterator>
         void insert_unique(InputIterator first, InputIterator last, input_iterator_tag)
         {
-
+            for (; first != last; ++first)
+            {
+                insert_unique(*first);
+            }
         }
         
         template<class ForwardIterator>
         void insert_unique(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
-
+            size_type dis = distance(first, last);
+            resize(num_elements + dis);
+            
+            for (; dis > 0; --dis, ++first)
+            {
+                insert_unique_noresize(*first);
+            }
         }
         
         //  insert_equal
         template<class InputIterator>
         void insert_equal(InputIterator first, InputIterator last, input_iterator_tag)
         {
-        
+            for (; first != last; ++first)
+            {
+                insert_equal(*first);
+            }
         }
 
         template<class ForwardIterator>
         void insert_equal(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
         {
-        
+            size_type dis = distance(first, last);
+            resize(num_elements + dis);
+
+            for (; dis > 0; --dis, ++first)
+            {
+                insert_equal_noresize(*first;)
+            }
         }
 
     public:
