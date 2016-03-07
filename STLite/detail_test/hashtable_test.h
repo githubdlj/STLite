@@ -118,12 +118,12 @@ namespace hashtable_private
     {
         cout << "testCase4" << endl;
         hashtable<int, int, hash<int>, identity<int>, equal_to<int> > hb1(4);
-        hb1.insert_unique(0);
-        hb1.insert_unique(1);
-        hb1.insert_unique(2);
-        hb1.insert_unique(3);
-        hb1.insert_unique(0 + 4);
         hb1.insert_unique(0 + 8);
+        hb1.insert_unique(0 + 16);
+        hb1.insert_unique(0 + 20);
+        hb1.insert_unique(1 + 8);
+        hb1.insert_unique(2 + 16);
+        hb1.insert_unique(3 + 16);
         
         hb1.show();
         cout << endl;
@@ -144,8 +144,8 @@ namespace hashtable_private
         cout << "hashtable_private test" << endl;
         //  testCase1();
         //  testCase2();
-          testCase3();
-        //  testCase4();
+        //  testCase3();
+          testCase4();
         cout << endl;
     }
 }

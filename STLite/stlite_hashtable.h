@@ -436,12 +436,37 @@ namespace STLite
         {
             return bkt_num_key(get_key(value));
         }
+
     //////////////////////////////////////////////////////////////////////
     //  resize
     private:
-        void resize(int n)
+        void resize(size_type n)
         {
-        }
+            size_type bucketsSize = buckets.size();
+            size_type maxSize = bucketsSize;
+            if (n > maxSize)
+            {
+                size_type newSize = n + 3;  //  newSize = next_size(newSize);
+                vector<node*, allocator<node*> > temp(newSize, (node*)0);
+               
+                for (size_type index = 0; index < bucketsSize; ++index)
+                {
+                    node* first = buckets[index];
+                    while (first)
+                    {
+                        size_type new_bucket = bkt_num(first->val, newSize);
+                        buckets[index] = first->next;
+                        
+                        first->next = temp[new_bucket];
+                        temp[new_bucket] = first;
+
+                        first = buckets[index];
+                    }
+                }
+                //  swap
+                buckets.swap(temp);
+            }
+        }           
         
     //////////////////////////////////////////////////////////////////////
     //  memory operation
