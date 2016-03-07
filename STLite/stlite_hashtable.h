@@ -334,36 +334,166 @@ namespace STLite
         }
     //////////////////////////////////////////////////////////////////////
     //  erase & clear
-    private:
-        //  erase the [first, last) elements in the bucket[n]
-        void erase_bucket(const size_type n, iterator first, iterator last)
+    public:
+        size_type erase(const Key& key)     //  return the number of the deleted key
         {
+            size_type erasedNum = 0;
+            size_type index = bkt_num_key(key);
+            node* first = buckets[index];
+            if (first)      //  if (index > 0 && index < bucket_count())   
+            {
+                node* cur = first;
+                node* next = cur->next;
+                while (next)
+                {
+                    if (equals(get_key(next->val), key))
+                    {
+                        cur->next = next->next;
+                        delete_node(next);
+                        next = cur->next;
 
+                        --num_elements;
+                        ++erasedNum;
+                    }
+                    else
+                    {
+                        cur = next;
+                        next = next->next;
+                    }
+                }
+                if (equals(get_key(first->val), key))    //  if delete the first node
+                {
+                    buckets[index] = first->next;
+                    delete_node(first);
+                    
+                    --num_elements;
+                    ++erasedNum;
+                }
+            }
+            return erasedNum;
         }
     
-        void erase_bucket(const size_type n, iterator last)
+        void erase(const iterator& it)      //  return void
+        {
+            //             Key key = get_key(it.m_cur->val);
+            //             erase(key);
+            size_type index = bkt_num(it.m_cur->val);
+            node* first = buckets[index];
+            if (it.m_cur && first)      //  it.m_cur can not be NULL 
+            {
+                node* cur = first;
+                node* next = cur->next;
+                while (next)
+                {
+                    if (next == it.m_cur)
+                    {
+                        cur->next = next->next; 
+                        delete_node(next);
+                        next = cur->next;
+
+                        --num_elements;
+                        break;          //  break
+                    }
+                    else
+                    {
+                        cur = next;
+                        next = next->next;
+                    }
+                }   
+
+                if (first == it.m_cur)  //  delete the first node
+                {
+                    buckets[index] = first->next;
+                    delete_node(first);
+                    
+                    --num_elements;
+                }
+            }
+        }
+            
+    private:
+        //  erase the [first, last) elements in the bucket[n]
+        void erase_bucket(const size_type n, node* first, node* last)
+        {
+            if (first == last)
+                return;
+
+            node* cur = buckets[n];
+            if (cur == first)   //  if first == buckets[n]
+            {
+                while (cur != last)
+                {
+                    buckets[n] = cur->next;
+                    delete_node(cur);
+                    cur = buckets[n];
+
+                    --num_elements;
+                }
+                
+            }
+            else    //  else, first != buckets[n]
+            {
+                node* next = cur->next;
+                for (; next != first; cur = next, next = next->next);    //  find the precursor node of the first
+                while (next != last)
+                {
+                    cur->next = next->next;
+                    delete_node(next);
+                    next = cur->next;
+
+                    --num_elements;
+                } 
+            }
+          
+        }
+    
+        void erase_bucket(const size_type n, node* last)
         {
 
         }
 
     public:
-        size_type erase(const Key& key)     //  return the number of the deleted key
-        {
-            return 0;
-        }
-    
-        void erase(const iterator& it)
-        {
-
-        }
-
         void erase(iterator first, iterator last)
         {
+//             //  error, the first will be destroyed.
+//             for (; first != last; ++first)
+//             {
+//                 erase(first);
+//             }
             
+//             //  bad performance, ++first, erase(first) do some same work.
+//             while (first != last)
+//             {
+//                 iterator next = ++first;
+//                 erase(first);
+//                 first = next;
+//             }
+
+            //  the best way
+            size_type first_index = bkt_num(first.m_cur->val);  //  first can not be iterator(NULL, this).
+            //  if last.m_cur == NULL, last_index = buckets.size() - 1;
+            size_type last_index = last.m_cur ? bkt_num(last.m_cur->val) : buckets.size() - 1;  
+           
+            if (first_index == last_index)      
+            {
+                erase_bucket(first_index, first.m_cur, last.m_cur);
+            }
+            else
+            {
+                erase_bucket(first_index, first.m_cur, NULL);
+
+                size_type bucket_index = first_index + 1;
+                for (; bucket_index < last_index; ++bucket_index)
+                {
+                    erase_bucket(bucket_index, buckets[bucket_index], NULL);
+                }
+                erase_bucket(last_index, buckets[bucket_index], last.m_cur);
+            }
         }
 
         void clear()
         {
+            //  erase(begin(), end());
             size_type bCount = bucket_count();
             for (size_type index = 0; index < bCount; ++index)
             {
@@ -377,12 +507,16 @@ namespace STLite
             }
             num_elements = 0;
         }
+
     //////////////////////////////////////////////////////////////////////
     //  find
     public:
-        iterator find() const
+        iterator find(const Key& key) 
         {
-            return iterator(NULL, NULL);
+            size_type index = bkt_num_key(key);
+            node* cur = buckets[index];
+            for (; cur && !equals(get_key(cur->val), key); cur = cur->next);
+            return iterator(cur, this);
         }
     
         value_type find_or_insert(const value_type& value)

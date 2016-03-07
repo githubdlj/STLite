@@ -145,8 +145,117 @@ namespace hashtable_private
 
         cout << endl;
     }
-    //  test for String Type
+
+    void testInsert()
+    {
+        cout << "testInsert" << endl;
+        testCase3();
+        testCase4();
+        testCase5();
+        cout << endl;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //  test erase
     void testCase6()
+    {
+        cout << "testCase6" << endl;
+        hashtable<int, int, hash<int>, identity<int>, equal_to<int> > hb1(10);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 16);
+        hb1.insert_equal(0 + 20);
+        hb1.insert_equal(1 + 8);
+        hb1.insert_equal(2 + 16);
+        hb1.insert_equal(3 + 16);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 30);
+         
+        hb1.show();
+
+        //////////////////////////////////////////////////////////////////////
+        //  erase(key)
+        hb1.erase(30);      
+        hb1.erase(8);
+
+        hb1.show();
+
+        //////////////////////////////////////////////////////////////////////
+        //  erase(iterator)
+        hashtableIterator<int, int, hash<int>, identity<int>, equal_to<int> > it = hb1.begin();
+        hb1.erase(it);
+
+        it = hb1.begin();
+        for (int i = 0; i < 2; ++i, ++it);
+        cout << *it << endl;
+        hb1.erase(it);
+
+        hb1.show();
+        cout << endl;
+    }
+
+    //  test erase(first, last)
+    void testCase7()
+    {
+        cout << "testCase7" << endl;
+        hashtable<int, int, hash<int>, identity<int>, equal_to<int> > hb1(10);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 16);
+        hb1.insert_equal(0 + 20);
+        hb1.insert_equal(1 + 8);
+        hb1.insert_equal(2 + 16);
+        hb1.insert_equal(3 + 16);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 30);
+        hb1.insert_equal(0 + 10);
+        hb1.show();
+
+        hashtableIterator<int, int, hash<int>, identity<int>, equal_to<int> > first = hb1.find(30);
+        hashtableIterator<int, int, hash<int>, identity<int>, equal_to<int> > last = hb1.find(9);
+//         cout << *first << endl;
+//         cout << *last << endl;
+        
+        hb1.erase(first, last);
+        hb1.show();
+
+        cout << endl;
+    }
+    
+    void testCase8()
+    {
+        cout << "testCase7" << endl;
+        hashtable<int, int, hash<int>, identity<int>, equal_to<int> > hb1(10);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 16);
+        hb1.insert_equal(0 + 20);
+        hb1.insert_equal(1 + 8);
+        hb1.insert_equal(2 + 16);
+        hb1.insert_equal(3 + 16);
+        hb1.insert_equal(0 + 8);
+        hb1.insert_equal(0 + 30);
+        hb1.insert_equal(0 + 10);
+        hb1.show();
+
+        //  first != NULL, last == NULL
+        hashtableIterator<int, int, hash<int>, identity<int>, equal_to<int> > first = hb1.find(30);
+        hashtableIterator<int, int, hash<int>, identity<int>, equal_to<int> > last = hb1.end();
+//         cout << *first << endl;
+//         cout << *last << endl;
+
+        hb1.erase(first, last);
+        hb1.show();
+
+        cout << endl;
+    }
+    void testErase()
+    {
+        cout << "testErase" << endl;
+        //  testCase6();
+        //  testCase7();
+        testCase8();
+        cout << endl;
+    }
+    //  test for String Type
+    void testCase16()
     {
 //         hashtable<int, int, int, int, int> hb1(4);
 //         hb1.insert_unique("String0");
@@ -158,11 +267,8 @@ namespace hashtable_private
     void test()
     {
         cout << "hashtable_private test" << endl;
-        //  testCase1();
-        //  testCase2();
-        //  testCase3();
-        //  testCase4();
-        testCase5();
+        //testInsert();
+        testErase();
         cout << endl;
     }
 }
