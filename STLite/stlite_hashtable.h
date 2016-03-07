@@ -216,10 +216,10 @@ namespace STLite
         void insert_unique_noresize(const value_type& value)    //  pair
         {
             //  size_type index  = value % bucket_count();
-            size_type index = bkt_num_key(hasher(value), bucket_count());
+            size_type index = bkt_num(value);
             for (node* cur = buckets[index]; cur; cur = cur->next)
             {
-                if (value == cur->val)  //  equals(get_key(value), get_ket(cur->val))
+                if (equals(get_key(value), get_key(cur->val)))  //  equals(get_key(value), get_ket(cur->val))
                 {
                     //  return pair<iterator, bool>(iterator(cur, this), false);
                 } 
@@ -235,12 +235,12 @@ namespace STLite
 
         iterator insert_equal_noresize(const value_type& value)
         {
-            size_type index = bkt_num_key(hasher(value), bucket_count());  
+            size_type index = bkt_num(value);  
             //  size_type index = value % bucket_count();
             for (node* cur = buckets[index]; cur; cur = cur->next)
             {
                 //  if find the equal value, insert it behind the cur.
-                if (value == cur->val)  //  equals(get_key(value), get_key(cur->val))
+                if (equals(get_key(value), get_key(cur->val)))  //  equals(get_key(value), get_key(cur->val))
                 {
                     node* newNode = new_node(value);
                     newNode->next = cur->next;
