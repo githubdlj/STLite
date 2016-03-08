@@ -144,15 +144,62 @@ namespace STLite
         EqualKey equals; 
 
     //////////////////////////////////////////////////////////////////////
-    //  
+    //  auxiliary constructor
     private:
         void initialize_bucket(size_type n)
         {
+            //////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////
+            //  note!
+            //  that the list does not have head node.
+            //  it will convenient to INSERT or ERASE when it has head node.
+            //  but it will cause bad performance!
+            //  that is why the SGI STL does not use the head node.
             size_type n_buckets = n;
             buckets.reserve(n_buckets);
             buckets.insert(buckets.end(), n_buckets, (node*)0);
             num_elements = 0;
+
+            //  if use the head node, it will be rewrite like this
+//             size_type n_buckets = n;
+//             buckets.reserve(n_buckets);
+//             for (int index = 0; index < n_buckets; ++index)
+//             {
+//                 buckets.insert(buckets.end(), new_node(value_type));
+//             }
+//             num_elements = 0;
         }
+
+        void copy_from(const hashtable& hb)
+        {
+            //  init the buckets
+            size_type hbSize = hb.size();   
+            buckets.clear();    //  clear itself, in order to insert (node*)0
+            buckets.reserve(hbSize);
+            buckets.insert(buckets.end(), hbSize, (node*)0);
+            
+            //  copy
+            for (size_type index = 0; index < hbSize; ++index)
+            {
+               // if (hb.buckets[index])
+                {
+                    //  insert the head node.
+                    node *p = hb.buckets[index];
+                         //              value_type newVal = hb.buckets[index]->val;
+//                     buckets[index] = new_node(hb.buckets[index]->val);
+//                 
+//                     //  insert the rest node.
+//                     node* rear = buckets[index];
+//                     for (node* cur = hb.buckets[index]->next; cur; cur = cur->next)
+//                     {
+//                         rear->next = new_node(cur->val);
+//                         rear = rear->next;
+//                     }
+                }
+            } 
+            num_elements = hb.num_elements;
+        }
+
     //  constructor  
     public:
         hashtable(size_type n)     //  hashtable does NOT support the default constructor
@@ -172,13 +219,22 @@ namespace STLite
             initialize_bucket(n);
         }
 
-        hashtable(const hashtable& ht)
+        hashtable(const hashtable& ht) : hasher(ht.hasher), get_key(ht.get_key), equals(ht.equals)
         {
-
+            copy_from(ht);
         }
         
         hashtable& operator =(const hashtable &ht)
         {
+            if (&ht != this)
+            {
+                clear();
+                
+                hasher = ht.hasher;
+                get_key = ht.get_key;
+                equals = ht.equals;
+                copy_from(ht);
+            }
             return *this;
         }
 
@@ -300,7 +356,7 @@ namespace STLite
 
             for (; dis > 0; --dis, ++first)
             {
-                insert_equal_noresize(*first;)
+                insert_equal_noresize(*first);
             }
         }
 
@@ -340,7 +396,7 @@ namespace STLite
             size_type erasedNum = 0;
             size_type index = bkt_num_key(key);
             node* first = buckets[index];
-            if (first)      //  if (index > 0 && index < bucket_count())   
+            if (first) 
             {
                 node* cur = first;
                 node* next = cur->next;
@@ -599,8 +655,10 @@ namespace STLite
             if (n > maxSize)
             {
                 size_type newSize = n + 3;  //  newSize = next_size(newSize);
+                //  note!
+                //  if the the list use the head node, it will cause bad performance like initialize_bucket()
                 vector<node*, allocator<node*> > temp(newSize, (node*)0);
-               
+                
                 for (size_type index = 0; index < bucketsSize; ++index)
                 {
                     node* first = buckets[index];
