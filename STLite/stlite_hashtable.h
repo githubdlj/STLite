@@ -145,6 +145,25 @@ namespace STLite
 
     //////////////////////////////////////////////////////////////////////
     //  auxiliary constructor
+    //  memory operation
+    private:
+        node* new_node(const value_type& value)
+        {
+            node* newNode = node_allocator::allocate(1);
+
+            construct(&newNode->val, value);
+            newNode->next = NULL;
+
+            return newNode;
+        }      
+    
+        void delete_node(node* deleteNode)
+        {
+            destroy(&deleteNode->val);
+            node_allocator::deallocate(deleteNode, 1);
+        }
+            
+    //////////////////////////////////////////////////////////////////////
     private:
         void initialize_bucket(size_type n)
         {
@@ -181,20 +200,18 @@ namespace STLite
             //  copy
             for (size_type index = 0; index < hbSize; ++index)
             {
-               // if (hb.buckets[index])
+                if (hb.buckets[index])
                 {
                     //  insert the head node.
-                    node *p = hb.buckets[index];
-                         //              value_type newVal = hb.buckets[index]->val;
-//                     buckets[index] = new_node(hb.buckets[index]->val);
-//                 
-//                     //  insert the rest node.
-//                     node* rear = buckets[index];
-//                     for (node* cur = hb.buckets[index]->next; cur; cur = cur->next)
-//                     {
-//                         rear->next = new_node(cur->val);
-//                         rear = rear->next;
-//                     }
+                    buckets[index] = new_node(hb.buckets[index]->val);
+                
+                    //  insert the rest node.
+                    node* rear = buckets[index];
+                    for (node* cur = hb.buckets[index]->next; cur; cur = cur->next)
+                    {
+                        rear->next = new_node(cur->val);
+                        rear = rear->next;
+                    }
                 }
             } 
             num_elements = hb.num_elements;
@@ -579,6 +596,32 @@ namespace STLite
         {
             return value;
         }
+
+        void equal_range(const Key& key)
+        {
+            size_type bucketSize = buckets.size();
+            size_type index = bkt_num_key(key);
+            for (node* beginRange = buckets[index]; beginRange; beginRange = beginRange->next)
+            {
+                if (equals(get_key(beginRange->val), key))
+                {
+                    node* endRange = beginRange; 
+                    for(;endRange && equals(get_key(endRange-val), key); endRange = endRange->next);
+
+                    if (endRange)
+                        //  return pair(iterator(beginRange, this), iterator(endRAnge, this))
+                    
+                    
+                    for (; index < bucketSize; ++index)
+                    {
+                        if (buckets[index])
+                            //return pair(iterator(beginRange, this), iterator(endRange), buckets[inex]);
+                    }
+                    //return pair(iterator(beginRange, this), end());
+                }
+            }
+            //  return pair(iterator(NULL, this), iterator(NULL, this));
+        }
     //////////////////////////////////////////////////////////////////////
     //  
     public:
@@ -620,7 +663,12 @@ namespace STLite
     
     size_type elems_in_bucket(size_type bucket) const
     {
-        return 0;
+        size_type nums = 0;
+        for (node* cur = buckets[bucket]; cur; cur = cur->next)
+        {
+            ++nums;
+        }
+        return nums;
     }
     //////////////////////////////////////////////////////////////////////
     //  locate the obj
@@ -678,25 +726,6 @@ namespace STLite
             }
         }           
         
-    //////////////////////////////////////////////////////////////////////
-    //  memory operation
-    private:
-        node* new_node(const value_type& value)
-        {
-            node* newNode = node_allocator::allocate(1);
-
-            construct(&newNode->val, value);
-            newNode->next = NULL;
-
-            return newNode;
-        }      
-    
-        void delete_node(node* deleteNode)
-        {
-            destroy(&deleteNode->val);
-            node_allocator::deallocate(deleteNode, 1);
-        }
-
     //////////////////////////////////////////////////////////////////////
     //  print the hashtable, just for test.
     public:
